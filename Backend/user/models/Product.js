@@ -1,58 +1,41 @@
-const mongoose = require("mongoose");
-
 const reviewSchema = new mongoose.Schema({
   rating: { type: Number, required: true },
   comment: { type: String, required: true },
-  date: { type: Date, required: true },
+  date: { type: Date, default: Date.now },
   reviewerName: { type: String, required: true },
   reviewerEmail: { type: String, required: true },
 });
 
-const dimensionsSchema = new mongoose.Schema({
-  width: { type: Number },
-  height: { type: Number },
-});
 
+
+
+
+// Main Product Schema
 const productSchema = new mongoose.Schema({
-  filename: {
-    type: String,
-    required: true,
-  },
-  path: {
-    type: String,
-    required: true,
-  },
-  uploadDate: {
-    type: Date,
-    default: Date.now,
-  },
-  mimetype: {
-    type: String,
-    required: true,
-  },
-  size: {
-    type: Number,
-    required: true,
-  },
   title: { type: String, required: true },
   description: { type: String, required: true },
-  category: { type: [String] },
+  category: { type: String, required: true },
+  
   price: { type: Number, required: true },
   discountPercentage: { type: Number },
-  rating: { type: Number },
-
+  rating: { type: Number, default: 0 },
+  stock: { type: Number, required: true },
+  tags: { type: [String], required: true },
   brand: { type: String },
+  sku: { type: String, required: true },
+  weight: { type: Number, required: true },
 
-  dimensions: { type: dimensionsSchema },
-
+  warrantyInformation: { type: String },
+  shippingInformation: { type: String, required: true },
+  availabilityStatus: { type: String, required: true },
   reviews: { type: [reviewSchema] },
+  returnPolicy: { type: String, required: true },
+  minimumOrderQuantity: { type: Number, required: true },
+ 
+  images: { type: [String], required: false }, // Array of image URLs
+  thumbnail: { type: String, required: false }, // Single thumbnail image URL
 
-  VendorUser: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "VendorUser",
-    required: true,
-  },
-});
+}, { timestamps: true }); // Adds createdAt and updatedAt automatically
 
 const Product = mongoose.model("Product", productSchema);
 
