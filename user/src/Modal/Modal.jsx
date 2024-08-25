@@ -6,7 +6,7 @@ const Modal = React.forwardRef(({ isOpen, onClose, categoryData, expandedSubcate
   console.log(categoryData)
 
   return (
-    <div ref={ref} className="fixed top-32 flex items-center justify-center  z-50 ">
+    <div ref={ref} className="fixed top-40 flex items-center justify-center  z-50 ">
       <div className="bg-white flex  p-6 md:p-8 rounded-lg shadow-lg w-full h-full md:w-3/4 md:h-3/4 lg:w-11/12 lg:h-[80vh] relative overflow-auto">
         <button
           onClick={onClose}
