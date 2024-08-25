@@ -9,7 +9,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
 const Navbar1 = () => {
   return (
-    <div className=" mb-5 bg-white px-20 flex flex-col md:flex-row items-center h-[80px]">
+    <div className=" mb-5  bg-white px-20 flex flex-col md:flex-row items-center h-[80px]">
       {/* Logo and Icons for Mobile and Medium View */}
       <div className="flex flex-col md:flex-row w-full md:w-auto items-center mb-4 md:mb-0">
         <div className="flex-shrink-0 flex items-center justify-center md:justify-start md:w-1/2 w-1/3 gap-20">
