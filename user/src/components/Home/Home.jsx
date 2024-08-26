@@ -3,6 +3,7 @@ import Navbar2 from "../Navbar/Navbar2";
 import Banner from "../Banner/Banner";
 import Featured from "../Featured";
 import LatestProducts from "../Product/LatestProducts";
+import ShopbyCategories from "../catogry/ShopbyCategories";
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
       <Banner/>
       <Featured/>
       <LatestProducts/>
+      <ShopbyCategories/>
     </div>
   );
 };
