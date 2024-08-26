@@ -1,131 +1,166 @@
 const nodemailer = require("nodemailer");
-const crypto = require("crypto");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 
-function generateUserId(email) {
-  return crypto.createHash("sha256").update(email).digest("hex").slice(0, 6).toUpperCase();
-}
-
-
-function generateRandomString(length) {
-  return crypto.randomBytes(Math.ceil(length / 2)).toString("hex").slice(0, length);
-}
-
-
-function generateOtp() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
-
+// Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
+  service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, 
-    pass: process.env.EMAIL_PASS,
+    user: "amitkumar425863@gmail.com",
+    pass: "wqql hbvq udjt erat", // Secure this password by using environment variables
+  },
+  tls: {
+    rejectUnauthorized: false,
   },
 });
 
+// Helper function to generate a user ID
+function generateUserId() {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"; // Characters to choose from for letters
+  const digits = "0123456789"; // Characters to choose from for digits
 
-const registerUser = async (req, res) => {
+  let userId = "";
+  
+  // Generate 3 random letters
+  for (let i = 0; i < 3; i++) {
+    userId += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+
+  // Generate 2 random digits
+  for (let i = 0; i < 2; i++) {
+    userId += digits.charAt(Math.floor(Math.random() * digits.length));
+  }
+
+  return userId;
+}
+
+exports.register = async (req, res) => {
   const { email } = req.body;
 
+  if (!email) {
+    return res.status(400).send("Email is required.");
+  }
+
   try {
-   
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email is already in use" });
-    }
+    let user = await User.findOne({ email });
+    if (user) return res.status(400).send("User already exists");
 
-   
-    const userId = generateUserId(email);
-    const rawPassword = generateRandomString(8);
-    const otp = generateOtp();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); 
+    // Generate a random password
+    const password = Math.random().toString(36).slice(-8); // This generates a random 8-character password
 
- 
-    const hashedPassword = await bcrypt.hash(rawPassword, 10);
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate a custom user ID
+    const customUserId = generateUserId();
 
-    const newUser = new User({
+    // Create a new user with the custom user ID
+    user = new User({
       email,
-      userName: userId,
-      password: hashedPassword,
-      otp,
-      otpExpires,
+      password: hashedPassword, // Save the hashed password
+      customUserId, // Add the custom user ID to the user model
     });
 
-    await newUser.save();
+    const otp = user.generateOtp(); // Assuming you have a function to generate OTP
+    await user.save();
 
-  
     const mailOptions = {
-      from: process.env.EMAIL_USER, 
-      to: email,
-      subject: "Your Account Details and OTP for Verification",
-      html: `
-        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; border: 1px solid #ddd; border-radius: 5px; max-width: 600px; margin: auto;">
-          <h2 style="color: #4CAF50;">Welcome to Our Service!</h2>
-          <p>Your account has been successfully created.</p>
-          <p><strong>User ID:</strong> ${userId}</p>
-          <p><strong>Password:</strong> ${rawPassword}</p>
-          <p><strong>OTP for verification:</strong> ${otp}</p>
-          <p>Please use the OTP above to verify your account. Make sure to change your password after logging in for security purposes.</p>
-          <p>If you have any questions, feel free to reach out to our support team.</p>
-          <hr style="border-top: 1px solid #ddd; margin-top: 20px;">
-          <footer style="font-size: 12px; color: #777;">
-            <p>Thank you for choosing our service!</p>
-            <p>Best Regards,<br>Your Company Name</p>
-          </footer>
-        </div>
-      `,
+      from: "amitkumar425863@gmail.com",
+      to: user.email,
+      subject: "Your account details",
+      text: `Your OTP is ${otp}. Your password is: ${password}. Your user ID is: ${customUserId}`, // Include the password and custom user ID here
     };
 
- 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error("Error sending email:", error);
-        return res.status(500).json({ message: "Error sending email", error: error.message });
+        return res.status(500).send("Error sending email.");
       }
-      res.status(201).json({ message: "Registration successful. User ID, password, and OTP sent to email." });
+      res.status(200).send("Password and user ID sent to your email.");
     });
   } catch (error) {
-    console.error("Server error:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error(error);
+    res.status(500).send("Internal server error.");
   }
 };
 
-// Login user function
-const loginUser = async (req, res) => {
-  const { identifier, password } = req.body;
+exports.verifyOtp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).send("Email and OTP are required.");
+  }
 
   try {
-    
-    const user = await User.findOne({ $or: [{ email: identifier }, { userName: identifier }] });
+    const user = await User.findOne({ email, otp });
+
     if (!user) {
-      return res.status(400).json({ message: "Invalid email/User ID or password" });
+      return res.status(400).send("Invalid OTP or email.");
     }
 
+    if (user.otpExpires < Date.now()) {
+      return res.status(400).send("OTP has expired.");
+    }
 
+    // Set isVerified to true after successful OTP verification
+    user.isVerified = true;
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    res.status(200).send("OTP verified successfully.");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error.");
+  }
+};
+
+
+
+// Function to handle user login and JWT token generation
+exports.login = async (req, res) => {
+  const { userId, email, password } = req.body;
+
+  // Validate that password is provided
+  if (!password) {
+    return res.status(400).send("Password is required.");
+  }
+
+  try {
+    // Find user by userId or email
+    const user = await User.findOne({
+      $or: [{ customUserId: userId }, { email: email }],
+    });
+
+    // If user not found
+    if (!user) {
+      return res.status(400).send("Invalid userId/email or password.");
+    }
+
+    // Check if user is verified
+    if (!user.isVerified) {
+      return res.status(403).send("User is not verified.");
+    }
+
+    // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email/User ID or password" });
+      return res.status(400).send("Invalid userId/email or password.");
     }
 
-
+    // User authenticated successfully, generate a JWT token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1h" } // Token expires in 1 hour
     );
 
-    res.json({ message: "Login successful", token });
+    // Send response with the token
+    res.status(200).json({ message: "Login successful", token: token });
   } catch (error) {
-    console.error("Server error:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error(error);
+    res.status(500).send("Internal server error.");
   }
 };
-
-module.exports = { registerUser, loginUser };

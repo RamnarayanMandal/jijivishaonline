@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken"); // Import jsonwebtoken
+const jwt = require("jsonwebtoken");
 
 // Define the Address schema
 const addressSchema = new mongoose.Schema({
@@ -21,12 +21,6 @@ const addressSchema = new mongoose.Schema({
 
 // Define the Cart Item schema
 const cartItemSchema = new mongoose.Schema({
- 
-  productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
-    required: true,
-  },
   productName: { type: String, required: true },
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
@@ -39,20 +33,31 @@ const cartItemSchema = new mongoose.Schema({
 
 // Define the User schema
 const userSchema = new mongoose.Schema({
-  email: { type: String, unique: true },
-  userName:{ type: String, unique: true},
-  password: { type: String, },
- 
+  email: { type: String, unique: true, required: true },
+  password: { type: String },
+  customUserId:{ type: String},
+  
+  isVerified: { type: Boolean, default: false },
   mobileNumber: { type: String, unique: true },
   name: { type: String },
   lastName: { type: String },
   phone: { type: String },
   location: { type: String },
   addresses: [addressSchema],
-  cart: [cartItemSchema], // Array of cart items
+  cart: [cartItemSchema],
   wallet: { type: Number, default: 0 },
   security: { type: Boolean, default: true },
+  otp: { type: String }, // Field for OTP
+  otpExpires: { type: Date }, // Field for OTP expiry
 });
+
+// Method to generate OTP and set its expiry
+userSchema.methods.generateOtp = function () {
+  const otp = crypto.randomInt(100000, 999999).toString();
+  this.otp = otp;
+  this.otpExpires = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
+  return otp;
+};
 
 // Create the User model
 const User = mongoose.model("User", userSchema);
