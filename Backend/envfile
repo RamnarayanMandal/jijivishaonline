@@ -1,0 +1,5 @@
+PORT=5001
+MONGODB_URL=mongodb+srv://admin:admin123@cluster0.n7xxrpc.mongodb.net/jijivishaonline?retryWrites=true&w=majority&appName=Cluster0
+JWT_SECRET=your_jwt_secret
+EMAIL_USER=amitkumar425863@gmail.com
+EMAIL_PASS =wqql hbvq udjt erat

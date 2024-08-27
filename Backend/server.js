@@ -5,6 +5,7 @@ const cors = require("cors");
 const userRoutes = require("./user/routes/userRoutes");
 const adminRoutes = require("./admin/routes/adminRoutes");
 const bannerRoutes = require("./admin/routes/bannerRoutes");
+const productRoutes = require("./admin/routes/productRoutes");
 
 const path = require("path");
 
@@ -26,6 +27,7 @@ app.use("/api/admin", adminRoutes);
 //banner routes
 
 app.use("/api/admin", bannerRoutes);
+app.use("/api/admin", productRoutes);
 
 // error handling middleware
 
