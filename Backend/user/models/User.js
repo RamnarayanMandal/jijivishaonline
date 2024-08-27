@@ -35,8 +35,7 @@ const cartItemSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   password: { type: String },
-  customUserId:{ type: String},
-  
+  customUserId: { type: String, unique: true },
   isVerified: { type: Boolean, default: false },
   mobileNumber: { type: String, unique: true },
   name: { type: String },
@@ -50,14 +49,8 @@ const userSchema = new mongoose.Schema({
   otp: { type: String }, // Field for OTP
   otpExpires: { type: Date }, // Field for OTP expiry
 });
-
 // Method to generate OTP and set its expiry
-userSchema.methods.generateOtp = function () {
-  const otp = crypto.randomInt(100000, 999999).toString();
-  this.otp = otp;
-  this.otpExpires = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
-  return otp;
-};
+// Helper function to generate a password of given length
 
 // Create the User model
 const User = mongoose.model("User", userSchema);
