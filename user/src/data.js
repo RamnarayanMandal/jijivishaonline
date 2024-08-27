@@ -7,7 +7,7 @@ export const product = [
           "size": ["S", "M", "L", "XL"],
           "brand": "BasicWear",
           "price": 19.99,
-          "img": ["https://example.com/images/white-tshirt-front.jpg", "https://example.com/images/white-tshirt-back.jpg"],
+          "img": ["https://images.pexels.com/photos/5746087/pexels-photo-5746087.jpeg?auto=compress&cs=tinysrgb&w=600", "https://images.pexels.com/photos/7752820/pexels-photo-7752820.jpeg?auto=compress&cs=tinysrgb&w=600"],
           "discount": 10,
           "category": "T-Shirts"
         },
@@ -18,7 +18,7 @@ export const product = [
           "size": ["28", "30", "32", "34", "36"],
           "brand": "DenimCo",
           "price": 49.99,
-          "img": ["https://example.com/images/slim-fit-jeans-front.jpg", "https://example.com/images/slim-fit-jeans-back.jpg"],
+          "img": ["https://images.pexels.com/photos/9558785/pexels-photo-9558785.jpeg?auto=compress&cs=tinysrgb&w=600", "https://images.pexels.com/photos/3965536/pexels-photo-3965536.jpeg?auto=compress&cs=tinysrgb&w=600"],
           "discount": 15,
           "category": "Jeans"
         },
@@ -29,7 +29,7 @@ export const product = [
           "size": ["M", "L", "XL"],
           "brand": "DenimCo",
           "price": 79.99,
-          "img": ["https://example.com/images/denim-jacket-front.jpg", "https://example.com/images/denim-jacket-back.jpg"],
+          "img": ["https://images.pexels.com/photos/16170/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=600", "https://images.pexels.com/photos/977796/pexels-photo-977796.jpeg?auto=compress&cs=tinysrgb&w=600"],
           "discount": 20,
           "category": "Jackets"
         },
@@ -40,7 +40,7 @@ export const product = [
           "size": ["S", "M", "L", "XL"],
           "brand": "ComfyClothes",
           "price": 39.99,
-          "img": ["https://example.com/images/black-hoodie-front.jpg", "https://example.com/images/black-hoodie-back.jpg"],
+          "img": ["https://images.pexels.com/photos/10475482/pexels-photo-10475482.jpeg?auto=compress&cs=tinysrgb&w=600", "https://example.com/images/black-hoodie-back.jpg"],
           "discount": 5,
           "category": "Hoodies"
         },
