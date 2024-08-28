@@ -49,8 +49,7 @@ const userSchema = new mongoose.Schema({
   otp: { type: String }, // Field for OTP
   otpExpires: { type: Date }, // Field for OTP expiry
 });
-// Method to generate OTP and set its expiry
-// Helper function to generate a password of given length
+
 
 // Create the User model
 const User = mongoose.model("User", userSchema);

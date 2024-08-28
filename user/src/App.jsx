@@ -10,7 +10,6 @@ import Footer from './components/Footer';
 import { UpperFooter } from './components/UpperFooter';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
