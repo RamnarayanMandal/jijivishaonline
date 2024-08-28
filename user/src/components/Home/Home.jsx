@@ -9,6 +9,12 @@ import OurPerspective from "../OurPerspective";
 import Elegantjewellery from "../Elegantjewellery";
 import HandwovenSareesfromalloverBharat from "../Product/HandwovenSareesfromalloverBharat";
 import DressMaterials from "../Product/DressMaterials";
+import { Handbags } from "../Product/Handbags";
+import { CustomMadeProducts } from "../Product/CustomMadeProducts";
+import Testimonials from "../Testimonials";
+import Services from "../service/Services";
+import BlogArticles from "../BlogArticles";
+import  Footer  from "../Footer";
 
 const Home = () => {
   return (
@@ -23,6 +29,12 @@ const Home = () => {
       <Elegantjewellery/>
       <HandwovenSareesfromalloverBharat/>
       <DressMaterials/>
+      <Handbags/>
+      <CustomMadeProducts/>
+      <Testimonials/>
+      <Services/>
+      <BlogArticles/>
+      
     </div>
   );
 };

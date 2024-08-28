@@ -6,6 +6,8 @@ import { Outlet } from 'react-router-dom'
 
 import Navbar1 from './components/Navbar/Navbar1'
 import Home from './components/Home/Home'
+import Footer from './components/Footer';
+import { UpperFooter } from './components/UpperFooter';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,6 +17,8 @@ function App() {
     <Navbar1/>
     <Home/>
      <Outlet/>
+     <UpperFooter/>
+     <Footer/>
     
     </>
   )
