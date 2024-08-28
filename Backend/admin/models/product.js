@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const productSchema = new mongoose.Schema({
+const productSchema = new mongoose.Schema(
+  {
     thumbnail: { type: String },
-    image: { type: [String] }, // An array of strings
-    
+    images: { type: [String] }, // An array of strings
+
     title: { type: String },
     price: { type: Number, default: 0 },
     discount: { type: Number },
@@ -27,14 +28,18 @@ const productSchema = new mongoose.Schema({
     materialCare: { type: [String] }, // An array of strings
     disclaimer: { type: String },
     shippingInfo: { type: [String] }, // An array of strings
-    
-    productreviews: [{
+
+    productreviews: [
+      {
         username: { type: String },
         email: { type: String },
         date: { type: Date },
         rating: { type: Number },
         description: { type: String },
-    }],
-});
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model("Product", productSchema);
