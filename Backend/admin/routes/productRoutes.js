@@ -14,7 +14,7 @@ router.post("/products", uploadFiles, createProduct);
 router.get("/getAllproducts", productController.getAllProducts);
 
 // Route to get a product by its ID
-// router.get("/products/:id", productController.getProductById);
+router.get("/products/:id", productController.getProductById);
 
 // Route to get a product by its ID
 router.delete("/deleteproduct/:id", productController.deleteProductById);

@@ -127,37 +127,37 @@ exports.getAllProducts = async (req, res) => {
 };
 
 // Controller to get a product by its ID
-// exports.getProductById = async (req, res) => {
-//   try {
-//     // Extract the product ID from the request parameters
-//     const { id } = req.params;
+exports.getProductById = async (req, res) => {
+  try {
+    // Extract the product ID from the request parameters
+    const { id } = req.params;
 
-//     // Find the product by its ID
-//     const product = await Product.findById(id); // Use the extracted 'id'
+    // Find the product by its ID
+    const product = await Product.findById(id); // Use the extracted 'id'
 
-//     // Check if the product was found
-//     if (!product) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Product not found",
-//       });
-//     }
+    // Check if the product was found
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
 
-//     // Return the found product with a success message
-//     res.status(200).json({
-//       success: true,
-//       message: "Product retrieved successfully",
-//       product,
-//     });
-//   } catch (error) {
-//     // Handle any errors that occur during the process
-//     res.status(500).json({
-//       success: false,
-//       message: "Failed to retrieve product",
-//       error: error.message,
-//     });
-//   }
-// };
+    // Return the found product with a success message
+    res.status(200).json({
+      success: true,
+      message: "Product retrieved successfully",
+      product,
+    });
+  } catch (error) {
+    // Handle any errors that occur during the process
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve product",
+      error: error.message,
+    });
+  }
+};
 
 exports.deleteProductById = async (req, res) => {
   try {
