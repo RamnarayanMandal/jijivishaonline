@@ -8,6 +8,7 @@ import RegisterPage from './components/Register/RegisterPage.jsx';
 import Login from './components/Register/Login.jsx';
 import { ThemeProvider } from "@material-tailwind/react";
 
+
 // Define your router outside of the provider
 const router = createBrowserRouter([
   {

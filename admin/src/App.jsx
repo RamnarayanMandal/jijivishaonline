@@ -12,15 +12,15 @@ function App() {
 
   return (
     <>
-    <div className="flex">
-      <Sidebar />
-      <div className="ml-64 p-4 w-10/12">
+    {/* <div className="flex"> */}
+      {/* <Sidebar /> */}
+      <div className=" w-full">
         <Navbar1/>
       <Home/>
         <h1 className="text-3xl font-bold">Dashboard</h1>
         {/* Add your dashboard content here */}
       </div>
-    </div>
+    {/* </div> */}
 
    
      <Outlet/>

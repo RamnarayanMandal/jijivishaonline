@@ -155,7 +155,7 @@ const Banner = () => {
                   <img
                     src={banners.banner3}
                     alt="Facebook Banner 2"
-                    className="w-full sm:w-1/2 h-auto object-cover"
+                    className="w-full sm:w-1/2 h-auto object-cover pr-4"
                   />
                 )}
               </div>
