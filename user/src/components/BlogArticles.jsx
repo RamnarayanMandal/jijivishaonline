@@ -29,7 +29,10 @@ const BlogArticles = () => {
         </Link>
       </div>
     </div>
+    <div className="flex justify-center items-center content-center w-full lg:px-2 md:px-2 px-10">
     <BlogCard/>
+    </div>
+    
   </section>
   )
 }

@@ -24,11 +24,12 @@ const Featured = () => {
     try {
       const resp = await axios.get(`${URI}api/admin/featuredImg`);
       setImg(resp.data.data);
-      console.log(resp.data.data);
+     
     } catch (error) {
       console.log(error);
     }
   };
+
 
   // Fallback images if API data is empty
   const fallbackImages = [fr1, fr2, fr3, fr4, fr5];
@@ -51,7 +52,7 @@ const Featured = () => {
           {(img.length > 0 ? img : fallbackImages).map((imageSrc, index) => (
             <SwiperSlide key={index}>
               <img
-                src={`${URI}imageSrc`}
+                src={`${URI}${imageSrc.images}`}
                 alt={`Featured ${index + 1}`}
                 className="h-auto w-auto object-contain"
               />
@@ -64,7 +65,7 @@ const Featured = () => {
         {(img.length > 0 ? img : fallbackImages).map((imageSrc, index) => (
           <img
             key={index}
-            src={imageSrc}
+            src={`${URI}${imageSrc.images}`}
             alt={`Featured ${index + 1}`}
             className="lg:h-20 h-auto w-auto object-contain"
           />

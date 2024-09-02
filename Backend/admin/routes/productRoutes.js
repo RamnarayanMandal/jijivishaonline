@@ -20,4 +20,15 @@ router.get("/products/:id", productController.getProductById);
 router.delete("/deleteproduct/:id", productController.deleteProductById);
 
 router.put("/product/:id", productController.updateProductById);
+
+router.get("/lastedproducts", productController.lastedProduct)
+
+router.get("/getAllSubcategory", productController.getAllsubcategorysByProduct)
+
+router.get("/getAllCategory", productController.getAllcategorysByProduct)
+
+router.get("/getProductByCatogry/:category", productController.getProductByCategory)
+
+router.get("/getProductBySubcategory/:subcategory", productController.getProductBySubcategory)
+
 module.exports = router;

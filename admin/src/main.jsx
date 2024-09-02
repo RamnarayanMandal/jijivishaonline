@@ -1,42 +1,54 @@
-import { StrictMode } from 'react';
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App.jsx';
+import React, { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
 import './index.css';
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import RegisterPage from './components/Register/RegisterPage.jsx';
-import Login from './components/Register/Login.jsx';
-import { ThemeProvider } from "@material-tailwind/react";
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import App from './App.jsx';
+import { Dashboard } from './Pages/Dashboard.jsx';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { Charts } from './Pages/Charts';
+import { LoginForm } from './Pages/LoginForm';
+import { SignUpForm } from './Pages/SingUpFrom';
+import { ProductHomePage } from './Pages/Product/ProductHomePage';
+import { AddProduct } from './Pages/Product/AddProduct';
+import { UpdateProduct } from './Pages/Product/UpdateProduct';
 
-
-// Define your router outside of the provider
+// Create the router instance
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
     children: [
       {
-        path: "/",
-        // element: <Home />
+        path: '/',
+        element:<LoginForm/> ,
       },
       {
-        path: "/register",
-        element: <RegisterPage />
+        path: '/signup',
+        element: <SignUpForm/>,
       },
+    
       {
-        path: "/login",
-        element: <Login />
-      },
+        path: '/dashboard',
+        element: <Dashboard />,
+      },{
+        path: '/products',
+        element: <ProductHomePage />,
+      },{
+        path: '/AddProduct',
+        element:<AddProduct/>,
+      },{
+        path: '/UpdateProduct',
+        element:<UpdateProduct/>,
+      }
     ],
-  }
+  },
 ]);
 
-// Wrap RouterProvider with ThemeProvider
-createRoot(document.getElementById('root')).render(
+// Render the application
+ReactDOM.createRoot(document.getElementById('root')).render(
   <StrictMode>
-  <ThemeProvider>
-    <RouterProvider router={router} />
-  </ThemeProvider>
-</StrictMode>
-
+    <TooltipProvider>
+      <RouterProvider router={router} />
+    </TooltipProvider>
+  </StrictMode>
 );

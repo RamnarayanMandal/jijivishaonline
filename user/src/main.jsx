@@ -7,6 +7,11 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import RegisterPage from './components/Register/RegisterPage.jsx';
 import Login from './components/Register/Login.jsx';
 import { ThemeProvider } from "@material-tailwind/react";
+import Home from './components/Home/Home.jsx';
+import { Provider } from "react-redux";
+import Jijivisha from './store/index.js';
+import { SubCategories } from './components/catogry/SubCategories.jsx';
+import ProductDetails from './components/Product/ProductDetails.jsx';
 
 // Define your router outside of the provider
 const router = createBrowserRouter([
@@ -16,7 +21,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        // element: <Home />
+         element: <Home />
       },
       {
         path: "/register",
@@ -26,6 +31,15 @@ const router = createBrowserRouter([
         path: "/login",
         element: <Login />
       },
+      {
+        path: "/SubCategory/:subcategory",
+        element: <SubCategories />,
+       
+      },{
+        path: "/product/:id",
+        element: <ProductDetails />,
+      }
+
     ],
   }
 ]);
@@ -34,7 +48,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
   <ThemeProvider>
+  <Provider store={Jijivisha}>
     <RouterProvider router={router} />
+    </Provider>
   </ThemeProvider>
 </StrictMode>
 

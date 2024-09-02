@@ -19,7 +19,7 @@ import  Footer  from "../Footer";
 const Home = () => {
   return (
     <div>
-      <Navbar2 />
+     
       <Banner/>
       <Featured/>
       <LatestProducts/>

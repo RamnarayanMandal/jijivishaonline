@@ -33,6 +33,7 @@ const Banner = () => {
       console.error(error);
     }
   };
+  console.log(banners)
 
   return (
     <div className='flex flex-col sm:flex-row justify-between px-4 sm:px-[6%] py-6 sm:py-10 gap-4'>

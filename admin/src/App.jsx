@@ -1,32 +1,27 @@
-import React from 'react';
-import { useState } from 'react'
-
-import './App.css'
-import { Outlet } from 'react-router-dom'
-
-import Navbar1 from './components/Navbar/Navbar1'
-import Home from './components/Home/Home'
-import Sidebar from './components/sideNavbar/Sidebar';
+import './App.css';
+import { Outlet, useLocation } from "react-router-dom";
+import Navbar from './components/Navbar';
+import Header from './components/Header';
 
 function App() {
+  const location = useLocation();
+  
+  // Add the paths where Navbar and Header should not be shown
+  const hideOnPaths = ["/","/signup"]; // Replace with actual paths
+  
+  const shouldHideNavbarAndHeader = hideOnPaths.includes(location.pathname);
 
   return (
     <>
-    {/* <div className="flex"> */}
-      {/* <Sidebar /> */}
-      <div className=" w-full">
-        <Navbar1/>
-      <Home/>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        {/* Add your dashboard content here */}
-      </div>
-    {/* </div> */}
-
-   
-     <Outlet/>
-    
+      {!shouldHideNavbarAndHeader && <Header />}
+      {!shouldHideNavbarAndHeader && (
+        <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+          <Navbar />
+        </aside>
+      )}
+      <Outlet />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

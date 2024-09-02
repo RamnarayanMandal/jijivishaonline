@@ -297,3 +297,143 @@ exports.updateProductById = async (req, res) => {
     });
   }
 };
+
+exports.lastedProduct = async (req, res) => {
+  try {
+    // Fetch products sorted by 'createdAt' in descending order, limit to 1 to get the latest product
+    const latestProduct = await Product.find().sort({ createdAt: -1 });
+
+    if (latestProduct) {
+      res.status(200).json({
+        success: true,
+        message: "Latest product retrieved successfully",
+        product: latestProduct,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "No products found",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve the latest product",
+      error: error.message,
+    });
+  }
+};
+
+  
+  exports.getAllsubcategorysByProduct = async (req, res) => {
+    try {
+      // Aggregate to group products by subcategory
+      const productsBySubcategory = await Product.aggregate([
+        {
+          $group: {
+            _id: "$subcategory", // Group by subcategory
+            firstProduct: { $first: "$$ROOT" } // Get the first product document in each group
+          }
+        },
+        {
+          $project: {
+            _id: "$firstProduct._id",
+            thumbnail: "$firstProduct.thumbnail",
+            subcategory: "$_id", // Use the grouped subcategory
+            title: "$firstProduct.title" // Get the title from the first product
+          }
+        }
+      ]);
+  
+      res.status(200).json({
+        success: true,
+        message: "Products retrieved successfully for each unique subcategory",
+        productsBySubcategory,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Failed to retrieve products by subcategory",
+        error: error.message,
+      });
+    }
+  };
+  
+  
+
+  exports.getAllcategorysByProduct = async (req, res) => {
+    try {
+      // Aggregate to group products by category
+      const productsByCategory = await Product.aggregate([
+        {
+          $group: {
+            _id: "$category", // Group by category
+            firstProduct: { $first: "$$ROOT" } // Get the first product document in each group
+          }
+        },
+        {
+          $project: {
+            _id: "$firstProduct._id", // Use the product ID of the first product in each category
+            thumbnail: "$firstProduct.thumbnail", // Get the thumbnail from the first product
+            category: "$_id", // Use the grouped category
+            title: "$firstProduct.title" // Get the title from the first product
+          }
+        }
+      ]);
+  
+      res.status(200).json({
+        success: true,
+        message: "Products retrieved successfully for each unique category",
+        productsByCategory,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Failed to retrieve products by category",
+        error: error.message,
+      });
+    }
+  };
+  
+
+
+exports.getProductByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const productsByCategory = await Product.find({ category });
+
+    res.status(200).json({
+      success: true,
+      message: "Products retrieved successfully for the given category",
+      productsByCategory,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve products by category",
+      error: error.message,
+    });
+  }
+};
+
+
+exports.getProductBySubcategory = async (req, res) => {
+  try {
+    const { subcategory } = req.params;
+    const productsBySubcategory = await Product.find({ subcategory });
+    res.status(200).json({
+      success: true,
+      message: "Products retrieved successfully for the given subcategory",
+      productsBySubcategory,
+    });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Failed to retrieve products by subcategory",
+        error: error.message,
+      });
+    }
+}  
+
+
+
