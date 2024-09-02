@@ -92,8 +92,8 @@ export default function ProductDetails() {
           <div className="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
             <img
               alt="Product image"
-              src={product.thumbnail}
-              className="h-full w-full object-cover object-center"
+              src={`${URI}${product.thumbnail}`}
+              className="h-40 w-40 object-cover object-center"
             />
           </div>
           <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
@@ -104,8 +104,8 @@ export default function ProductDetails() {
               >
                 <img
                   alt={`Product image ${index + 1}`}
-                  src={image}
-                  className="h-full w-full object-cover object-center"
+                  src={`${URI}${image}`}
+                  className="h-40 w-40 object-cover object-center"
                 />
               </div>
             ))}
@@ -113,7 +113,7 @@ export default function ProductDetails() {
           <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg">
             <img
               alt="Product image"
-              src={product.images[1]}
+              src={`${URI}${product.images[1]}`}
               className="h-full w-full object-cover object-center"
             />
           </div>

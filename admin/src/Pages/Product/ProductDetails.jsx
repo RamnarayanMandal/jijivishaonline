@@ -32,7 +32,7 @@ const ProductDetails = ({ product, fetchProduct }) => {
     }
   };
 
-  console.log("images",product)
+  console.log("images", product.images);
 
   return (
     <>
@@ -41,7 +41,7 @@ const ProductDetails = ({ product, fetchProduct }) => {
         <CardHeader>
           <CardTitle className="text-2xl font-bold">{product.title}</CardTitle>
           <p className="text-muted-foreground text-sm mt-1">
-            SKU Code: {product.skuCode}
+            SKU Code: {product.productCode}
           </p>
         </CardHeader>
 
@@ -49,21 +49,23 @@ const ProductDetails = ({ product, fetchProduct }) => {
         <CardContent className="space-y-4">
           {/* Product Images */}
           <div className="grid grid-cols-3 gap-2">
-            <img
-              src={`${URI}uploads/${product?.images[0]}`}
-              alt={`Product image`}
-              className="w-full  object-cover rounded-md"
-            />
+            {product.images.map((image, index) => (
+              <img
+                key={index}
+                src={`${URI}${image}`}
+                alt={`Product image ${index + 1}`}
+                className="w-full object-cover rounded-md"
+              />
+            ))}
           </div>
-          <div>
-            <p>
-              <strong>Description:</strong> {product.descriptions}
-            </p>
-          </div>
+
           {/* Product Details */}
           <div className="grid grid-cols-2 gap-2">
             <p>
-              <strong>Category:</strong> {product.categories}
+              <strong>Description:</strong> {product.productdescriptions}
+            </p>
+            <p>
+              <strong>Category:</strong> {product.category}
             </p>
             <p>
               <strong>Subcategory:</strong> {product.subcategory}
@@ -71,30 +73,41 @@ const ProductDetails = ({ product, fetchProduct }) => {
             <p>
               <strong>Price:</strong> ₹{product.price}
             </p>
-
             <p>
               <strong>Discount:</strong> {product.discount}%
             </p>
             <p>
-              <strong>Total Price:</strong> ${product.totalPrice}
-            </p>
-            <p>
-              <strong>Rating:</strong> {product.rating} / 5
+              <strong>Total Price:</strong> ₹{(product.price * (1 - product.discount / 100)).toFixed(2)}
             </p>
             <p>
               <strong>Color:</strong> {product.color}
             </p>
             <p>
-              <strong>Material:</strong> {product.material}
+              <strong>Size:</strong> {product.size.join(", ")}
             </p>
             <p>
-              <strong>End Use:</strong> {product.endUse}
+              <strong>Material:</strong> {product.fabric}
             </p>
             <p>
-              <strong>Compositions:</strong> {product.compositions}
+              <strong>Type of Product:</strong> {product.typeOfProduct}
             </p>
             <p>
-              <strong>GSM:</strong> {product.gsm}
+              <strong>Type of Printing:</strong> {product.typeOfPrinting}
+            </p>
+            <p>
+              <strong>Additional Info:</strong> {product.additionalInfo1}, {product.additionalInfo2}
+            </p>
+            <p>
+              <strong>Marketed By:</strong> {product.marketedBy}
+            </p>
+            <p>
+              <strong>Country of Origin:</strong> {product.countryOfOrigin}
+            </p>
+            <p>
+              <strong>In Stock:</strong> {product.inStock}
+            </p>
+            <p>
+              <strong>Notes:</strong> {product.note}
             </p>
           </div>
         </CardContent>
@@ -127,10 +140,10 @@ const ProductDetails = ({ product, fetchProduct }) => {
         className="modal"
         overlayClassName="modal-overlay"
       >
-        <div style={{ border: '1px solid red', padding:10, borderRadius:10 }}>
+        <div style={{ border: '1px solid red', padding: 10, borderRadius: 10 }}>
           <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
           <p className="mb-4">Are you sure you want to delete this product? This action cannot be undone.</p>
-          <div className="flex justify-end  gap-5">
+          <div className="flex justify-end gap-5">
             <Button
               className="bg-red-500 text-white px-4 py-2 rounded"
               onClick={handleDelete}

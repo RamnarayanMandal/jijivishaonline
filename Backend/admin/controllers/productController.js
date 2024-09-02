@@ -6,17 +6,24 @@ const fs = require("fs");
 // Initialize multer with storage configuration
 const upload = require("../../modules/fileModule");
 
-// Middleware to handle file uploads
-exports.uploadFiles = upload.fields([
-  { name: "thumbnail", maxCount: 1 },
-  { name: "images", maxCount: 10 },
-]);
+
 
 // Controller to create a product
+exports.uploadFiles = upload.fields([
+  { name: 'thumbnail', maxCount: 1 },
+  { name: 'images', maxCount: 10 },
+]);
+
 exports.createProduct = async (req, res) => {
   try {
     // Check if the necessary files are uploaded
     const { thumbnail, images } = req.files;
+
+    console.log(thumbnail, images);
+
+    if (!thumbnail || !images) {
+      return res.status(400).json({ message: 'Required files are missing' });
+    }
 
     // Extract product details from request body
     const {
@@ -46,6 +53,11 @@ exports.createProduct = async (req, res) => {
       productreviews,
     } = req.body;
 
+    // Validate required fields
+    if (!title || !price || !productCode) {
+      return res.status(400).json({ message: 'Title, price, and product code are required' });
+    }
+
     // Check if a product with the same productCode exists (if applicable)
     const existingProduct = await Product.findOne({ productCode });
 
@@ -74,7 +86,7 @@ exports.createProduct = async (req, res) => {
       category,
       subcategory,
       typeOfProduct,
-      size,
+      size: size ? size.split(',') : [], // Handle array input
       quantity,
       inStock,
       productdescriptions,
@@ -86,23 +98,25 @@ exports.createProduct = async (req, res) => {
       countryOfOrigin,
       marketedBy,
       note,
-      materialCare,
+      materialCare: materialCare ? materialCare.split(',') : [], // Handle array input
       disclaimer,
-      shippingInfo,
-      productreviews,
+      shippingInfo: shippingInfo ? shippingInfo.split(',') : [], // Handle array input
+      productreviews: productreviews ? JSON.parse(productreviews) : [], // Parse JSON if necessary
     });
 
     // Save the new product to the database
     await newProduct.save();
 
     res.status(201).json({
-      message: "Product created and images uploaded successfully",
+      message: 'Product created and images uploaded successfully',
       product: newProduct,
     });
   } catch (error) {
-    res.status(500).json({ message: "Failed to create product", error });
+    console.error('Error creating product:', error); // Improved error logging
+    res.status(500).json({ message: 'Failed to create product', error: error.message });
   }
 };
+
 
 // Controller to get all products
 exports.getAllProducts = async (req, res) => {
