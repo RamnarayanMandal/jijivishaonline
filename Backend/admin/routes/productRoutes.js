@@ -7,6 +7,8 @@ const {
 } = require("../controllers/productController");
 const router = express.Router();
 
+
+router.get("/categories", productController.getCategoriesWithSubcategories);
 // Route to handle product creation
 router.post("/products", uploadFiles, createProduct);
 

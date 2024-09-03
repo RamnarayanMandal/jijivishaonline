@@ -444,3 +444,36 @@ exports.getProductBySubcategory = async (req, res) => {
     });
   }
 };
+   
+
+
+
+exports.getCategoriesWithSubcategories = async (req, res) => {
+  try {
+    // Aggregation pipeline to group by category and collect unique subcategories
+    const result = await Product.aggregate([
+      {
+        $group: {
+          _id: "$category",
+          subcategories: { $addToSet: "$subcategory" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          category: "$_id",
+          subcategories: 1
+        }
+      }
+    ]);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching categories and subcategories:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+
+
+

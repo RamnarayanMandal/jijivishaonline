@@ -9,6 +9,8 @@ import Home from './components/Home/Home'
 import Footer from './components/Footer';
 import { UpperFooter } from './components/UpperFooter';
 import Navbar2 from './components/Navbar/Navbar2';
+import { IconContext } from 'react-icons/lib';
+import IconLabelTabs from './components/Navbar/IconLabelTabs';
 
 function App() {
 
@@ -19,6 +21,7 @@ function App() {
      <Outlet/>
      <UpperFooter/>
      <Footer/>
+     <IconLabelTabs/>
     
     </>
   )
