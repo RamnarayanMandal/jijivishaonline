@@ -22,7 +22,7 @@ const ProductDetails = ({ product, fetchProduct }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`${URI}api/admin/product/${product._id}`, {
+      await axios.delete(`${URI}api/admin/deleteproduct/${product._id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       fetchProduct();

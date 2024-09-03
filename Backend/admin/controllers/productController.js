@@ -6,12 +6,10 @@ const fs = require("fs");
 // Initialize multer with storage configuration
 const upload = require("../../modules/fileModule");
 
-
-
 // Controller to create a product
 exports.uploadFiles = upload.fields([
-  { name: 'thumbnail', maxCount: 1 },
-  { name: 'images', maxCount: 10 },
+  { name: "thumbnail", maxCount: 1 },
+  { name: "images", maxCount: 10 },
 ]);
 
 exports.createProduct = async (req, res) => {
@@ -22,7 +20,7 @@ exports.createProduct = async (req, res) => {
     console.log(thumbnail, images);
 
     if (!thumbnail || !images) {
-      return res.status(400).json({ message: 'Required files are missing' });
+      return res.status(400).json({ message: "Required files are missing" });
     }
 
     // Extract product details from request body
@@ -55,7 +53,9 @@ exports.createProduct = async (req, res) => {
 
     // Validate required fields
     if (!title || !price || !productCode) {
-      return res.status(400).json({ message: 'Title, price, and product code are required' });
+      return res
+        .status(400)
+        .json({ message: "Title, price, and product code are required" });
     }
 
     // Check if a product with the same productCode exists (if applicable)
@@ -86,7 +86,7 @@ exports.createProduct = async (req, res) => {
       category,
       subcategory,
       typeOfProduct,
-      size: size ? size.split(',') : [], // Handle array input
+      size: size ? size.split(",") : [], // Handle array input
       quantity,
       inStock,
       productdescriptions,
@@ -98,9 +98,9 @@ exports.createProduct = async (req, res) => {
       countryOfOrigin,
       marketedBy,
       note,
-      materialCare: materialCare ? materialCare.split(',') : [], // Handle array input
+      materialCare: materialCare ? materialCare.split(",") : [], // Handle array input
       disclaimer,
-      shippingInfo: shippingInfo ? shippingInfo.split(',') : [], // Handle array input
+      shippingInfo: shippingInfo ? shippingInfo.split(",") : [], // Handle array input
       productreviews: productreviews ? JSON.parse(productreviews) : [], // Parse JSON if necessary
     });
 
@@ -108,15 +108,16 @@ exports.createProduct = async (req, res) => {
     await newProduct.save();
 
     res.status(201).json({
-      message: 'Product created and images uploaded successfully',
+      message: "Product created and images uploaded successfully",
       product: newProduct,
     });
   } catch (error) {
-    console.error('Error creating product:', error); // Improved error logging
-    res.status(500).json({ message: 'Failed to create product', error: error.message });
+    console.error("Error creating product:", error); // Improved error logging
+    res
+      .status(500)
+      .json({ message: "Failed to create product", error: error.message });
   }
 };
-
 
 // Controller to get all products
 exports.getAllProducts = async (req, res) => {
@@ -260,8 +261,9 @@ exports.updateProductById = async (req, res) => {
     if (thumbnail || images) {
       const oldImagePaths = [product.thumbnail, ...product.images];
       oldImagePaths.forEach((imagePath) => {
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
+        const fullPath = path.join(__dirname, '..', imagePath); // Adjust path if needed
+        if (fs.existsSync(fullPath)) {
+          fs.unlinkSync(fullPath);
         }
       });
     }
@@ -280,8 +282,7 @@ exports.updateProductById = async (req, res) => {
     product.size = size || product.size;
     product.quantity = quantity || product.quantity;
     product.inStock = inStock || product.inStock;
-    product.productdescriptions =
-      productdescriptions || product.productdescriptions;
+    product.productdescriptions = productdescriptions || product.productdescriptions;
     product.color = color || product.color;
     product.typeOfPrinting = typeOfPrinting || product.typeOfPrinting;
     product.fabric = fabric || product.fabric;
@@ -304,6 +305,7 @@ exports.updateProductById = async (req, res) => {
       product,
     });
   } catch (error) {
+    console.error("Error updating product:", error.message); // Log the error for debugging
     res.status(500).json({
       success: false,
       message: "Failed to update product",
@@ -338,78 +340,73 @@ exports.lastedProduct = async (req, res) => {
   }
 };
 
-  
-  exports.getAllsubcategorysByProduct = async (req, res) => {
-    try {
-      // Aggregate to group products by subcategory
-      const productsBySubcategory = await Product.aggregate([
-        {
-          $group: {
-            _id: "$subcategory", // Group by subcategory
-            firstProduct: { $first: "$$ROOT" } // Get the first product document in each group
-          }
+exports.getAllsubcategorysByProduct = async (req, res) => {
+  try {
+    // Aggregate to group products by subcategory
+    const productsBySubcategory = await Product.aggregate([
+      {
+        $group: {
+          _id: "$subcategory", // Group by subcategory
+          firstProduct: { $first: "$$ROOT" }, // Get the first product document in each group
         },
-        {
-          $project: {
-            _id: "$firstProduct._id",
-            thumbnail: "$firstProduct.thumbnail",
-            subcategory: "$_id", // Use the grouped subcategory
-            title: "$firstProduct.title" // Get the title from the first product
-          }
-        }
-      ]);
-  
-      res.status(200).json({
-        success: true,
-        message: "Products retrieved successfully for each unique subcategory",
-        productsBySubcategory,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Failed to retrieve products by subcategory",
-        error: error.message,
-      });
-    }
-  };
-  
-  
-
-  exports.getAllcategorysByProduct = async (req, res) => {
-    try {
-      // Aggregate to group products by category
-      const productsByCategory = await Product.aggregate([
-        {
-          $group: {
-            _id: "$category", // Group by category
-            firstProduct: { $first: "$$ROOT" } // Get the first product document in each group
-          }
+      },
+      {
+        $project: {
+          _id: "$firstProduct._id",
+          thumbnail: "$firstProduct.thumbnail",
+          subcategory: "$_id", // Use the grouped subcategory
+          title: "$firstProduct.title", // Get the title from the first product
         },
-        {
-          $project: {
-            _id: "$firstProduct._id", // Use the product ID of the first product in each category
-            thumbnail: "$firstProduct.thumbnail", // Get the thumbnail from the first product
-            category: "$_id", // Use the grouped category
-            title: "$firstProduct.title" // Get the title from the first product
-          }
-        }
-      ]);
-  
-      res.status(200).json({
-        success: true,
-        message: "Products retrieved successfully for each unique category",
-        productsByCategory,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Failed to retrieve products by category",
-        error: error.message,
-      });
-    }
-  };
-  
+      },
+    ]);
 
+    res.status(200).json({
+      success: true,
+      message: "Products retrieved successfully for each unique subcategory",
+      productsBySubcategory,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve products by subcategory",
+      error: error.message,
+    });
+  }
+};
+
+exports.getAllcategorysByProduct = async (req, res) => {
+  try {
+    // Aggregate to group products by category
+    const productsByCategory = await Product.aggregate([
+      {
+        $group: {
+          _id: "$category", // Group by category
+          firstProduct: { $first: "$$ROOT" }, // Get the first product document in each group
+        },
+      },
+      {
+        $project: {
+          _id: "$firstProduct._id", // Use the product ID of the first product in each category
+          thumbnail: "$firstProduct.thumbnail", // Get the thumbnail from the first product
+          category: "$_id", // Use the grouped category
+          title: "$firstProduct.title", // Get the title from the first product
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      message: "Products retrieved successfully for each unique category",
+      productsByCategory,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve products by category",
+      error: error.message,
+    });
+  }
+};
 
 exports.getProductByCategory = async (req, res) => {
   try {
@@ -430,7 +427,6 @@ exports.getProductByCategory = async (req, res) => {
   }
 };
 
-
 exports.getProductBySubcategory = async (req, res) => {
   try {
     const { subcategory } = req.params;
@@ -440,14 +436,11 @@ exports.getProductBySubcategory = async (req, res) => {
       message: "Products retrieved successfully for the given subcategory",
       productsBySubcategory,
     });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Failed to retrieve products by subcategory",
-        error: error.message,
-      });
-    }
-}  
-
-
-
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve products by subcategory",
+      error: error.message,
+    });
+  }
+};

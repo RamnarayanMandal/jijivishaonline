@@ -2,34 +2,39 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, Label, Input, Textarea } from '@/components/ui/button'; // Adjust import if necessary
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export const UpdateProduct = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
       title: '',
-      descriptions: '',
+      description: '',
       category: '',
       subcategory: '',
       price: '',
       discount: '',
-      totalPrice: '',
-      skuCode: '',
-      rating: '',
-      productCollection: '',
-      patternNumber: '',
-      rollSize: '',
-      mrpRoll: '',
-      quality: '',
+      productCode: '',
       color: '',
-      endUse: '',
-      compositions: '',
-      gsm: '',
-      martindale: '',
-      material: ''
+      typeOfProduct: '',
+      size: [],
+      quantity: '',
+      inStock: '',
+      typeOfPrinting: '',
+      fabric: '',
+      additionalInfo1: '',
+      additionalInfo2: '',
+      countryOfOrigin: '',
+      marketedBy: '',
+      note: '',
+      materialCare: [],
+      disclaimer: '',
+      shippingInfo: [],
     }
   });
-  
+
   const [images, setImages] = useState([]);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const navigate = useNavigate(); 
@@ -42,44 +47,55 @@ export const UpdateProduct = () => {
     if (product) {
       reset({
         title: product.title || '',
-        descriptions: product.descriptions || '',
+        description: product.description || '',
         category: product.category || '',
         subcategory: product.subcategory || '',
         price: product.price || '',
         discount: product.discount || '',
-        totalPrice: product.totalPrice || '',
-        skuCode: product.skuCode || '',
-        rating: product.rating || '',
-        productCollection: product.productCollection || '',
-        patternNumber: product.patternNumber || '',
-        rollSize: product.rollSize || '',
-        mrpRoll: product.mrpRoll || '',
-        quality: product.quality || '',
+        productCode: product.productCode || '',
         color: product.color || '',
-        endUse: product.endUse || '',
-        compositions: product.compositions || '',
-        gsm: product.gsm || '',
-        martindale: product.martindale || '',
-        material: product.material || ''
+        typeOfProduct: product.typeOfProduct || '',
+        size: product.size || [],
+        quantity: product.quantity || '',
+        inStock: product.inStock || '',
+        typeOfPrinting: product.typeOfPrinting || '',
+        fabric: product.fabric || '',
+        additionalInfo1: product.additionalInfo1 || '',
+        additionalInfo2: product.additionalInfo2 || '',
+        countryOfOrigin: product.countryOfOrigin || '',
+        marketedBy: product.marketedBy || '',
+        note: product.note || '',
+        materialCare: product.materialCare || [],
+        disclaimer: product.disclaimer || '',
+        shippingInfo: product.shippingInfo || [],
       });
+
+      setImages(product.images || []);
+      setThumbnailPreview(product.thumbnail ? `${URI}/${product.thumbnail}` : null);
     }
-  }, [product, reset]);
+  }, [product, reset, URI]);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
 
     // Append form fields to formData
     for (const key in data) {
-      formData.append(key, data[key]);
+      if (Array.isArray(data[key])) {
+        data[key].forEach((item) => formData.append(key, item));
+      } else {
+        formData.append(key, data[key]);
+      }
     }
 
     // Append images to formData
     images.forEach((image) => {
-      formData.append('files', image);
+      formData.append('images', image);
     });
 
+    formData.append('thumbnail', thumbnailPreview); // Append thumbnail
+
     try {
-      const response = await axios.put(`${URI}api/admin/products/${product._id}`, formData, {
+      const response = await axios.put(`${URI}api/admin/product/${product._id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -123,11 +139,11 @@ export const UpdateProduct = () => {
             <Label className="block text-sm font-medium text-gray-700 mb-2">Title</Label>
             <Input
               type="text"
-              {...register("title", { required: "Title is required" })}
+              {...register("title")}
               placeholder="Enter product title"
-              className="w-full"
+              className="w-full text-black"
             />
-            {errors.title && <p className="text-red-500">{errors.title.message}</p>}
+           
           </div>
 
           {/* Thumbnail Image */}
@@ -137,11 +153,12 @@ export const UpdateProduct = () => {
               type="file"
               accept="image/*"
               onChange={handleThumbnailChange}
-              className="mb-2"
+              className="mb-2 text-black"
             />
             {thumbnailPreview && (
               <img
-                src={thumbnailPreview}
+              src={`${URI}${thumbnailPreview}`}
+     
                 alt="Thumbnail Preview"
                 className="w-32 h-32 object-cover rounded-md border border-gray-300"
               />
@@ -155,7 +172,7 @@ export const UpdateProduct = () => {
               type="file"
               multiple
               onChange={handleFileChange}
-              className="mb-2"
+              className="mb-2 text-black"
             />
           </div>
 
@@ -163,11 +180,11 @@ export const UpdateProduct = () => {
           <div>
             <Label className="block text-sm font-medium text-gray-700 mb-2">Description</Label>
             <Textarea
-              {...register("descriptions", { required: "Description is required" })}
+              {...register("description")}
               placeholder="Enter product description"
-              className="w-full"
+              className="w-full text-black"
             />
-            {errors.descriptions && <p className="text-red-500">{errors.descriptions.message}</p>}
+          
           </div>
 
           {/* Price */}
@@ -175,11 +192,11 @@ export const UpdateProduct = () => {
             <Label className="block text-sm font-medium text-gray-700 mb-2">Price</Label>
             <Input
               type="number"
-              {...register("price", { required: "Price is required" })}
+              {...register("price", )}
               placeholder="Enter product price"
-              className="w-full"
+              className="w-full text-black"
             />
-            {errors.price && <p className="text-red-500">{errors.price.message}</p>}
+           
           </div>
 
           {/* Discount */}
@@ -189,95 +206,18 @@ export const UpdateProduct = () => {
               type="number"
               {...register("discount")}
               placeholder="Enter discount"
-              className="w-full"
+              className="w-full text-black"
             />
           </div>
 
-          {/* Total Price */}
+          {/* Product Code */}
           <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Total Price</Label>
-            <Input
-              type="number"
-              {...register("totalPrice")}
-              placeholder="Enter total price"
-              className="w-full"
-            />
-          </div>
-
-          {/* SKU Code */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">SKU Code</Label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Product Code</Label>
             <Input
               type="text"
-              {...register("skuCode")}
-              placeholder="Enter SKU code"
-              className="w-full"
-            />
-          </div>
-
-          {/* Rating */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Rating</Label>
-            <Input
-              type="number"
-              {...register("rating")}
-              placeholder="Enter rating"
-              className="w-full"
-            />
-          </div>
-
-          {/* Product Collection */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Product Collection</Label>
-            <Input
-              type="text"
-              {...register("productCollection")}
-              placeholder="Enter product collection"
-              className="w-full"
-            />
-          </div>
-
-          {/* Pattern Number */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Pattern Number</Label>
-            <Input
-              type="text"
-              {...register("patternNumber")}
-              placeholder="Enter pattern number"
-              className="w-full"
-            />
-          </div>
-
-          {/* Roll Size */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Roll Size</Label>
-            <Input
-              type="text"
-              {...register("rollSize")}
-              placeholder="Enter roll size"
-              className="w-full"
-            />
-          </div>
-
-          {/* MRP Roll */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">MRP Roll</Label>
-            <Input
-              type="number"
-              {...register("mrpRoll")}
-              placeholder="Enter MRP roll"
-              className="w-full"
-            />
-          </div>
-
-          {/* Quality */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Quality</Label>
-            <Input
-              type="text"
-              {...register("quality")}
-              placeholder="Enter quality"
-              className="w-full"
+              {...register("productCode")}
+              placeholder="Enter product code"
+              className="w-full text-black"
             />
           </div>
 
@@ -288,67 +228,165 @@ export const UpdateProduct = () => {
               type="text"
               {...register("color")}
               placeholder="Enter color"
-              className="w-full"
+              className="w-full text-black"
             />
           </div>
 
-          {/* End Use */}
+          {/* Type of Product */}
           <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">End Use</Label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Type of Product</Label>
             <Input
               type="text"
-              {...register("endUse")}
-              placeholder="Enter end use"
-              className="w-full"
+              {...register("typeOfProduct")}
+              placeholder="Enter type of product"
+              className="w-full text-black"
             />
           </div>
 
-          {/* Compositions */}
+          {/* Size */}
           <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Compositions</Label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Size</Label>
             <Input
               type="text"
-              {...register("compositions")}
-              placeholder="Enter compositions"
-              className="w-full"
+              {...register("size")}
+              placeholder="Enter size"
+              className="w-full text-black"
             />
           </div>
 
-          {/* GSM */}
+          {/* Quantity */}
           <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">GSM</Label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Quantity</Label>
             <Input
               type="number"
-              {...register("gsm")}
-              placeholder="Enter GSM"
-              className="w-full"
+              {...register("quantity")}
+              placeholder="Enter quantity"
+              className="w-full text-black"
             />
           </div>
 
-          {/* Martindale */}
+          {/* In Stock */}
           <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Martindale</Label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">In Stock</Label>
             <Input
               type="number"
-              {...register("martindale")}
-              placeholder="Enter Martindale"
-              className="w-full"
+              {...register("inStock")}
+              placeholder="Enter stock quantity"
+              className="w-full text-black"
             />
           </div>
 
-          {/* Material */}
+          {/* Type of Printing */}
           <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Material</Label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Type of Printing</Label>
             <Input
               type="text"
-              {...register("material")}
-              placeholder="Enter material"
-              className="w-full"
+              {...register("typeOfPrinting")}
+              placeholder="Enter type of printing"
+              className="w-full text-black"
             />
           </div>
+
+          {/* Fabric */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Fabric</Label>
+            <Input
+              type="text"
+              {...register("fabric")}
+              placeholder="Enter fabric type"
+              className="w-full text-black"
+            />
+          </div>
+
+          {/* Additional Info 1 */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Additional Info 1</Label>
+            <Input
+              type="text"
+              {...register("additionalInfo1")}
+              placeholder="Enter additional info 1"
+              className="w-full text-black"
+            />
+          </div>
+
+          {/* Additional Info 2 */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Additional Info 2</Label>
+            <Input
+              type="text"
+              {...register("additionalInfo2")}
+              placeholder="Enter additional info 2"
+              className="w-full text-black"
+            />
+          </div>
+
+          {/* Country of Origin */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Country of Origin</Label>
+            <Input
+              type="text"
+              {...register("countryOfOrigin")}
+              placeholder="Enter country of origin"
+              className="w-full text-black"
+            />
+          </div>
+
+          {/* Marketed By */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Marketed By</Label>
+            <Input
+              type="text"
+              {...register("marketedBy")}
+              placeholder="Enter marketed by"
+              className="w-full text-black"
+            />
+          </div>
+
+          {/* Note */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Note</Label>
+            <Textarea
+              {...register("note")}
+              placeholder="Enter note"
+              className="w-full text-black"
+            />
+          </div>
+
+          {/* Material Care */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Material Care</Label>
+            <Textarea
+              {...register("materialCare")}
+              placeholder="Enter material care instructions"
+              className="w-full text-black"
+            />
+          </div>
+
+          {/* Disclaimer */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Disclaimer</Label>
+            <Textarea
+              {...register("disclaimer")}
+              placeholder="Enter disclaimer"
+              className="w-full text-black"
+            />
+          </div>
+
+          {/* Shipping Info */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Shipping Info</Label>
+            <Textarea
+              {...register("shippingInfo")}
+              placeholder="Enter shipping information"
+              className="w-full text-black"
+            />
+          </div>
+
         </div>
 
-        <Button type="submit" variant="dark">Update Product</Button>
+        <div className="flex justify-end">
+          <Button type="submit" variant="dark">Update Product</Button>
+        </div>
       </form>
     </div>
   );
