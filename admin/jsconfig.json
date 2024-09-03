@@ -5,6 +5,6 @@
         "@/*": ["./src/*"]
       }
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*", "../user/src/components/Navbar/MobileNavbar.jsx"]
   }
   

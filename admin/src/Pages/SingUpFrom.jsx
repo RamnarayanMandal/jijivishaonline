@@ -2,44 +2,47 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom"; // Correct import for Link from react-router-dom
+import { Link } from "react-router-dom";
 import axios from 'axios';
+import Logo from '../../src/assets/JIJIVISHA-Logo.png';
+import Modal from '../components/Modal'; // Import your custom modal
+import OtpVerification from './OtpVerification';
 
 export const SignUpForm = () => {
-  // State variables for form fields and handling errors
+  const [name, setName] = useState("");
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [otpModalOpen, setOtpModalOpen] = useState(false);
 
   const URI = import.meta.env.VITE_API_URL;
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault();
 
-    // Simple form validation
-    if (!email || !password) {
+    if (!name || !email || !password) {
       setError('Please fill in all fields.');
       return;
     }
 
     try {
-      setIsLoading(true); // Set loading state
-      setError(''); // Clear previous errors
+      setIsLoading(true);
+      setError('');
 
-      // Send a POST request to the registration endpoint
-      const response = await axios.post(`${URI}api/admin/register`, { email, password });
+      const response = await axios.post(`${URI}api/admin/register`, { name, email, password });
 
       if (response.status === 200) {
         alert('Registration successful! OTP sent to your email.');
-        setEmail(''); // Clear email field
-        setPassword(''); // Clear password field
+        setName('');
+        setEmail('');
+        setPassword('');
+        setOtpModalOpen(true);
       }
     } catch (error) {
       setError(error.response ? error.response.data : 'An error occurred during registration.');
     } finally {
-      setIsLoading(false); // Reset loading state
+      setIsLoading(false);
     }
   };
 
@@ -55,13 +58,22 @@ export const SignUpForm = () => {
           </div>
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                type="text"
+                id="name"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="m@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)} // Update state on change
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
@@ -71,19 +83,18 @@ export const SignUpForm = () => {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)} // Update state on change
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
-            {error && <p className="text-red-500">{error}</p>} {/* Display error if exists */}
+            {error && <p className="text-red-500">{error}</p>}
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Loading...' : 'Sign Up'}
             </Button>
-            
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link to="/" className="underline"> {/* Correct route for login */}
+            <Link to="/" className="underline">
               Login
             </Link>
           </div>
@@ -91,13 +102,22 @@ export const SignUpForm = () => {
       </div>
       <div className="hidden bg-muted lg:block">
         <img
-          src="/placeholder.svg"
+          src={Logo}
           alt="Image"
-          width="1920"
-          height="1080"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          width="500"
+          height="550"
+          className="h-28 w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
+
+      {/* OTP Verification Modal */}
+      <Modal open={otpModalOpen} onClose={() => setOtpModalOpen(false)}>
+        <OtpVerification
+          email={email}
+          password={password}
+          onClose={() => setOtpModalOpen(false)}
+        />
+      </Modal>
     </div>
   );
 };

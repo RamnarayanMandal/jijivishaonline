@@ -11,6 +11,7 @@ import { SignUpForm } from './Pages/SingUpFrom';
 import { ProductHomePage } from './Pages/Product/ProductHomePage';
 import { AddProduct } from './Pages/Product/AddProduct';
 import { UpdateProduct } from './Pages/Product/UpdateProduct';
+import OtpVerification from './Pages/OtpVerification';
 
 // Create the router instance
 const router = createBrowserRouter([
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: '/signup',
         element: <SignUpForm/>,
+      },
+      {
+        path: '/otpverification',
+        element: <OtpVerification/>,
       },
     
       {
