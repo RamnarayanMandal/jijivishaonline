@@ -9,7 +9,7 @@ import { Charts } from './Pages/Charts';
 import { LoginForm } from './Pages/LoginForm';
 import { SignUpForm } from './Pages/SingUpFrom';
 import { ProductHomePage } from './Pages/Product/ProductHomePage';
-import { AddProduct } from './Pages/Product/AddProduct';
+import  AddProduct  from './Pages/Product/AddProduct';
 import { UpdateProduct } from './Pages/Product/UpdateProduct';
 import OtpVerification from './Pages/OtpVerification';
 
