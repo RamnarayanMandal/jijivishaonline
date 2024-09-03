@@ -72,7 +72,7 @@ export function RecentlyViewedProduct({ subcategory }) {
               >
                 <div className="overflow-hidden">
                   <img
-                    src={`${URI}/${product.thumbnail}`}
+                    src={`${URI}${product.thumbnail}`}
                     alt={product.title}
                     className="w-full object-cover h-80"
                   />

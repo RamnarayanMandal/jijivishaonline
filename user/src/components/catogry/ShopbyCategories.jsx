@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 
 const ShopbyCategories = () => {
-  const [categoriesData, setCategoriesData] = useState([]); // Step 1: State to hold fetched data
+  const [categoriesData, setCategoriesData] = useState([]);
+  const navigate = useNavigate() // Step 1: State to hold fetched data
 
   const URI = import.meta.env.VITE_API_URL; // Ensure this environment variable is set correctly
 
@@ -14,10 +16,10 @@ const ShopbyCategories = () => {
 
   const fetchCategories = async () => {
     try {
-      const resp = await axios.get(`${URI}api/admin/getAllSubcategory`);
+      const resp = await axios.get(`${URI}api/admin/getAllCategory`);
       // Step 3: Update the state with fetched data
       if (resp.data.success) {
-        setCategoriesData(resp.data.productsBySubcategory);
+        setCategoriesData(resp.data.productsByCategory);
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -37,9 +39,9 @@ const ShopbyCategories = () => {
                 src={`${URI}${category.thumbnail}`} // Step 4: Show thumbnail image
                 alt={category.subcategory}
                 className="w-32 h-32 rounded-full transition-transform duration-300 ease-in-out transform hover:scale-125"
-              />
+              onClick={()=>navigate(`/catogry/${category.category}`)}/>
             </div>
-            <p className="text-lg text-gray-700">{category.subcategory}</p> {/* Step 5: Show subcategory name */}
+            <p className="text-lg text-gray-700">{category.category}</p> {/* Step 5: Show subcategory name */}
           </div>
         ))}
       </div>

@@ -39,7 +39,7 @@ export const SubCategories = () => {
             <div className="border-2 border-gray-300 bg-gray-50 shadow-lg overflow-hidden hover:border-red-500 transition-transform duration-300 transform hover:scale-105 cursor-pointer"  onClick={()=>navagite(`/product/${product._id}`)}>
               <div className="overflow-hidden">
                 <img
-                  src={`${URI}/${product.thumbnail}`}
+                  src={`${URI}${product.thumbnail}`}
                   alt={product.title}
                   className="w-full object-cover h-80"
                 />
