@@ -1,22 +1,31 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Button, Input, Textarea } from "@material-tailwind/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
   const { register, handleSubmit, setValue } = useForm();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
+  const [alert, setAlert] = useState({ type: "", message: "" });
   const navigate = useNavigate();
 
-  const URI = import.meta.env.VITE_API_URL;
+  const URI = import.meta.env.VITE_API_URL; // Make sure to set your environment variable for the API URL
 
   const onSubmit = async (data) => {
     if (!selectedFiles.length || !data.thumbnail) {
-      alert("Please upload both thumbnail and product images.");
+      setAlert({
+        type: "error",
+        message: "Please upload both thumbnail and product images.",
+      });
       return;
     }
+
     try {
       const formData = new FormData();
 
@@ -32,11 +41,21 @@ const AddProduct = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Product added successfully!");
-      navigate("/products");
+      setAlert({
+        type: "success",
+        message: "Product added successfully!",
+      });
+
+      // Redirect to the products page after a successful submission
+      setTimeout(() => {
+        navigate("/products");
+      }, 2000);
     } catch (error) {
       console.error("Error adding product:", error);
-      alert("Failed to add product.");
+      setAlert({
+        type: "error",
+        message: "Failed to add product.",
+      });
     }
   };
 
@@ -59,12 +78,35 @@ const AddProduct = () => {
 
   return (
     <div className="container mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-3xl font-semibold mb-6 text-gray-800">Add New Product</h2>
+      <div className="flex justify-between content-center items-center">
+        <h2 className="text-3xl font-semibold mb-6 text-gray-800">
+          Add New Product
+        </h2>
+        <Button variant="dark" onClick={() => navigate("/products")}>
+          Back
+        </Button>
+      </div>
+
+      {/* Alert Message */}
+      {alert.message && (
+        <Alert
+          variant={alert.type === "success" ? "success" : "error"}
+          className="mb-4"
+        >
+          <AlertTitle>
+            {alert.type === "success" ? "Success" : "Error"}
+          </AlertTitle>
+          <AlertDescription>{alert.message}</AlertDescription>
+        </Alert>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-          {/* Thumbnail Image */}
+          {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Title
+            </Label>
             <Input
               type="text"
               {...register("title", { required: true })}
@@ -72,8 +114,12 @@ const AddProduct = () => {
               className="w-full text-black"
             />
           </div>
+
+          {/* Thumbnail Image */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Thumbnail Image</label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Thumbnail Image
+            </Label>
             <Input
               type="file"
               accept="image/*"
@@ -91,7 +137,9 @@ const AddProduct = () => {
 
           {/* Product Images */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Product Images
+            </Label>
             <Input
               type="file"
               multiple
@@ -100,7 +148,33 @@ const AddProduct = () => {
             />
           </div>
 
-          {/* Basic Product Information */}
+          {/* Description */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Description
+            </Label>
+            <Textarea
+              {...register("description", { required: true })}
+              placeholder="Enter product description"
+              className="w-full text-black"
+            />
+          </div>
+
+          {/* Price */}
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Price
+            </Label>
+            <Input
+              type="number"
+              {...register("price", { required: true })}
+              placeholder="Enter product price"
+              className="w-full text-black"
+            />
+          </div>
+
+      
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Price</label>
             <Input
@@ -281,8 +355,13 @@ const AddProduct = () => {
               className="w-full text-black"
             />
           </div>
+          
+
         </div>
-        <Button type="submit" color="blue">Add Product</Button>
+
+        <Button type="submit"  variant="outline"  className="w-full mt-4">
+          Add Product
+        </Button>
       </form>
     </div>
   );
