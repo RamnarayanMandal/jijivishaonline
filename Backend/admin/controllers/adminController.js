@@ -4,14 +4,21 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 require("dotenv").config(); // Import dotenv to use environment variables
 
-// Create a Nodemailer transporter
-const transporter = require("../mailer");
+// Adjust the path to your Admin model
 
-// Register Admin
+// Nodemailer transporter setup
+const transporter = nodemailer.createTransport({
+  service: "gmail", // Change according to your email service provider
+  auth: {
+    user: process.env.EMAIL_USER, // Ensure you have this set in your environment variables
+    pass: process.env.EMAIL_PASS, // Email account password from env variables
+  },
+});
+
 exports.registerAdmin = async (req, res) => {
-  const { email, name, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!email || !name || !password) {
+  if (!email || !password) {
     return res.status(400).json({ message: "All fields are required." });
   }
 
@@ -21,15 +28,15 @@ exports.registerAdmin = async (req, res) => {
 
     if (existingAdmin) {
       if (!existingAdmin.isVerified) {
-        // If the admin exists but is not verified, resend OTP
-        const otp = existingAdmin.generateOtp();
+        // If the admin exists but is not verified, regenerate OTP
+        const newOtp = existingAdmin.generateOtp(); // Implement generateOtp in your Admin model
         await existingAdmin.save();
 
         const mailOptions = {
           from: process.env.EMAIL_USER,
           to: existingAdmin.email,
           subject: "Resend OTP for account verification",
-          text: `Your OTP is ${otp}. It will expire in 10 minutes.`,
+          text: `Your OTP is ${newOtp}. It will expire in 10 minutes.`,
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
@@ -38,13 +45,14 @@ exports.registerAdmin = async (req, res) => {
             return res
               .status(500)
               .json({ message: "Error sending OTP email." });
+          } else {
+            return res.status(200).json({
+              message:
+                "Admin already exists but is not verified. A new OTP has been sent to your email.",
+            });
           }
         });
-
-        return res.status(200).json({
-          message:
-            "Admin already exists but is not verified. OTP resent to email.",
-        });
+        return; // Ensure no further response is sent
       } else {
         return res
           .status(400)
@@ -53,13 +61,13 @@ exports.registerAdmin = async (req, res) => {
     }
 
     // Create new admin if not existing
-    const admin = new Admin({ email, name, password });
+    const admin = new Admin({ email, password });
 
     // Hash password before saving
     admin.password = await bcrypt.hash(password, 10);
 
     // Generate OTP and save it to the admin
-    const otp = admin.generateOtp();
+    const otp = admin.generateOtp(); // Implement generateOtp in your Admin model
     await admin.save();
 
     // Send OTP to the admin's email
@@ -74,12 +82,12 @@ exports.registerAdmin = async (req, res) => {
       if (error) {
         console.error("Error sending email:", error);
         return res.status(500).json({ message: "Error sending email." });
+      } else {
+        return res.status(201).json({
+          message:
+            "Admin registered successfully. OTP sent to email for verification.",
+        });
       }
-    });
-
-    res.status(201).json({
-      message:
-        "Admin registered successfully. OTP sent to email for verification.",
     });
   } catch (error) {
     console.error("Error registering admin:", error);

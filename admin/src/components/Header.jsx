@@ -1,12 +1,35 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from './ui/button';
-import { Home, LineChart, Package, Package2, PanelLeft, Search, ShoppingCart, Users2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from './ui/breadcrumb';
-import { Input } from './ui/input';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { Button } from "./ui/button";
+import {
+  Home,
+  LineChart,
+  Package,
+  Package2,
+  PanelLeft,
+  Search,
+  ShoppingCart,
+  Users2,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "./ui/breadcrumb";
+import { Input } from "./ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -14,10 +37,10 @@ const Header = () => {
   // Function to handle logout
   const handleLogout = () => {
     // Clear user session data (e.g., remove tokens from localStorage)
-    localStorage.removeItem('authToken'); // Adjust this based on how you store session data
+    localStorage.clear("authToken"); // Adjust this based on how you store session data
 
     // Redirect to login page
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -129,9 +152,9 @@ const Header = () => {
             <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </header> 
+      </header>
     </div>
   );
-}
+};
 
 export default Header;

@@ -1,4 +1,3 @@
-
 import {
   Area,
   AreaChart,
@@ -16,7 +15,7 @@ import {
   ReferenceLine,
   XAxis,
   YAxis,
-} from "recharts"
+} from "recharts";
 
 import {
   Card,
@@ -25,23 +24,21 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/chart";
+import { Separator } from "@/components/ui/separator";
 
-export const description = "A collection of health charts."
+export const description = "A collection of health charts.";
 
 export function Charts() {
   return (
     <div className="chart-wrapper w-screen mx-auto flex max-w-6xl flex-col flex-wrap items-start justify-center gap-6 p-6 sm:flex-row sm:p-8">
       <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
-        <Card
-          className="lg:max-w-md" x-chunk="charts-01-chunk-0"
-        >
+        <Card className="lg:max-w-md" x-chunk="charts-01-chunk-0">
           <CardHeader className="space-y-0 pb-2">
             <CardDescription>Today</CardDescription>
             <CardTitle className="text-4xl tabular-nums">
@@ -112,7 +109,7 @@ export function Charts() {
                   tickFormatter={(value) => {
                     return new Date(value).toLocaleDateString("en-US", {
                       weekday: "short",
-                    })
+                    });
                   }}
                 />
                 <ChartTooltip
@@ -125,7 +122,7 @@ export function Charts() {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
-                        })
+                        });
                       }}
                     />
                   }
@@ -167,9 +164,7 @@ export function Charts() {
             </CardDescription>
           </CardFooter>
         </Card>
-        <Card
-          className="flex flex-col lg:max-w-md" x-chunk="charts-01-chunk-1"
-        >
+        <Card className="flex flex-col lg:max-w-md" x-chunk="charts-01-chunk-1">
           <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
             <div>
               <CardDescription>Resting HR</CardDescription>
@@ -253,7 +248,7 @@ export function Charts() {
                   tickFormatter={(value) => {
                     return new Date(value).toLocaleDateString("en-US", {
                       weekday: "short",
-                    })
+                    });
                   }}
                 />
                 <Line
@@ -278,7 +273,7 @@ export function Charts() {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
-                        })
+                        });
                       }}
                     />
                   }
@@ -290,9 +285,7 @@ export function Charts() {
         </Card>
       </div>
       <div className="grid w-full flex-1 gap-6 lg:max-w-[20rem]">
-        <Card
-          className="max-w-xs" x-chunk="charts-01-chunk-2"
-        >
+        <Card className="max-w-xs" x-chunk="charts-01-chunk-2">
           <CardHeader>
             <CardTitle>Progress</CardTitle>
             <CardDescription>
@@ -404,9 +397,7 @@ export function Charts() {
             </div>
           </CardContent>
         </Card>
-        <Card
-          className="max-w-xs" x-chunk="charts-01-chunk-3"
-        >
+        <Card className="max-w-xs" x-chunk="charts-01-chunk-3">
           <CardHeader className="p-4 pb-0">
             <CardTitle>Walking Distance</CardTitle>
             <CardDescription>
@@ -488,9 +479,7 @@ export function Charts() {
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card
-          className="max-w-xs" x-chunk="charts-01-chunk-4"
-        >
+        <Card className="max-w-xs" x-chunk="charts-01-chunk-4">
           <CardContent className="flex gap-4 p-4 pb-2">
             <ChartContainer
               config={{
@@ -597,9 +586,7 @@ export function Charts() {
         </Card>
       </div>
       <div className="grid w-full flex-1 gap-6">
-        <Card
-          className="max-w-xs" x-chunk="charts-01-chunk-5"
-        >
+        <Card className="max-w-xs" x-chunk="charts-01-chunk-5">
           <CardContent className="flex gap-4 p-4">
             <div className="grid items-center gap-2">
               <div className="grid flex-1 auto-rows-min gap-0.5">
@@ -687,9 +674,7 @@ export function Charts() {
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card
-          className="max-w-xs" x-chunk="charts-01-chunk-6"
-        >
+        <Card className="max-w-xs" x-chunk="charts-01-chunk-6">
           <CardHeader className="p-4 pb-0">
             <CardTitle>Active Energy</CardTitle>
             <CardDescription>
@@ -770,9 +755,7 @@ export function Charts() {
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card
-          className="max-w-xs" x-chunk="charts-01-chunk-7"
-        >
+        <Card className="max-w-xs" x-chunk="charts-01-chunk-7">
           <CardHeader className="space-y-0 pb-0">
             <CardDescription>Time in Bed</CardDescription>
             <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
@@ -878,5 +861,5 @@ export function Charts() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

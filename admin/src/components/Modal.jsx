@@ -1,5 +1,5 @@
-import React from 'react';
-import './Modal.css'; // Add your own styles
+import React from "react";
+import "./Modal.css"; // Add your own styles
 
 const Modal = ({ open, onClose, children }) => {
   if (!open) return null;
@@ -7,7 +7,9 @@ const Modal = ({ open, onClose, children }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="modal-close" onClick={onClose}>X</button>
+        <button className="modal-close" onClick={onClose}>
+          X
+        </button>
         {children}
       </div>
     </div>

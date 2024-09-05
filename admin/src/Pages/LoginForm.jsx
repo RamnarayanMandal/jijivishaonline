@@ -17,14 +17,13 @@ export function LoginForm() {
 
   const URI = import.meta.env.VITE_API_URL;
 
-  useEffect(()=>{
+  useEffect(() => {
     const token = localStorage.getItem("token");
-    if(token){
+    if (token) {
       // User is already logged in, redirect to the dashboard or another page
       navigate("/dashboard");
     }
-
-  },[])
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,15 +31,18 @@ export function LoginForm() {
     setError("");
 
     try {
-      const response = await axios.post(`${URI}api/admin/login`, { email, password });
-      
+      const response = await axios.post(`${URI}api/admin/login`, {
+        email,
+        password,
+      });
+
       // Handle successful login
       console.log("Login successful:", response.data);
-      
+
       // Save token and user data in localStorage
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
       // Redirect to the dashboard or another page after successful login
       navigate("/dashboard");
     } catch (err) {
@@ -94,7 +96,6 @@ export function LoginForm() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </Button>
-            
           </div>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
@@ -106,11 +107,9 @@ export function LoginForm() {
       </div>
       <div className="hidden bg-muted lg:block">
         <img
-          src="/placeholder.svg"
+          src="https://cdn.pixabay.com/photo/2017/06/29/07/32/furniture-2453307_1280.jpg"
           alt="Image"
-          width="1920"
-          height="1080"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className=" h-screen w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
     </div>

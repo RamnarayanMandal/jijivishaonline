@@ -1,93 +1,60 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'; // Adjust the import path based on your setup
-import { Package2, Home, ShoppingCart, Package, Users2, LineChart, Settings } from 'lucide-react';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Home, ShoppingCart, Package, Users2, LineChart } from "lucide-react";
 
 const Navbar = () => {
   return (
     <div>
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-4">
+      <nav className="grid gap-6 text-lg font-medium px-2 pt-10">
+        <Link
+          to="/dashboard"
+          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+        >
+          <Home className="h-5 w-5" />
+          Dashboard
+        </Link>
+        <Link
+          to="/navbarheadercontroller"
+          className="flex items-center gap-4 px-2.5 text-foreground"
+        >
+          <ShoppingCart className="h-5 w-5" />
+          Navbar
+        </Link>
+        <Link
+          to="/order"
+          className="flex items-center gap-4 px-2.5 text-foreground"
+        >
+          <ShoppingCart className="h-5 w-5" />
+          Orders
+        </Link>
+        <Link
+          to="/products"
+          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+        >
+          <Package className="h-5 w-5" />
+          Create product
+        </Link>
+        <Link
+          to="/Category"
+          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+        >
+          <Users2 className="h-5 w-5" />
+          Mange Catogry
+        </Link>
+        <Link
+          to="/Banner"
+          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+        >
+          <Users2 className="h-5 w-5" />
+          Mange Banner
+        </Link>
         <Link
           to="#"
-          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
         >
-          <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
-          <span className="sr-only">Acme Inc</span>
+          <LineChart className="h-5 w-5" />
+          Settings
         </Link>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              to="/dashboard"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Home className="h-5 w-5" />
-              <span className="sr-only">Dashboard</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Dashboard</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              to="/order"
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              <span className="sr-only">Orders</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Orders</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              to="/products"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Package className="h-5 w-5" />
-              <span className="sr-only">Products</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Our Products</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              to="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Users2 className="h-5 w-5" />
-              <span className="sr-only">Customers</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Customers</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              to="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <LineChart className="h-5 w-5" />
-              <span className="sr-only">Analytics</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Analytics</TooltipContent>
-        </Tooltip>
-      </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-4">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              to="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Settings className="h-5 w-5" />
-              <span className="sr-only">Settings</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Settings</TooltipContent>
-        </Tooltip>
       </nav>
     </div>
   );
