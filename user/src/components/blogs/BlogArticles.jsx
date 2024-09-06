@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Link } from "react-router-dom";
 import { IoIosArrowForward } from "react-icons/io";
-import { BlogCard } from './Product/BlogCard';
+import { BlogCard } from './BlogCard';
 
 const BlogArticles = () => {
   return (
@@ -23,7 +23,7 @@ const BlogArticles = () => {
       
       {/* Flex container for the 'VIEW ALL' link */}
       <div className="flex justify-center sm:justify-end w-full sm:w-1/5 ">
-        <Link to="/" className="flex items-center text-red-600 text-sm hover:text-red-800 ">
+        <Link to="/blogsAll" className="flex items-center text-red-600 text-sm hover:text-red-800 ">
           VIEW ALL
           <IoIosArrowForward className="ml-1" />
         </Link>

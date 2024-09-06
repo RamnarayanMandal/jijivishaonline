@@ -14,6 +14,8 @@ import { SubCategories } from "./components/catogry/SubCategories.jsx";
 
 import { ShowCatogry } from "./components/catogry/ShowCatogry.jsx";
 import ProductHome from "./components/Product/ProductDetails/ProductHome.jsx";
+import { BlogShow } from "./components/blogs/BlogsShow.jsx";
+import BlogDetails from "./components/blogs/BlogDetails.jsx";
 
 // Define your router outside of the provider
 const router = createBrowserRouter([
@@ -45,6 +47,14 @@ const router = createBrowserRouter([
       {
         path: "/product/:id",
         element: <ProductHome />,
+      },
+      {
+        path: "/blogsAll",
+        element: <BlogShow />,
+      },
+      {
+        path: "/blogsdetails/:id",
+        element: <BlogDetails/>,
       },
     ],
   },

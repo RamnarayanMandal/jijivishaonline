@@ -7,6 +7,7 @@ const adminRoutes = require("./admin/routes/adminRoutes");
 const bannerRoutes = require("./admin/routes/bannerRoutes");
 const productRoutes = require("./admin/routes/productRoutes");
 const featuredImgRoutes = require("./admin/routes/featureRoutes");
+const BlogRoutes = require("./blogs/blogsRoutes");
 
 const path = require("path");
 
@@ -30,6 +31,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/admin", bannerRoutes);
 app.use("/api/admin", productRoutes);
 app.use("/api/admin",featuredImgRoutes);
+
+app.use("/api/admin", BlogRoutes);
 
 // error handling middleware
 

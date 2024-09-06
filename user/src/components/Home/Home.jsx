@@ -13,7 +13,7 @@ import { Handbags } from "../Product/Handbags";
 import { CustomMadeProducts } from "../Product/CustomMadeProducts";
 import Testimonials from "../Testimonials";
 import Services from "../service/Services";
-import BlogArticles from "../BlogArticles";
+import BlogArticles from "../blogs/BlogArticles";
 import  Footer  from "../Footer";
 
 const Home = () => {
