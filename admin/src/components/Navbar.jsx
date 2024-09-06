@@ -14,39 +14,32 @@ const Navbar = () => {
           Dashboard
         </Link>
         <Link
-          to="/navbarheadercontroller"
-          className="flex items-center gap-4 px-2.5 text-foreground"
-        >
-          <ShoppingCart className="h-5 w-5" />
-          Navbar
-        </Link>
-        <Link
-          to="/order"
-          className="flex items-center gap-4 px-2.5 text-foreground"
-        >
-          <ShoppingCart className="h-5 w-5" />
-          Orders
-        </Link>
-        <Link
           to="/products"
-          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+          className="flex items-center gap-4 px-2.5 text-foreground"
+        >
+          <ShoppingCart className="h-5 w-5" />
+          Products
+        </Link>
+        <Link
+          to="/AddProduct"
+          className="flex items-center gap-4 px-2.5 text-foreground"
         >
           <Package className="h-5 w-5" />
-          Create product
+          Add Product
         </Link>
         <Link
           to="/Category"
           className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
         >
           <Users2 className="h-5 w-5" />
-          Mange Catogry
+          Manage Category
         </Link>
         <Link
-          to="/Banner"
+          to="/Manage-Banner"
           className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
         >
           <Users2 className="h-5 w-5" />
-          Mange Banner
+          Manage Banner
         </Link>
         <Link
           to="#"

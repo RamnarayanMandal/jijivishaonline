@@ -28,9 +28,17 @@ export default function ProductDetails() {
 
   return (
     <div className="bg-white p-6">
-      <div className="flex flex-col-reverse lg:flex-row md:flex-row gap-5">
+      <div className="flex flex-col lg:flex-row md:flex-row gap-5">
         {/* Main Image */}
-        <div className="flex gap-2 mb-4 overflow-x-auto lg:flex-col md:flex-col lg:gap-4">
+        <div className="lg:w-1/2 md:w-1/2  ">
+          <div className="flex  justify-center items-center content-center gap-5 my-4 ">
+            <img
+              src={`${URI}${selectedImage}`}
+              alt={product.title}
+              className="w-full object-fill h-80 lg:h-[700px] md:h-[600px] rounded-lg shadow-md"
+            />
+          </div>
+          <div className="flex  justify-center items-center content-center gap-5 my-4 ">
           {product.images.map((image, index) => (
             <button
               key={index}
@@ -45,20 +53,13 @@ export default function ProductDetails() {
               />
             </button>
           ))}
-        </div>
-        <div className="flex-1 lg:w-1/2 md:w-1/2">
-          <img
-            src={`${URI}${selectedImage}`}
-            alt={product.title}
-            className="w-full object-fill h-80 lg:h-[700px] md:h-[600px] rounded-lg shadow-md"
-          />
+          </div>
+
+
         </div>
 
         {/* Thumbnails and Product Details */}
         <div className="flex-1 lg:w-1/2 md:w-1/2 flex flex-col justify-between">
-          {/* Thumbnails */}
-
-          {/* Product Details */}
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
               {product.title}

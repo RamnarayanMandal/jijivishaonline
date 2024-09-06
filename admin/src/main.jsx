@@ -12,6 +12,8 @@ import { ProductHomePage } from './Pages/Product/ProductHomePage';
 import  AddProduct  from './Pages/Product/AddProduct';
 import { UpdateProduct } from './Pages/Product/UpdateProduct';
 import OtpVerification from './Pages/OtpVerification';
+import Product from "./Pages/Product/Product"
+import Banner from './components/Banner/Banner';
 
 // Create the router instance
 const router = createBrowserRouter([
@@ -44,7 +46,14 @@ const router = createBrowserRouter([
       },{
         path: '/UpdateProduct',
         element:<UpdateProduct/>,
-      }
+      },{
+        path: '/Product-Details',
+        element: <Product />,
+      },
+      {
+        path: '/Manage-Banner',
+        element: <Banner/>,
+      },
     ],
   },
 ]);

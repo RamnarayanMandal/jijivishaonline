@@ -1,46 +1,56 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "./ui/button";
-import {
-  Home,
-  LineChart,
-  Package,
-  Package2,
-  PanelLeft,
-  Search,
-  ShoppingCart,
-  Users2,
-} from "lucide-react";
-import { Link } from "react-router-dom";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "./ui/breadcrumb";
-import { Input } from "./ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+import { Button } from './ui/button';
+import { Home, LineChart, Package, Package2, PanelLeft, Search, ShoppingCart, Users2 } from 'lucide-react';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from './ui/breadcrumb';
+import { Input } from './ui/input';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Function to handle logout
   const handleLogout = () => {
     // Clear user session data (e.g., remove tokens from localStorage)
-    localStorage.clear("authToken"); // Adjust this based on how you store session data
+    localStorage.removeItem('authToken'); // Adjust this based on how you store session data
 
     // Redirect to login page
-    navigate("/");
+    navigate('/');
+  };
+
+  // Generate breadcrumb items based on the current location
+  const generateBreadcrumbs = () => {
+    const pathnames = location.pathname.split('/').filter(x => x);
+
+    return (
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Link to="/">Home</Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        {pathnames.map((value, index) => {
+          const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+          const isLast = index === pathnames.length - 1;
+          return (
+            <React.Fragment key={to}>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                {isLast ? (
+                  <BreadcrumbPage>{value.charAt(0).toUpperCase() + value.slice(1)}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link to={to}>{value.charAt(0).toUpperCase() + value.slice(1)}</Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </React.Fragment>
+          );
+        })}
+      </BreadcrumbList>
+    );
   };
 
   return (
@@ -101,23 +111,7 @@ const Header = () => {
           </SheetContent>
         </Sheet>
         <Breadcrumb className="hidden md:flex">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/dashboard">Dashboard</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/order">Orders</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Recent Orders</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
+          {generateBreadcrumbs()}
         </Breadcrumb>
         <div className="relative ml-auto flex-1 md:grow-0">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -152,9 +146,9 @@ const Header = () => {
             <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </header>
+      </header> 
     </div>
   );
-};
+}
 
 export default Header;

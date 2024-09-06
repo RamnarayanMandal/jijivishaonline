@@ -1,138 +1,68 @@
-import React, { useState } from "react";
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Modal from "react-modal";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Button } from '@/components/ui/button';
 
-Modal.setAppElement('#root'); // Ensure this is correct for your setup
-
-const ProductDetails = ({ product, fetchProduct }) => {
-  console.log("Product Details", product);
-  const URI = import.meta.env.VITE_API_URL;
+const ProductDetails = ({ product, fetchProducts }) => {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const URI = import.meta.env.VITE_API_URL;
 
+  // Handle the delete action
   const handleDelete = async () => {
     try {
       await axios.delete(`${URI}api/admin/deleteproduct/${product._id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      fetchProduct();
-      setIsModalOpen(false);
+      fetchProducts(); // Refresh products after deletion
+      setIsModalOpen(false); // Close the modal after deletion
     } catch (error) {
       console.error("Error deleting product", error.message);
     }
   };
 
-  console.log("images", product.images);
-
   return (
     <>
-      <Card className={cn("w-full max-w-lg mx-auto shadow-md p-4")}>
-        {/* Card Header with Product Title */}
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">{product.title}</CardTitle>
-          <p className="text-muted-foreground text-sm mt-1">
-            SKU Code: {product.productCode}
-          </p>
-        </CardHeader>
-
-        {/* Card Content */}
-        <CardContent className="space-y-4">
-          {/* Product Images */}
-          <div className="grid grid-cols-3 gap-2">
-            {product.images.map((image, index) => (
-              <img
-                key={index}
-                src={`${URI}${image}`}
-                alt={`Product image ${index + 1}`}
-                className="w-full object-cover rounded-md"
-              />
-            ))}
-          </div>
-
-          {/* Product Details */}
-          <div className="grid grid-cols-2 gap-2">
-            <p>
-              <strong>Description:</strong> {product.productdescriptions}
-            </p>
-            <p>
-              <strong>Category:</strong> {product.category}
-            </p>
-            <p>
-              <strong>Subcategory:</strong> {product.subcategory}
-            </p>
-            <p>
-              <strong>Price:</strong> ₹{product.price}
-            </p>
-            <p>
-              <strong>Discount:</strong> {product.discount}%
-            </p>
-            <p>
-              <strong>Total Price:</strong> ₹{(product.price * (1 - product.discount / 100)).toFixed(2)}
-            </p>
-            <p>
-              <strong>Color:</strong> {product.color}
-            </p>
-            <p>
-              <strong>Size:</strong> {product.size.join(", ")}
-            </p>
-            <p>
-              <strong>Material:</strong> {product.fabric}
-            </p>
-            <p>
-              <strong>Type of Product:</strong> {product.typeOfProduct}
-            </p>
-            <p>
-              <strong>Type of Printing:</strong> {product.typeOfPrinting}
-            </p>
-            <p>
-              <strong>Additional Info:</strong> {product.additionalInfo1}, {product.additionalInfo2}
-            </p>
-            <p>
-              <strong>Marketed By:</strong> {product.marketedBy}
-            </p>
-            <p>
-              <strong>Country of Origin:</strong> {product.countryOfOrigin}
-            </p>
-            <p>
-              <strong>In Stock:</strong> {product.inStock}
-            </p>
-            <p>
-              <strong>Notes:</strong> {product.note}
-            </p>
-          </div>
-        </CardContent>
-
-        {/* Card Footer with Action Buttons */}
-        <CardFooter className="flex justify-between">
-          <Button
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+      <tr className="bg-white border-b hover:bg-gray-50">
+        <td className="px-6 py-4">
+          <img src={`${URI}${product.thumbnail}`} alt="" className='w-20 h-20 rounded-md' />
+        </td>
+        <td className="px-6 py-4">{product.title}</td>
+        <td className="px-6 py-4">{product.productCode}</td>
+        <td className="px-6 py-4">{product.category}</td>
+        <td className="px-6 py-4">{product.subcategory}</td>
+        <td className="px-6 py-4">₹ {product.price}</td>
+        <td className="px-6 py-4">{product.discount}</td>
+        <td className="px-6 py-4">{product.typeOfProduct}</td>
+        <td className="px-6 py-4 flex space-x-4">
+          <button 
+            onClick={() => {
+              navigate("/Product-Details", { state: { product } });
+            }} 
+            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+          >
+            View Details
+          </button>
+          <button 
             onClick={() => {
               navigate("/UpdateProduct", { state: { product } });
-            }}
+            }} 
+            className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-700"
           >
-            Update Product
-          </Button>
-
-          <Button
-            className="bg-red-500 text-white px-4 py-2 rounded"
-            onClick={() => setIsModalOpen(true)}
+            Update
+          </button>
+          {/* Trigger modal on delete button click */}
+          <button 
+            onClick={() => setIsModalOpen(true)} 
+            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
           >
-            Delete Product
-          </Button>
-        </CardFooter>
-      </Card>
+            Delete
+          </button>
+        </td>
+      </tr>
 
-      {/* Confirmation Modal */}
+      {/* Confirmation Modal for Deletion */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
@@ -140,18 +70,18 @@ const ProductDetails = ({ product, fetchProduct }) => {
         className="modal"
         overlayClassName="modal-overlay"
       >
-        <div style={{ border: '1px solid red', padding: 10, borderRadius: 10 }}>
+        <div className="p-5 border rounded">
           <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
           <p className="mb-4">Are you sure you want to delete this product? This action cannot be undone.</p>
           <div className="flex justify-end gap-5">
             <Button
-              className="bg-red-500 text-white px-4 py-2 rounded"
+              className="bg-red-500 text-white hover:bg-red-800  px-4 py-2 rounded"
               onClick={handleDelete}
             >
               Yes, delete it!
             </Button>
             <Button
-              className="bg-gray-500 text-white px-4 py-2 rounded"
+              className="bg-gray-500 text-white hover:bg-gray-700 px-4 py-2 rounded"
               onClick={() => setIsModalOpen(false)}
             >
               Cancel

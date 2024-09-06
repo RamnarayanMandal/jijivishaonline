@@ -33,6 +33,7 @@
     "recharts": "^2.12.7",
     "sweetalert2": "^11.13.2",
     "sweetalert2-react-content": "^5.0.7",
+    "swiper": "^11.1.12",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },
