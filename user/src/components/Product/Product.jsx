@@ -6,15 +6,18 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { bagActions } from "../../store/bagSlice";
+import { Snackbar, Alert } from "@mui/material";
 
 export function Product({ products }) {
   const [itemsPerSlide, setItemsPerSlide] = useState(1);
-
-  const navagite = useNavigate()
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const URI = import.meta.env.VITE_API_URL;
-  console.log("Products:", products);
 
   useEffect(() => {
     const updateItemsPerSlide = () => {
@@ -35,6 +38,20 @@ export function Product({ products }) {
     };
   }, []);
 
+  const handleAddToCart = (product) => {
+    dispatch(
+      bagActions.addToBag({
+        data: { ...product, quantity: 1 },
+        totalQuantity: 1,
+      })
+    );
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   return (
     <div className="relative w-full overflow-hidden">
       <Swiper
@@ -53,24 +70,30 @@ export function Product({ products }) {
       >
         {products && products.map((product) => (
           <SwiperSlide key={product._id}>
-            <div className="flex-shrink-0 w-72 mx-2 items-center justify-center content-center my-10">
-              <div className="border-2 border-gray-300 bg-gray-50 shadow-lg overflow-hidden hover:border-red-500 transition-transform duration-300 transform hover:scale-105" onClick={()=>navagite(`/product/${product._id}`)}>
+            <div className="flex-shrink-0 w-72 mx-2 my-10">
+              <div className="border-2 border-gray-300 bg-gray-50 shadow-lg overflow-hidden hover:border-red-500 transition-transform duration-300 transform hover:scale-105 cursor-pointer" >
                 <div className="overflow-hidden">
                   <img
                     src={`${URI}${product.thumbnail}`}
                     alt={product.title}
                     className="w-full object-cover h-80"
-                  />
+                    onClick={() => navigate(`/product/${product._id}`)}/>
                 </div>
                 <div className="p-4 flex flex-col justify-between">
-                  <div className="flex justify-between items-center">
-                    <p className="font-semibold text-base mb-2 w-[90%]">
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="font-semibold text-base w-[90%]">
                       {product.title}
                     </p>
                     <CiHeart className="hover:text-red-500 text-2xl cursor-pointer" />
                   </div>
                   <p className="mb-4">₹ {product.price.toFixed(2)}</p>
-                  <button className="border-2 hover:border-none text-black py-2 px-4 hover:bg-red-500 w-full hover:text-white transition duration-300 flex justify-center items-center gap-5">
+                  <button
+                    className="border-2 border-black py-2 px-4 text-black hover:border-none hover:bg-red-500 hover:text-white transition duration-300 flex justify-center items-center gap-2 w-full"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent click event from triggering the parent div
+                      handleAddToCart(product);
+                    }}
+                  >
                     <IoCartOutline className="text-xl" />
                     <p>Add to Cart</p>
                   </button>
@@ -103,6 +126,20 @@ export function Product({ products }) {
           background-color: black; /* Color for the active bullet */
         }
       `}</style>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Product added to cart!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

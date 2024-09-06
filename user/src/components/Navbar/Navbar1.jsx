@@ -7,6 +7,7 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { Navigate, useNavigate } from "react-router-dom";
+import ShowCart from "../cart/ShowCart";
 
 const Navbar1 = () => {
   const navigation = useNavigate();
@@ -62,7 +63,7 @@ const Navbar1 = () => {
             <LocalShippingOutlinedIcon className="text-black text-sm md:text-base" />
           </li>
           <li>
-            <ShoppingCartOutlinedIcon className="text-black text-sm md:text-base" />
+            <ShowCart/>
           </li>
           <li>
             <button className="flex items-center bg-transparent border-none text-black text-sm md:text-base">
