@@ -11,8 +11,9 @@ import Home from "./components/Home/Home.jsx";
 import { Provider } from "react-redux";
 import Jijivisha from "./store/index.js";
 import { SubCategories } from "./components/catogry/SubCategories.jsx";
-import ProductDetails from "./components/Product/ProductDetails.jsx";
+
 import { ShowCatogry } from "./components/catogry/ShowCatogry.jsx";
+import ProductHome from "./components/Product/ProductDetails/ProductHome.jsx";
 
 // Define your router outside of the provider
 const router = createBrowserRouter([
@@ -40,9 +41,10 @@ const router = createBrowserRouter([
         path: "/catogry/:category",
         element: <ShowCatogry />,
       },
+
       {
         path: "/product/:id",
-        element: <ProductDetails />,
+        element: <ProductHome />,
       },
     ],
   },
