@@ -3,10 +3,15 @@ import React, { useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { IoCartOutline } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { bagActions } from "../../store/bagSlice";
+import { Snackbar, Alert } from "@mui/material";
 
 export const SubCategories = () => {
   const [subCategories, setSubCategories] = useState([]);
   const { subcategory } = useParams();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const dispatch = useDispatch();
   const URI = import.meta.env.VITE_API_URL;
 
   const navagite = useNavigate()
@@ -28,6 +33,21 @@ export const SubCategories = () => {
     }
   };
 
+  
+  const handleAddToCart = (product) => {
+    dispatch(
+      bagActions.addToBag({
+        data: { ...product, quantity: 1 },
+        totalQuantity: 1,
+      })
+    );
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   return (
     <div className="container mx-auto p-4 my-10">
       <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
@@ -36,12 +56,12 @@ export const SubCategories = () => {
             key={product.id}
             className="flex-shrink-0 w-full items-center justify-center content-center"
           >
-            <div className="border-2 border-gray-300 bg-gray-50 shadow-lg overflow-hidden hover:border-red-500 transition-transform duration-300 transform hover:scale-105 cursor-pointer"  onClick={()=>navagite(`/product/${product._id}`)}>
-              <div className="overflow-hidden">
+            <div className="border-2 border-gray-300 bg-gray-50 shadow-lg overflow-hidden hover:border-red-500 transition-transform duration-300 transform hover:scale-105 " >
+              <div className="overflow-hidden"  onClick={()=>navagite(`/product/${product._id}`)}>
                 <img
                   src={`${URI}${product.thumbnail}`}
                   alt={product.title}
-                  className="w-full object-cover h-80"
+                  className="w-full object-cover h-80 cursor-pointer"
                 />
               </div>
               <div className="p-4 flex flex-col justify-between">
@@ -52,7 +72,11 @@ export const SubCategories = () => {
                   <CiHeart className="hover:text-red-500 text-2xl cursor-pointer" />
                 </div>
                 <p className="mb-4">₹ {product.price.toFixed(2)}</p>
-                <button className="border-2 hover:border-none text-black py-2 px-4 hover:bg-red-500 w-full hover:text-white transition duration-300 flex justify-center items-center gap-5">
+                <button className="border-2 hover:border-none text-black py-2 px-4 hover:bg-red-500 w-full hover:text-white transition duration-300 flex justify-center items-center gap-5"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent click event from triggering the parent div
+                  handleAddToCart(product);
+                }}>
                   <IoCartOutline className="text-xl" />
                   <p>Add to Cart</p>
                 </button>
@@ -61,6 +85,19 @@ export const SubCategories = () => {
           </div>
         ))}
       </div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Product added to cart!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
