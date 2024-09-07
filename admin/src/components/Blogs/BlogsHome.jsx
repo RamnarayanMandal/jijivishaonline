@@ -4,6 +4,7 @@ import CreateBlogs from './CreateBlogs'
 const BlogsHome = () => {
   return (
     <div className='lg:w-full'>
+        
 <CreateBlogs />
 
     </div>
