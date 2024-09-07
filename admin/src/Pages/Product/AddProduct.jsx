@@ -172,18 +172,6 @@ const AddProduct = () => {
               className="w-full text-black"
             />
           </div>
-
-      
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Price</label>
-            <Input
-              type="number"
-              {...register("price")}
-              placeholder="Enter product price"
-              className="w-full text-black"
-            />
-          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Discount</label>
             <Input
@@ -202,15 +190,6 @@ const AddProduct = () => {
               className="w-full text-black"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-            <Textarea
-              {...register("description")}
-              placeholder="Enter product description"
-              className="w-full text-black"
-            />
-          </div>
-
           {/* Category and Classification */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>

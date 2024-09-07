@@ -63,16 +63,15 @@ const LatestProducts = () => {
         
         {/* Flex container for the 'VIEW ALL' link */}
         <div className="flex justify-center sm:justify-end w-full sm:w-1/5">
-        {subcategories.map((subcategory, index) => (
+       
           <Link
-            to={`/Subcategory/${subcategory}`}
+            to={`/All-lasted-products`}
             className="flex items-center text-red-600 text-sm hover:text-red-800"
-             // Reset subcategory when clicking 'VIEW ALL'
+             
           >
             VIEW ALL
             <IoIosArrowForward className="ml-1" />
-          </Link>
-            ))}
+          </Link>         
         </div>
       </div>
      <div className="flex justify-center items-center content-center w-full lg:px-2 md:px-2 px-10">

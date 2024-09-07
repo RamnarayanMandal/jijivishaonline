@@ -23,17 +23,12 @@ exports.register = async (req, res) => {
 
     if (user) {
       if (!user.isVerified) {
-        // If user exists but is not verified, resend OTP
-        const otp = generateOtp();
-        user.otp = otp;
-        user.otpExpires = Date.now() + 15 * 60 * 1000; // OTP valid for 15 minutes
-        await user.save();
-
+        // If user exists but is not verified, resend a simple notification
         const mailOptions = {
           from: process.env.EMAIL_USER,
           to: user.email,
-          subject: "Resend OTP for account verification",
-          text: `Your OTP is ${otp}.`,
+          subject: "Account Verification Reminder",
+          text: "Your account is not yet verified. Please check your email for the OTP to complete the verification.",
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
@@ -41,7 +36,7 @@ exports.register = async (req, res) => {
             console.error("Error sending email:", error);
             return res.status(500).send("Error sending email.");
           }
-          return res.status(200).send("OTP resent to your email.");
+          return res.status(200).send("Verification reminder sent to your email.");
         });
       } else {
         return res.status(400).send("User already exists and is verified.");
@@ -54,14 +49,11 @@ exports.register = async (req, res) => {
       // Generate a custom user ID
       const customUserId = generateUserId();
 
-      // Create a new user with OTP
-      const otp = generateOtp();
+      // Create a new user
       user = new User({
         email,
         password: hashedPassword,
         customUserId,
-        otp,
-        otpExpires: Date.now() + 15 * 60 * 1000, // OTP valid for 15 minutes
       });
 
       await user.save();
@@ -69,8 +61,8 @@ exports.register = async (req, res) => {
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,
-        subject: "Your account verification details",
-        text: `Your OTP is ${otp}. Your user ID is: ${customUserId}. Your password is: ${password}.`,
+        subject: "Account Registration Details",
+        text: `Your account has been created successfully.\nPassword: ${password}\n\nPlease keep this information safe.`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
@@ -80,7 +72,7 @@ exports.register = async (req, res) => {
         }
         res
           .status(200)
-          .send("Account verification details sent to your email.");
+          .send("Account registration details sent to your email.");
       });
     }
   } catch (error) {
@@ -88,6 +80,7 @@ exports.register = async (req, res) => {
     res.status(500).send("Internal server error.");
   }
 };
+
 
 // 2. Verify OTP
 exports.verifyOtp = async (req, res) => {

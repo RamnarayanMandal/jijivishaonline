@@ -60,13 +60,13 @@ const Navbar1 = () => {
             <FavoriteBorderIcon className="text-black text-sm md:text-base" />
           </li>
           <li>
-            <LocalShippingOutlinedIcon className="text-black text-sm md:text-base" />
+            <LocalShippingOutlinedIcon className="text-black text-sm md:text-base"  />
           </li>
           <li>
             <ShowCart/>
           </li>
           <li>
-            <button className="flex items-center bg-transparent border-none text-black text-sm md:text-base">
+            <button className="flex items-center bg-transparent border-none text-black text-sm md:text-base" onClick={()=>{navigation("/My-Account")}}>
               LOGIN <ArrowForwardOutlinedIcon className="ml-1" />
             </button>
           </li>

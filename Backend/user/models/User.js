@@ -35,9 +35,9 @@ const cartItemSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   password: { type: String },
-  customUserId: { type: String, unique: true },
+  customUserId: { type: String },
   isVerified: { type: Boolean, default: false },
-  mobileNumber: { type: String, unique: true },
+  mobileNumber: { type: String},
   name: { type: String },
   lastName: { type: String },
   phone: { type: String },

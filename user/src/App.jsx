@@ -22,7 +22,7 @@ function App() {
       <UpperFooter />
       <Footer />
       <IconLabelTabs />
-      <ProductHome />
+      
     </>
   );
 }
