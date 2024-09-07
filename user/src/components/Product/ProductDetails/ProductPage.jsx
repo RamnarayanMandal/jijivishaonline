@@ -3,6 +3,7 @@ import ImageGallery from "./ImageGallery";
 import ProductInfo from "./ProductInfo";
 import ProductDetails from "./ProductDetails";
 import { RecentlyViewedProduct } from "../RecentlyViewedProduct";
+import ReviewComponent from "../../ReviewComponent";
 
 const ProductPage = ({ product }) => {
   const images = [
@@ -24,6 +25,7 @@ const ProductPage = ({ product }) => {
       <div className="mt-10 bg-[#f4f1e9] lg:px-[6%]">
       <RecentlyViewedProduct subcategory={product.subcategory}/>
       </div>
+      <ReviewComponent/>
     </div>
   );
 };

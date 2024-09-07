@@ -21,7 +21,7 @@ router.get("/products/:id", productController.getProductById);
 // Route to get a product by its ID
 router.delete("/deleteproduct/:id", productController.deleteProductById);
 
-router.put("/product/:id", productController.updateProductById);
+router.put("/product/:id",uploadFiles, productController.updateProductById);
 
 router.get("/lastedproducts", productController.lastedProduct)
 
