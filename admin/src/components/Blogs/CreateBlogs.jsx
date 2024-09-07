@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CreateBlogs = () => {
     const URI = import.meta.env.VITE_API_URL;
@@ -36,6 +36,11 @@ const CreateBlogs = () => {
   };
 
   return (
+    <>
+    <div className='m-5'>
+
+   <Link to="/Blogs-list"> <button className='bg-white text-black p-3 rounded-md font-bold'>Blogs List</button></Link>
+    </div>
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md lg:w-full ">
       <h1 className="text-2xl font-bold mb-6 text-black">Create a Blog</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -90,6 +95,7 @@ const CreateBlogs = () => {
         </button>
       </form>
     </div>
+    </>
   );
 };
 

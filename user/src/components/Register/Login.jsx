@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Assuming you're using Axios for API calls
-import { useNavigate } from 'react-router-dom'; // For navigation after login
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [userIdOrEmail, setUserIdOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const URI = import.meta.env.VITE_API_URL; // For redirecting after login
+  const URI = import.meta.env.VITE_API_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,9 +16,10 @@ const Login = () => {
     setError('');
 
     try {
-      // API call for login (replace with your actual login API)
+      // API call for login
       const response = await axios.post(`${URI}api/user/login`, {
-        email,
+        userId: userIdOrEmail,  // Assuming the backend handles both userId and email in the same field
+        email: userIdOrEmail,
         password
       });
 
@@ -39,14 +40,16 @@ const Login = () => {
       <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email ID</label>
+          <label htmlFor="userIdOrEmail" className="block text-gray-700 text-sm font-bold mb-2">
+            User ID or Email ID
+          </label>
           <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            id="userIdOrEmail"
+            name="userIdOrEmail"
+            placeholder="Enter your User ID or Email"
+            value={userIdOrEmail}
+            onChange={(e) => setUserIdOrEmail(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             required
           />
