@@ -13,6 +13,8 @@ import Jijivisha from "./store/index.js";
 import { SubCategories } from "./components/catogry/SubCategories.jsx";
 import { ShowCatogry } from "./components/catogry/ShowCatogry.jsx";
 import ProductHome from "./components/Product/ProductDetails/ProductHome.jsx";
+import { BlogShow } from "./components/blogs/BlogsShow.jsx";
+import BlogDetails from "./components/blogs/BlogDetails.jsx";
 import { AllLatestProduct } from "./components/Product/latestProduct/AllLatestProduct.jsx";
 import ViewCartAndUpdateCart from "./components/cart/ViewCartAndUpdateCart.jsx";
 import { MyAccount } from "./components/myaccount/MyAccount.jsx";
@@ -47,7 +49,16 @@ const router = createBrowserRouter([
       {
         path: "/product/:id",
         element: <ProductHome />,
-      },{
+      },
+      {
+        path: "/blogsAll",
+        element: <BlogShow />,
+      },
+      {
+        path: "/blogsdetails/:id",
+        element: <BlogDetails/>,
+      },
+      ,{
         path:"All-lasted-products",
         element:<AllLatestProduct/>
       },{

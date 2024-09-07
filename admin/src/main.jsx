@@ -14,6 +14,8 @@ import { UpdateProduct } from './Pages/Product/UpdateProduct';
 import OtpVerification from './Pages/OtpVerification';
 import Product from "./Pages/Product/Product"
 import Banner from './components/Banner/Banner';
+import BlogsHome from './components/Blogs/BlogsHome';
+import BlogsList from './components/Blogs/BlogsList';
 
 // Create the router instance
 const router = createBrowserRouter([
@@ -53,6 +55,14 @@ const router = createBrowserRouter([
       {
         path: '/Manage-Banner',
         element: <Banner/>,
+      },
+      {
+        path: '/Manage-Blogs',
+        element: <BlogsHome/>,
+      },
+      {
+        path: '/Blogs-list',
+        element: <BlogsList/>,
       },
     ],
   },
