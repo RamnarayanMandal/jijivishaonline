@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { bagActions } from "../../store/bagSlice";
 import { Snackbar, Alert } from "@mui/material";
+import Swal from "sweetalert2";
 
 
 export const SubCategories = () => {
@@ -36,6 +37,18 @@ export const SubCategories = () => {
   };
 
   const handleAddToCart = async (product) => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      Swal.fire({
+        title: 'Login Required',
+        text: 'Please log in to add products to the cart.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+  
     try {
       const response = await axios.post(`${URI}api/user/`, {
         userId,

@@ -22,10 +22,8 @@ const ProductPage = ({ product }) => {
           <ProductDetails product={product} />
         </div>
       </div>
-      <div className="mt-10 bg-[#f4f1e9] lg:px-[6%]">
-      <RecentlyViewedProduct subcategory={product.subcategory}/>
-      </div>
-      <ReviewComponent/>
+      
+      
     </div>
   );
 };

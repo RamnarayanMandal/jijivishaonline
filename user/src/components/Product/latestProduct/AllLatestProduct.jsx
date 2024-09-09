@@ -7,6 +7,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useDispatch } from "react-redux";
 import { bagActions } from "../../../store/bagSlice";
+import Swal from "sweetalert2";
 
 export const AllLatestProduct = () => {
   const [products, setProducts] = useState([]);
@@ -40,6 +41,18 @@ export const AllLatestProduct = () => {
   };
 
   const handleAddToCart = async (product) => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      Swal.fire({
+        title: 'Login Required',
+        text: 'Please log in to add products to the cart.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+  
     try {
       await axios.post(`${URI}api/user/`, {
         userId,

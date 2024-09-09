@@ -11,6 +11,8 @@ import { useDispatch } from "react-redux";
 import { bagActions } from "../../store/bagSlice";
 import { Snackbar, Alert } from "@mui/material";
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
 
 export function Product({ products }) {
   const [itemsPerSlide, setItemsPerSlide] = useState(1);
@@ -41,6 +43,18 @@ export function Product({ products }) {
   }, []);
 
   const handleAddToCart = async (product) => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      Swal.fire({
+        title: 'Login Required',
+        text: 'Please log in to add products to the cart.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+  
     try {
       const response = await axios.post(`${URI}api/user/`, {
         userId,
@@ -71,6 +85,7 @@ export function Product({ products }) {
       setOpenSnackbar({ open: true, message: "Error adding item to cart", severity: "error" });
     }
   };
+  
   
 
   const handleCloseSnackbar = () => {

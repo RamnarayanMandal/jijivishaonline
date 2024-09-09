@@ -1,17 +1,36 @@
-import React, { useState } from "react";
+import { useState } from "react"; // Correct import
+import React from "react"; // Remove the duplicate useState
 import { useDispatch } from "react-redux";
 import { bagActions } from "../../../store/bagSlice";
 import { Snackbar, Alert } from "@mui/material";
 import { IoCartOutline } from "react-icons/io5";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const ProductInfo = ({ product }) => {
+  // Handle undefined product
+  if (!product) {
+    return <p>Product not found</p>;
+  }
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
 
   const handleAddToCart = async (product) => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      Swal.fire({
+        title: 'Login Required',
+        text: 'Please log in to add products to the cart.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+  
     try {
       await axios.post(`${URI}api/user/`, {
         userId,
@@ -57,28 +76,28 @@ const ProductInfo = ({ product }) => {
   };
 
   const discountedPrice =
-    product.discount > 0
-      ? product.price - (product.price * product.discount) / 100
-      : product.price;
+    product?.discount > 0
+      ? product?.price - (product?.price * product?.discount) / 100
+      : product?.price;
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold">{product.title}</h1>
-      <p className="text-sm text-gray-600">{product.productCode}</p>
+      <h1 className="text-2xl font-bold">{product?.title}</h1>
+      <p className="text-sm text-gray-600">{product?.productCode}</p>
 
       {/* Price Section */}
       <div className="flex items-center my-4">
         <p className="text-2xl font-semibold text-gray-800">
-          ₹ {discountedPrice.toFixed(2)}
+          ₹ {discountedPrice?.toFixed(2)}
         </p>
-        {product.discount > 0 && (
+        {product?.discount > 0 && (
           <p className="text-xl font-light text-gray-500 line-through ml-4">
-            ₹ {product.price.toFixed(2)}
+            ₹ {product?.price?.toFixed(2)}
           </p>
         )}
-        {product.discount > 0 && (
+        {product?.discount > 0 && (
           <p className="ml-2 text-red-500 font-semibold text-lg">
-            ({product.discount}% OFF)
+            ({product?.discount}% OFF)
           </p>
         )}
       </div>
@@ -87,7 +106,7 @@ const ProductInfo = ({ product }) => {
       <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 my-4">
         <div className="space-x-2">
           <label className="font-semibold">Size:</label>
-          {product.size.map((size) => (
+          {product?.size?.map((size) => (
             <button
               key={size}
               className={`px-3 py-1 border ${

@@ -34,6 +34,7 @@ const cartItemSchema = new mongoose.Schema({
     size: { type: String },
     color: { type: String },
   },
+  
 });
 
 // Define the User schema

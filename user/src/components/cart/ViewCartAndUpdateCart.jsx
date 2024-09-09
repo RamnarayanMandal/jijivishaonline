@@ -25,8 +25,12 @@ const ViewCartAndUpdateCart = () => {
     }
   };
 
+  const handleSizeChange = (productId, newSize) => {
+    // Update the size in the Redux store
+    dispatch(bagActions.updateSize({ _id: productId, size: newSize }));
+  };
+
   const applyCoupon = () => {
-    // Example: Implement coupon validation here
     setDiscount(couponCode === "SAVE5" ? 5 : 0);
   };
 
@@ -49,7 +53,7 @@ const ViewCartAndUpdateCart = () => {
 
   return (
     <>
-      <div className='mt-10  '>
+      <div className='mt-10'>
         <CustomizedSteppers />
       </div>
       <div className="p-4 md:flex md:justify-between md:gap-10">
@@ -61,16 +65,35 @@ const ViewCartAndUpdateCart = () => {
             >
               <div className="flex items-center gap-4">
                 <img
-                  src={`${URI}${item.images[0]}`} // Ensure the correct image URL
-                  alt={item.title} // Changed from name to title
+                  src={`${URI}${item.images[0]}`}
+                  alt={item.title}
                   className="w-32 h-32 object-cover rounded-md"
                 />
-                <h3 className="font-semibold text-lg">{item.title}</h3> {/* Changed from name to title */}
+                <div>
+                  <h3 className="font-semibold text-lg">{item.title}</h3>
+                  <div className="flex items-center gap-2 mt-2">
+                    <label htmlFor={`size-${item._id}`} className="text-sm font-medium">
+                      Size:
+                    </label>
+                    <select
+                      id={`size-${item._id}`}
+                      value={item.size} // Ensure 'size' is part of the product data
+                      onChange={(e) => handleSizeChange(item._id, e.target.value)}
+                      className="border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out text-sm"
+                    >
+                      <option value="S">S</option>
+                      <option value="M">M</option>
+                      <option value="L">L</option>
+                      <option value="XL">XL</option>
+                    </select>
+                  </div>
+                </div>
               </div>
+
               <div className="flex items-center gap-4">
                 <label htmlFor={`quantity-${item._id}`} className="text-sm">Quantity:</label>
                 <input
-                  id={`quantity-${item._id}`} // Changed from item.id to item._id
+                  id={`quantity-${item._id}`}
                   type="number"
                   name="quantity"
                   value={item.quantity}
@@ -79,13 +102,13 @@ const ViewCartAndUpdateCart = () => {
                   min="1"
                 />
               </div>
+
               <p className="text-lg font-semibold">Rs {formatPrice(item.price).toFixed(2)}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-6 md:w-4/12">
-         
           <div className="border-y-2 border-gray-300 bg-gray-100 rounded-lg p-4">
             <h1 className="text-xl font-semibold mb-4">Summary</h1>
             <hr className="my-2" />

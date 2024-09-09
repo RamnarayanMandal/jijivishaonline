@@ -8,12 +8,18 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { bagActions } from "../../store/bagSlice";
+import { useDispatch } from "react-redux";
+import Swal from "sweetalert2"; // Ensure this is imported
 
 export function RecentlyViewedProduct({ subcategory }) {
-  const [products, setProduct] = useState([]);
+  const [products, setProducts] = useState([]);
   const [itemsPerSlide, setItemsPerSlide] = useState(1);
+  const [openSnackbar, setOpenSnackbar] = useState({ open: false, message: "", severity: "" }); // Snackbar state
+  const dispatch = useDispatch(); // Using dispatch for Redux actions
   const navigate = useNavigate();
   const URI = import.meta.env.VITE_API_URL;
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     fetchSubCategories();
@@ -22,9 +28,10 @@ export function RecentlyViewedProduct({ subcategory }) {
   const fetchSubCategories = async () => {
     try {
       const resp = await axios.get(`${URI}api/admin/getProductBySubcategory/${subcategory}`);
-      setProduct(resp.data.productsBySubcategory);
+      setProducts(resp.data?.productsBySubcategory || []); // Handle possible undefined
     } catch (error) {
       console.error(error);
+      setOpenSnackbar({ open: true, message: "Failed to fetch products", severity: "error" });
     }
   };
 
@@ -46,6 +53,47 @@ export function RecentlyViewedProduct({ subcategory }) {
       window.removeEventListener("resize", updateItemsPerSlide); // Clean up
     };
   }, []);
+
+  const handleAddToCart = async (product) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      Swal.fire({
+        title: "Login Required",
+        text: "Please log in to add products to the cart.",
+        icon: "warning",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    try {
+      await axios.post(`${URI}api/user/`, {
+        userId,
+        productId: product._id,
+        productName: product.title,
+        quantity: 1,
+        price: product.price,
+        attributes: product.attributes,
+        discount: product.discount,
+        Image: product.thumbnail,
+      });
+
+      // Dispatch the action to add to Redux store (bag)
+      dispatch(
+        bagActions.addToBag({
+          data: { ...product, quantity: 1 },
+          totalQuantity: 1,
+        })
+      );
+
+      // Show success Snackbar
+      setOpenSnackbar({ open: true, message: "Product added to cart!", severity: "success" });
+    } catch (error) {
+      console.error("Error adding item to cart", error);
+      setOpenSnackbar({ open: true, message: "Error adding item to cart", severity: "error" });
+    }
+  };
 
   return (
     <div className="relative w-full overflow-hidden">
@@ -85,7 +133,13 @@ export function RecentlyViewedProduct({ subcategory }) {
                     <CiHeart className="hover:text-red-500 text-2xl cursor-pointer" />
                   </div>
                   <p className="mb-4">₹ {product.price.toFixed(2)}</p>
-                  <button className="border-2 hover:border-none text-black py-2 px-4 hover:bg-red-500 w-full hover:text-white transition duration-300 flex justify-center items-center gap-5">
+                  <button
+                    className="border-2 hover:border-none text-black py-2 px-4 hover:bg-red-500 w-full hover:text-white transition duration-300 flex justify-center items-center gap-5"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent click event from triggering the parent div
+                      handleAddToCart(product);
+                    }}
+                  >
                     <IoCartOutline className="text-xl" />
                     <p>Add to Cart</p>
                   </button>

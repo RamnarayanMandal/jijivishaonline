@@ -8,10 +8,13 @@ import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useNavigate } from "react-router-dom";
 import ShowCart from "../cart/ShowCart";
+import { IoIosPersonAdd } from "react-icons/io";
+import { FaUserCircle } from "react-icons/fa";
 
 const Navbar1 = () => {
   const navigation = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     // Check if the token is in localStorage
@@ -25,6 +28,10 @@ const Navbar1 = () => {
     setIsLoggedIn(false);
     // Redirect to the login page
     navigation("/My-Account");
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
@@ -80,12 +87,44 @@ const Navbar1 = () => {
           </li>
           <li>
             {isLoggedIn ? (
-              <button
-                className="flex items-center bg-transparent border-none text-black text-sm md:text-base"
-                onClick={handleLogout}
-              >
-                LOGOUT <ArrowForwardOutlinedIcon className="ml-1" />
-              </button>
+              <div className="relative">
+                <button
+                  className="flex items-center bg-transparent border-none text-black text-sm md:text-base"
+                  onClick={toggleDropdown}
+                >
+                  <FaUserCircle className="ml-1 mr-2 text-2xl" /> Account
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                    <ul>
+                      <li
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => navigation("/profile")}
+                      >
+                        Profile
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => navigation("/profile")}
+                      >
+                        My Order
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => navigation("/profile")}
+                      >
+                        My Adress
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
             ) : (
               <button
                 className="flex items-center bg-transparent border-none text-black text-sm md:text-base"

@@ -24,7 +24,7 @@ const ReviewComponent = () => {
   return (
     <div className="flex flex-col-reverse gap-5 lg:flex-row-reverse items-center lg:items-start justify-between p-6 space-y-6 lg:space-y-0 lg:space-x-8">
       {/* Left Section - User Review Form */}
-      <div className="w-full lg:w-1/2 bg-gray-100 p-4 rounded-lg shadow-lg">
+      <div className="w-full lg:w-1/2  p-4 rounded border-2">
         <h2 className="text-lg font-semibold mb-4">Leave a Review</h2>
         <form>
           <div className="mb-4">
@@ -78,7 +78,7 @@ const ReviewComponent = () => {
       </div>
 
       {/* Right Section - Display Review */}
-      <div className="w-full lg:w-1/2 bg-white p-4 rounded-lg shadow-lg">
+      <div className="w-full lg:w-1/2 border-2 p-4 rounded-lg ">
         <h2 className="text-lg font-semibold mb-4">Your Review</h2>
         {review.name || review.description || review.rating ? (
           <div className="space-y-4">
