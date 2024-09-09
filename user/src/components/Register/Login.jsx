@@ -25,8 +25,11 @@ const Login = () => {
 
       // Assuming the API returns a token on success
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token); // Save token in localStorage
-        navigate('/dashboard'); // Redirect to the dashboard or another page
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userId', response.data.userId); // Assuming the API returns user data on success 
+
+        // Save token in localStorage
+        navigate('/'); // Redirect to the dashboard or another page
       }
     } catch (err) {
       setError('Login failed. Please check your credentials.');

@@ -477,5 +477,141 @@ exports.getCategoriesWithSubcategories = async (req, res) => {
 };
 
 
+exports.postReview = async (req, res) => {
+  try {
+    const { username, email, rating, description, userId, productId } = req.body;
+
+    // Find the product by ID
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Check if user already reviewed the product
+    const existingReview = product.productreviews.find(
+      (review) => review.email === email
+    );
+    if (existingReview) {
+      return res.status(400).json({ message: "Review already exists" });
+    }
+
+    // Create a new review
+    const newReview = {
+      username,
+      email,
+      userId,
+      rating,
+      description,
+      date: new Date(),
+    };
+
+    // Add new review to product reviews array
+    product.productreviews.push(newReview);
+
+    // Save the product with the new review
+    await product.save();
+
+    // Recalculate the product's average rating
+    const totalReviews = product.productreviews.length;
+    const totalRating = product.productreviews.reduce(
+      (acc, review) => acc + review.rating,
+      0
+    );
+    const updatedRating = totalRating / totalReviews;
+
+    // Update the product rating and save
+    product.rating = updatedRating;
+    await product.save();
+
+    // Send back the updated reviews list
+    res.status(201).json(product.productreviews);
+
+  } catch (error) {
+    console.error("Error posting review:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+exports.getAverageRating = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    const totalReviews = product.productreviews.length;
+    const totalRating = product.productreviews.reduce(
+      (acc, review) => acc + review.rating,
+      0
+    );
+    const averageRating = totalRating / totalReviews;
+    res.status(200).json({ averageRating });
+
+  } catch (error) {
+    console.error("Error getting average rating:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+}
+
+exports.getTopRatedProducts = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = parseInt(req.query.skip) || 0;
+
+    const products = await Product.find()
+      .sort({ rating: -1 }) // Sort by rating in descending order
+      .limit(limit)
+      .skip(skip)
+      .exec(); // Properly chaining exec
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error getting top rated products:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
 
 
+exports.getProductReviews = async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    // Find the product by its ID
+    const product = await Product.findById(productId);
+
+    // Check if the product exists
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Return the product reviews
+    res.status(200).json(product.productreviews);
+  } catch (error) {
+    console.error("Error fetching product reviews:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+
+exports.deleteProductReview = async (req, res) => {
+  try {
+    const { productId, reviewId } = req.params;
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    const reviewIndex = product.productreviews.findIndex(
+      (review) => review._id.toString() === reviewId
+    );
+    if (reviewIndex === -1) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+    product.productreviews.splice(reviewIndex, 1);
+    await product.save();
+    res.status(204).json({ message: "Review deleted successfully" });
+
+  } catch (error) {
+    console.error("Error deleting product review:", error);
+    res.status(500).json({ message: "Server Error", error });
+  }
+};

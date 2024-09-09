@@ -32,6 +32,7 @@ const productSchema = new mongoose.Schema(
     productreviews: [
       {
         username: { type: String },
+        userId: { type: String },
         email: { type: String },
         date: { type: Date },
         rating: { type: Number },

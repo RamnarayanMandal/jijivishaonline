@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/JIJIVISHA-Logo.png";
 import SearchIcon from "@mui/icons-material/Search";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -6,11 +6,26 @@ import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ShowCart from "../cart/ShowCart";
 
 const Navbar1 = () => {
   const navigation = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if the token is in localStorage
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    // Remove token from localStorage
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    // Redirect to the login page
+    navigation("/My-Account");
+  };
 
   return (
     <div className="hidden md:flex mb-5 bg-white px-20 flex-col md:flex-row items-center h-[80px]">
@@ -26,10 +41,8 @@ const Navbar1 = () => {
             }}
           />
 
-          {/* Icons and Login Button for Medium and Large View */}
+          {/* Icons and Menu Icon for Mobile and Medium View */}
           <div className="flex-grow flex items-center justify-center md:justify-end space-x-4">
-            
-            {/* Show Menu Icon in Mobile and Medium View */}
             <div className="md:hidden block">
               <MenuOutlinedIcon className="text-black text-lg" />
             </div>
@@ -53,22 +66,36 @@ const Navbar1 = () => {
         </button>
       </div>
 
-      {/* Icons and Login Button for Medium and Large View */}
+      {/* Icons and Login/Logout Button for Medium and Large View */}
       <div className="hidden md:flex lg:w-1/4 items-center justify-center md:justify-end space-x-4">
         <ul className="flex space-x-4 items-center m-8">
           <li>
             <FavoriteBorderIcon className="text-black text-sm md:text-base" />
           </li>
           <li>
-            <LocalShippingOutlinedIcon className="text-black text-sm md:text-base"  />
+            <LocalShippingOutlinedIcon className="text-black text-sm md:text-base" />
           </li>
           <li>
-            <ShowCart/>
+            <ShowCart />
           </li>
           <li>
-            <button className="flex items-center bg-transparent border-none text-black text-sm md:text-base" onClick={()=>{navigation("/My-Account")}}>
-              LOGIN <ArrowForwardOutlinedIcon className="ml-1" />
-            </button>
+            {isLoggedIn ? (
+              <button
+                className="flex items-center bg-transparent border-none text-black text-sm md:text-base"
+                onClick={handleLogout}
+              >
+                LOGOUT <ArrowForwardOutlinedIcon className="ml-1" />
+              </button>
+            ) : (
+              <button
+                className="flex items-center bg-transparent border-none text-black text-sm md:text-base"
+                onClick={() => {
+                  navigation("/My-Account");
+                }}
+              >
+                LOGIN <ArrowForwardOutlinedIcon className="ml-1" />
+              </button>
+            )}
           </li>
         </ul>
       </div>

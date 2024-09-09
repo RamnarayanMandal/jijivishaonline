@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { bagActions } from "../../store/bagSlice";
 import { Snackbar, Alert } from "@mui/material";
+import axios from 'axios';
 
 export function Product({ products }) {
   const [itemsPerSlide, setItemsPerSlide] = useState(1);
@@ -18,6 +19,7 @@ export function Product({ products }) {
   const navigate = useNavigate();
 
   const URI = import.meta.env.VITE_API_URL;
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const updateItemsPerSlide = () => {
@@ -38,15 +40,38 @@ export function Product({ products }) {
     };
   }, []);
 
-  const handleAddToCart = (product) => {
-    dispatch(
-      bagActions.addToBag({
-        data: { ...product, quantity: 1 },
-        totalQuantity: 1,
-      })
-    );
-    setOpenSnackbar(true);
+  const handleAddToCart = async (product) => {
+    try {
+      const response = await axios.post(`${URI}api/user/`, {
+        userId,
+        productId: product._id,
+        productName: product.title,
+        quantity: 1,
+        price: product.price,
+        attributes: product.attributes,
+        discount: product.discount,
+        Image: product.thumbnail,
+      });
+  
+      // Dispatch the action to add to the Redux store (bag)
+      dispatch(
+        bagActions.addToBag({
+          data: { ...product, quantity: 1 },
+          totalQuantity: 1,
+        })
+      );
+  
+      // Show success notification
+      setOpenSnackbar(true);
+    } catch (error) {
+      // Catch the error and show an error message
+      console.error("Error adding item to cart", error);
+  
+      // Display a user-friendly message or show a snackbar with error info
+      setOpenSnackbar({ open: true, message: "Error adding item to cart", severity: "error" });
+    }
   };
+  
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);

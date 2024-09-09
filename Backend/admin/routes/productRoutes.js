@@ -33,4 +33,14 @@ router.get("/getProductByCatogry/:category", productController.getProductByCateg
 
 router.get("/getProductBySubcategory/:subcategory", productController.getProductBySubcategory)
 
+router.get("/postReview",productController.postReview)
+
+router.get("/getaverage/:productId", productController.getAverageRating)
+
+router.get("/getProductReview/:productId",productController.getProductReviews)
+
+router.delete("/deleteProductReview/:productId/:reviewId")
+
+
+
 module.exports = router;

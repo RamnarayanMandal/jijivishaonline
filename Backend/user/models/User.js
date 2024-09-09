@@ -21,10 +21,15 @@ const addressSchema = new mongoose.Schema({
 
 // Define the Cart Item schema
 const cartItemSchema = new mongoose.Schema({
+  productId: { type: String, required: true },
   productName: { type: String, required: true },
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
-  discountPercentage: { type: Number },
+  discount: { type: Number },
+  Image:{
+    type: String,
+    required: true,
+  },
   attributes: {
     size: { type: String },
     color: { type: String },
