@@ -4,8 +4,6 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import RegisterPage from "./components/Register/RegisterPage.jsx";
-import Login from "./components/Register/Login.jsx";
 import { ThemeProvider } from "@material-tailwind/react";
 import Home from "./components/Home/Home.jsx";
 import { Provider } from "react-redux";
@@ -18,6 +16,8 @@ import BlogDetails from "./components/blogs/BlogDetails.jsx";
 import { AllLatestProduct } from "./components/Product/latestProduct/AllLatestProduct.jsx";
 import ViewCartAndUpdateCart from "./components/cart/ViewCartAndUpdateCart.jsx";
 import { MyAccount } from "./components/myaccount/MyAccount.jsx";
+import UserProfile from "./components/UserProfile.jsx/UserProfile.jsx";
+import AddressForm from "./components/UserProfile.jsx/AddressForm.jsx";
 
 // Define your router outside of the provider
 const router = createBrowserRouter([
@@ -28,14 +28,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
-      },
-      {
-        path: "/register",
-        element: <RegisterPage />,
-      },
-      {
-        path: "/login",
-        element: <Login />,
       },
       {
         path: "/SubCategory/:subcategory",
@@ -58,7 +50,7 @@ const router = createBrowserRouter([
         path: "/blogsdetails/:id",
         element: <BlogDetails/>,
       },
-      ,{
+      {
         path:"All-lasted-products",
         element:<AllLatestProduct/>
       },{
@@ -67,6 +59,12 @@ const router = createBrowserRouter([
       },{
         path:"/My-Account",
         element:<MyAccount/>
+      },{
+        path: "/user-Profile/:name",
+        element: <UserProfile/>, 
+      },{
+        path: "/addressForm",
+        element: <AddressForm/>, 
       }
     ],
   },

@@ -6,7 +6,7 @@ import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ShowCart from "../cart/ShowCart";
 import { IoIosPersonAdd } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
@@ -15,6 +15,12 @@ const Navbar1 = () => {
   const navigation = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Mock user profile data (replace with actual data from your backend)
+  const userProfile = {
+    mobileNumber: "9876543210",
+    wallet: "500",
+  };
 
   useEffect(() => {
     // Check if the token is in localStorage
@@ -95,33 +101,49 @@ const Navbar1 = () => {
                   <FaUserCircle className="ml-1 mr-2 text-2xl" /> Account
                 </button>
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                    <ul>
-                      <li
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        onClick={() => navigation("/profile")}
-                      >
-                        Profile
-                      </li>
-                      <li
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        onClick={() => navigation("/profile")}
-                      >
-                        My Order
-                      </li>
-                      <li
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        onClick={() => navigation("/profile")}
-                      >
-                        My Adress
-                      </li>
-                      <li
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        onClick={handleLogout}
-                      >
-                        Logout
-                      </li>
-                    </ul>
+                  <div className="absolute bg-white text-gray-600 shadow-md rounded w-60 mt-4 p-5 z-10">
+                    <Link
+                      to={`/user-Profile/MyAcount`}
+                      className="block px-4 py-2 hover:bg-gray-200 text-lg font-semibold"
+                    >
+                      My Account
+                      <p className="text-sm font-thin">{userProfile.mobileNumber}</p>
+                    </Link>
+                    <Link
+                      to={`/user-Profile/MyOrder`}
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
+                      My Orders
+                    </Link>
+                    <Link
+                      to={`/user-Profile/SaveAddress`}
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
+                      Save Address
+                    </Link>
+                    <Link
+                      to={`/user-Profile/MyWishlist`}
+                      className="px-4 py-2 hover:bg-gray-200 flex justify-between items-center"
+                    >
+                      <span>My Wishlist</span>
+                      <span className="text-sm font-thin">₹{userProfile.wallet}</span>
+                    </Link>
+                    <div className="border-t my-2"></div>
+                    <Link to="/faqs" className="block px-4 py-2 hover:bg-gray-200">
+                      FAQ's
+                    </Link>
+                    <Link
+                      to="/account-privacy"
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
+                      Account Privacy
+                    </Link>
+                    <button
+                      className="block px-4 py-2 hover:bg-gray-200 text-red-500"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
                   </div>
                 )}
               </div>

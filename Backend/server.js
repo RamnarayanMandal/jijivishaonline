@@ -10,6 +10,8 @@ const featuredImgRoutes = require("./admin/routes/featureRoutes");
 const BlogRoutes = require("./blogs/blogsRoutes");
 const PerspectiveRoutes = require("./Perspective/PerspectiveRoutes")
 
+const addressRoutes = require("./user/routes/addressRoutes");
+
 const path = require("path");
 
 connectDB();
@@ -24,6 +26,7 @@ app.get("/", (req, res) => {
 
 //user register
 app.use("/api/user", userRoutes);
+app.use("/api/users",addressRoutes);
 //admin register
 app.use("/api/admin", adminRoutes);
 
