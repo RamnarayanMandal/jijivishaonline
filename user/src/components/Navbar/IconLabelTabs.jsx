@@ -14,7 +14,7 @@ export default function IconLabelTabs() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 sm:hidden bg-white z-50">
+    <div className="fixed bottom-0 left-0 right-0 sm:hidden bg-white z-40">
       <Tabs
         value={value}
         onChange={handleChange}

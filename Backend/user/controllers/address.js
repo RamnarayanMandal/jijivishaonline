@@ -89,3 +89,22 @@ exports.deleteAddress = async (req, res) => {
     res.status(500).json({ message: 'Error deleting address', error });
   }
 };
+
+
+// Get all addresses of user
+
+exports.getAllAddresses = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Find the user by userId
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'Addresses retrieved successfully', addresses: user.addresses });
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving addresses', error });
+  }
+};

@@ -45,7 +45,7 @@ const UpdateAddress = ({ address, fetchAddress }) => {
     const updatedAddress = { addressType, street, city, state, country, postalCode, name, phone };
     
     try {
-      await axios.put(`${URI}/api/users/address/${userId}/${addressId}`, updatedAddress); // Replace with your actual endpoint
+      await axios.put(`${URI}api/user/address/${userId}/${addressId}`, updatedAddress); // Replace with your actual endpoint
       fetchAddress()
       setIsModalOpen(false);
       Swal.fire({
@@ -78,8 +78,8 @@ const UpdateAddress = ({ address, fetchAddress }) => {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        className="fixed inset-0 top-20 flex items-center justify-center z-40"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+        className="fixed inset-0  flex items-center justify-center z-50"
+        overlayClassName="absolute inset-0 bg-black bg-opacity-50"
       >
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg mx-4">
           <form className="space-y-4" onSubmit={handleOnSubmit}>

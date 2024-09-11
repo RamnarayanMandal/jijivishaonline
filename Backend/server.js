@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 
 //user register
 app.use("/api/user", userRoutes);
-app.use("/api/users", addressRoutes);
+app.use("/api/user", addressRoutes);
 //admin register
 app.use("/api/admin", adminRoutes);
 

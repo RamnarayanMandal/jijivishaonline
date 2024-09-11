@@ -52,9 +52,7 @@ const UserProfile = () => {
       <div className="bg-white shadow-md rounded lg:flex md:flex block justify-center lg:items-center content-center border-[1px] border-solid px-2 py-4 w-full">
         <div className="lg:w-1/5 md:w-1/5 lg:block md:block overflow-x-auto max-w-96 w-full">
           <ul className="w-full lg:block md:block flex justify-center content-center items-center">
-            <li className="h-12 mb-4 lg:block md:block hidden">
-              <p className="px-4 py-2">+91{userProfile?.mobileNumber}</p>
-            </li>
+            
             <Link
               to={`/user-Profile/MyOrder`}
               className="px-4 py-2 hover:bg-gray-200 mb-4 flex gap-2 content-center items-center cursor-pointer"

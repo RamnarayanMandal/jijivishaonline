@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 
 import "./App.css";
 import { Outlet } from "react-router-dom";
@@ -12,12 +11,14 @@ import Navbar2 from "./components/Navbar/Navbar2";
 import { IconContext } from "react-icons/lib";
 import IconLabelTabs from "./components/Navbar/IconLabelTabs";
 import ProductHome from "./components/Product/ProductDetails/ProductHome";
+import { Api } from "./api";
 
 function App() {
   return (
     <>
       <Navbar1 />
       <Navbar2 />
+      <Api/>
       <Outlet />
       <UpperFooter />
       <Footer />

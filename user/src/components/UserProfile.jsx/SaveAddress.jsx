@@ -11,14 +11,14 @@ import { addressActions } from "../../store/addressSlice";
 const SaveAddress = () => {
   const [address, setAddress] = useState([]);
   const userId = localStorage.getItem("userId");
-  const disatch = useDispatch()
+  const dispatch = useDispatch();
   const URI = import.meta.env.VITE_API_URL;
 
   const fetchAddress = async () => {
     try {
-      const resp = await axios.get(`${URI}/user/get-address/${userId}`);
-      setAddress(resp.data.address);
-      disatch(addressActions.updateAddress(resp.data.address))
+      const resp = await axios.get(`${URI}api/user/get-address/${userId}`);
+      setAddress(resp.data.addresses); // Ensure this matches the actual response structure
+      dispatch(addressActions.updateAddress(resp.data.addresses));
     } catch (error) {
       console.log(error);
     }
@@ -30,11 +30,11 @@ const SaveAddress = () => {
 
   const handleDelete = async (addressId) => {
     try {
-      await axios.delete(`${URI}/api/users/address/${userId}/${addressId}`);
+      await axios.delete(`${URI}api/user/address/${userId}/${addressId}`);
       fetchAddress();
       Swal.fire({
         title: 'Success!',
-        text: 'Address is deleted successfully',
+        text: 'Address deleted successfully',
         icon: 'success',
         confirmButtonText: 'OK'
       });
@@ -65,10 +65,7 @@ const SaveAddress = () => {
   };
 
   return (
-    <div
-      className="w-full flex flex-col gap-4 p-4 mt-2"
-      style={{ maxHeight: "400px", overflowY: "auto" }}
-    >
+    <div className="w-full flex flex-col gap-4 p-4 mt-2" style={{ maxHeight: "400px", overflowY: "auto" }}>
       {address.length > 0 ? (
         address.map((addr, index) => (
           <div key={addr._id} className="flex gap-4 content-center">
@@ -84,11 +81,9 @@ const SaveAddress = () => {
                   <IoCheckmarkDone className="text-blue-600 text-xl font-extrabold" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm">{addr.name}</p>
+                  <p className="text-sm font-semibold">{addr.name}</p>
                   <p className="text-sm">{addr.street}</p>
-                  <p className="text-sm">
-                    {addr.city}, {addr.state}, {addr.country}
-                  </p>
+                  <p className="text-sm">{addr.city}, {addr.state}, {addr.country}</p>
                   <p className="text-sm">{addr.postalCode}</p>
                   <p className="text-sm">Phone: {addr.phone}</p>
                 </div>
@@ -105,27 +100,18 @@ const SaveAddress = () => {
               </div>
             </div>
           </div>
-          
         ))
       ) : (
         <div className="block justify-center items-center w-full">
           <p className="text-sm text-gray-600 text-center">No address available</p>
-          <div className="flex justify-center items-center w-full">
-         
-          </div>
-       </div>
-     
+        </div>
       )}
       <div className="flex justify-center content-center items-center">
-      <Link to={'/addressForm'}
-            className="flex gap-2 text-xs  items-center my-4  justify-center px-4 py-1 border border-transparent rounded-lg shadow-sm  font-medium text-white bg-green-500 hover:bg-green-600"
-
-          >
-            Add New Address
-
+        <Link to="/addressForm" className="flex gap-2 text-xs items-center my-4 justify-center px-4 py-1 border border-transparent rounded-lg shadow-sm font-medium text-white bg-green-500 hover:bg-green-600">
+          Add New Address
         </Link>
       </div>
-    </div >
+    </div>
   );
 };
 
