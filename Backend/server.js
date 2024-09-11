@@ -8,7 +8,9 @@ const bannerRoutes = require("./admin/routes/bannerRoutes");
 const productRoutes = require("./admin/routes/productRoutes");
 const featuredImgRoutes = require("./admin/routes/featureRoutes");
 const BlogRoutes = require("./blogs/blogsRoutes");
-const PerspectiveRoutes = require("./Perspective/PerspectiveRoutes")
+const PerspectiveRoutes = require("./Perspective/PerspectiveRoutes");
+
+const navbarIconsRoutes = require("./admin/routes/navIconsRoutes");
 
 const addressRoutes = require("./user/routes/addressRoutes");
 
@@ -26,7 +28,7 @@ app.get("/", (req, res) => {
 
 //user register
 app.use("/api/user", userRoutes);
-app.use("/api/users",addressRoutes);
+app.use("/api/users", addressRoutes);
 //admin register
 app.use("/api/admin", adminRoutes);
 
@@ -34,9 +36,11 @@ app.use("/api/admin", adminRoutes);
 
 app.use("/api/admin", bannerRoutes);
 app.use("/api/admin", productRoutes);
-app.use("/api/admin",featuredImgRoutes);
+app.use("/api/admin", featuredImgRoutes);
 
 app.use("/api/admin", BlogRoutes);
+
+app.use("/api/navbarIcons", navbarIconsRoutes);
 
 app.use("/api/perspective", PerspectiveRoutes);
 

@@ -43,11 +43,19 @@ const Navbar = () => {
         </Link>
 
         <Link
-          to="/Manage-Blogs"
+          to="/Blogs-list"
           className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
         >
           <Users2 className="h-5 w-5" />
           Manage Blogs
+        </Link>
+
+        <Link
+          to="/manage-nav-icons"
+          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+        >
+          <Users2 className="h-5 w-5" />
+          Manage NavIcons
         </Link>
         <Link
           to="#"

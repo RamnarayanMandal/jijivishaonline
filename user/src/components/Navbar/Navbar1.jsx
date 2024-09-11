@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import logo from "../../assets/JIJIVISHA-Logo.png";
 import SearchIcon from "@mui/icons-material/Search";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
@@ -10,11 +9,14 @@ import { Link, useNavigate } from "react-router-dom";
 import ShowCart from "../cart/ShowCart";
 import { IoIosPersonAdd } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
+import axios from "axios";
 
 const Navbar1 = () => {
   const navigation = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [logo, setLogo] = useState("");
+  const [icons, setIcons] = useState([]);
 
   // Mock user profile data (replace with actual data from your backend)
   const userProfile = {
@@ -26,6 +28,24 @@ const Navbar1 = () => {
     // Check if the token is in localStorage
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
+
+    // Fetch data from API
+    const fetchNavbarData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5001/api/navbarIcons/getAll"
+        );
+        if (response.data && response.data.length > 0) {
+          const { filename } = response.data[0]; // Assuming the first item is the logo
+          setLogo(`http://localhost:5001/uploads/${filename}`); // Adjust URL as needed
+          setIcons(response.data); // Store all icons
+        }
+      } catch (error) {
+        console.error("Error fetching navbar data:", error);
+      }
+    };
+
+    fetchNavbarData();
   }, []);
 
   const handleLogout = () => {
@@ -45,14 +65,16 @@ const Navbar1 = () => {
       {/* Logo and Icons for Mobile and Medium View */}
       <div className="flex flex-col md:flex-row w-full md:w-auto items-center mb-4 md:mb-0">
         <div className="flex-shrink-0 flex items-center justify-center md:justify-start md:w-1/2 w-1/3 gap-20">
-          <img
-            src={logo}
-            alt="Logo"
-            className="h-full object-contain cursor-pointer"
-            onClick={() => {
-              navigation("/");
-            }}
-          />
+          {logo && (
+            <img
+              src={logo}
+              alt="Logo"
+              className="h-full object-contain cursor-pointer"
+              onClick={() => {
+                navigation("/");
+              }}
+            />
+          )}
 
           {/* Icons and Menu Icon for Mobile and Medium View */}
           <div className="flex-grow flex items-center justify-center md:justify-end space-x-4">
@@ -82,12 +104,15 @@ const Navbar1 = () => {
       {/* Icons and Login/Logout Button for Medium and Large View */}
       <div className="hidden md:flex lg:w-1/4 items-center justify-center md:justify-end space-x-4">
         <ul className="flex space-x-4 items-center m-8">
-          <li>
-            <FavoriteBorderIcon className="text-black text-sm md:text-base" />
-          </li>
-          <li>
-            <LocalShippingOutlinedIcon className="text-black text-sm md:text-base" />
-          </li>
+          {icons.map((icon) => (
+            <li key={icon._id}>
+              <img
+                src={`http://localhost:5001/uploads/${icon.filename}`} // Adjust URL as needed
+                alt="Icon"
+                className="text-black text-sm md:text-base"
+              />
+            </li>
+          ))}
           <li>
             <ShowCart />
           </li>
@@ -107,7 +132,9 @@ const Navbar1 = () => {
                       className="block px-4 py-2 hover:bg-gray-200 text-lg font-semibold"
                     >
                       My Account
-                      <p className="text-sm font-thin">{userProfile.mobileNumber}</p>
+                      <p className="text-sm font-thin">
+                        {userProfile.mobileNumber}
+                      </p>
                     </Link>
                     <Link
                       to={`/user-Profile/MyOrder`}
@@ -126,10 +153,15 @@ const Navbar1 = () => {
                       className="px-4 py-2 hover:bg-gray-200 flex justify-between items-center"
                     >
                       <span>My Wishlist</span>
-                      <span className="text-sm font-thin">₹{userProfile.wallet}</span>
+                      <span className="text-sm font-thin">
+                        ₹{userProfile.wallet}
+                      </span>
                     </Link>
                     <div className="border-t my-2"></div>
-                    <Link to="/faqs" className="block px-4 py-2 hover:bg-gray-200">
+                    <Link
+                      to="/faqs"
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
                       FAQ's
                     </Link>
                     <Link
