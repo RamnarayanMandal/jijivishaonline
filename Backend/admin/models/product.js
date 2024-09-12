@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema(
     quantity: { type: Number },
     inStock: { type: Number },
     productdescriptions: { type: String },
-    color: { type: String },
+    color: [{type: String}]  ,
     typeOfPrinting: { type: String },
     fabric: { type: String },
     additionalInfo1: { type: String },

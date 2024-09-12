@@ -53,10 +53,10 @@ const ViewCartAndUpdateCart = () => {
 
   return (
     <>
-      <div className='mt-10'>
+      <div className='my-10'>
         <CustomizedSteppers />
       </div>
-      <div className="p-4 md:flex md:justify-between md:gap-10">
+      <div className="p-4 md:flex md:justify-between md:gap-10 lg:px-[14%]">
         <div className="space-y-4 w-full md:w-8/12 border-t-2 border-gray-300 p-2">
           {bag.data.map((item) => (
             <div

@@ -1,5 +1,4 @@
-import { useState } from "react"; // Correct import
-import React from "react"; // Remove the duplicate useState
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { bagActions } from "../../../store/bagSlice";
 import { Snackbar, Alert } from "@mui/material";
@@ -13,14 +12,19 @@ const ProductInfo = ({ product }) => {
     return <p>Product not found</p>;
   }
 
+  // Parse the color array (assuming color[0] holds the actual color data)
+  const parsedColors = product.color && product.color[0] ? JSON.parse(product.color[0]) : [];
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(product.size ? product.size[0] : "");
+  const [selectedColor, setSelectedColor] = useState(parsedColors.length > 0 ? parsedColors[0] : "");
   const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
 
   const handleAddToCart = async (product) => {
     const token = localStorage.getItem("token");
-  
+
     if (!token) {
       Swal.fire({
         title: 'Login Required',
@@ -30,23 +34,26 @@ const ProductInfo = ({ product }) => {
       });
       return;
     }
-  
+
     try {
       await axios.post(`${URI}api/user/`, {
         userId,
         productId: product._id,
         productName: product.title,
-        quantity: 1,
+        quantity,
         price: product.price,
-        attributes: product.attributes,
+        attributes: {
+          size: selectedSize,
+          color: selectedColor,
+        },
         discount: product.discount,
-        Image: product.thumbnail,
+        image: product.thumbnail,
       });
 
       dispatch(
         bagActions.addToBag({
-          data: { ...product, quantity: 1 },
-          totalQuantity: 1,
+          data: { ...product, quantity, size: selectedSize, color: selectedColor },
+          totalQuantity: quantity,
         })
       );
 
@@ -102,19 +109,19 @@ const ProductInfo = ({ product }) => {
         )}
       </div>
 
-      {/* Size and Quantity Section */}
+      {/* Size and Color Section */}
       <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 my-4">
+        {/* Size Selection */}
         <div className="space-x-2">
           <label className="font-semibold">Size:</label>
           {product?.size?.map((size) => (
             <button
               key={size}
+              onClick={() => setSelectedSize(size)}
               className={`px-3 py-1 border ${
-                size === product.selectedSize
-                  ? "border-red-600"
-                  : "border-gray-300"
+                size === selectedSize ? "border-red-600" : "border-gray-300"
               } rounded ${
-                size === product.selectedSize ? "text-red-600" : "text-gray-700"
+                size === selectedSize ? "text-red-600" : "text-gray-700"
               }`}
             >
               {size}
@@ -122,34 +129,52 @@ const ProductInfo = ({ product }) => {
           ))}
         </div>
 
+        {/* Color Selection */}
+        <div className="space-x-2">
+          <label className="font-semibold">Color:</label>
+          {parsedColors.map((color) => (
+            <button
+              key={color}
+              onClick={() => setSelectedColor(color)}
+              style={{ backgroundColor: color }} // Set background color dynamically
+              className={`px-3 py-1 border ${
+                color === selectedColor ? "border-red-600" : "border-gray-300"
+              } rounded text-white`} // Add text color and border for selected color
+            >
+              {color}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Quantity Section */}
+      <div className="flex items-center">
+        <label className="font-semibold mr-2">Quantity:</label>
         <div className="flex items-center">
-          <label className="font-semibold mr-2">Quantity:</label>
-          <div className="flex items-center">
-            <button
-              onClick={handleDecreaseQuantity}
-              className="px-2 py-1 bg-gray-200 border border-gray-300 rounded"
-            >
-              -
-            </button>
-            <input
-              type="number"
-              value={quantity}
-              min={1}
-              className="w-16 border border-gray-300 rounded px-2 py-1 text-center mx-2"
-              onChange={(e) => setQuantity(Number(e.target.value))}
-            />
-            <button
-              onClick={handleIncreaseQuantity}
-              className="px-2 py-1 bg-gray-200 border border-gray-300 rounded"
-            >
-              +
-            </button>
-          </div>
+          <button
+            onClick={handleDecreaseQuantity}
+            className="px-2 py-1 bg-gray-200 border border-gray-300 rounded"
+          >
+            -
+          </button>
+          <input
+            type="number"
+            value={quantity}
+            min={1}
+            className="w-16 border border-gray-300 rounded px-2 py-1 text-center mx-2"
+            onChange={(e) => setQuantity(Number(e.target.value))}
+          />
+          <button
+            onClick={handleIncreaseQuantity}
+            className="px-2 py-1 bg-gray-200 border border-gray-300 rounded"
+          >
+            +
+          </button>
         </div>
       </div>
 
       {/* Buttons Section */}
-      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full">
+      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full mt-4">
         <button
           className="border-2 border-black py-2 px-4 text-black hover:border-none hover:bg-red-500 hover:text-white transition duration-300 flex justify-center items-center gap-2 w-full"
           onClick={(e) => {

@@ -60,7 +60,10 @@ export const AllLatestProduct = () => {
         productName: product.title,
         quantity: 1,
         price: product.price,
-        attributes: product.attributes,
+        attributes:{
+          size:product.size,
+          color:product.color
+        },
         discount: product.discount,
         Image: product.thumbnail,
       });

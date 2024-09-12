@@ -14,6 +14,8 @@ const navbarIconsRoutes = require("./admin/routes/navIconsRoutes");
 
 const addressRoutes = require("./user/routes/addressRoutes");
 
+const productOrderRoutes = require("./user/routes/productOrderRoutes");
+
 // QuickLink Footer
 const quickLinkRoutes = require("./QuickLink/routes/giftCardRoutes");
 
@@ -32,6 +34,7 @@ app.get("/", (req, res) => {
 //user register
 app.use("/api/user", userRoutes);
 app.use("/api/address", addressRoutes);
+app.use("/api/productOrder",productOrderRoutes)
 //admin register
 app.use("/api/admin", adminRoutes);
 

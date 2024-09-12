@@ -13,9 +13,10 @@ const AddProduct = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [alert, setAlert] = useState({ type: "", message: "" });
+  const [colorInput, setColorInput] = useState("");
   const navigate = useNavigate();
 
-  const URI = import.meta.env.VITE_API_URL; // Make sure to set your environment variable for the API URL
+  const URI = import.meta.env.VITE_API_URL;
 
   const onSubmit = async (data) => {
     if (!selectedFiles.length || !data.thumbnail) {
@@ -32,6 +33,10 @@ const AddProduct = () => {
       // Append image files to formData
       selectedFiles.forEach((file) => formData.append("images", file));
 
+      // Process color input and save as an array
+      const colorArray = colorInput.split(",").map((color) => color.trim());
+      formData.append("color", JSON.stringify(colorArray));
+
       // Append other form fields to formData
       Object.keys(data).forEach((key) => {
         formData.append(key, data[key]);
@@ -46,7 +51,6 @@ const AddProduct = () => {
         message: "Product added successfully!",
       });
 
-      // Redirect to the products page after a successful submission
       setTimeout(() => {
         navigate("/products");
       }, 2000);
@@ -72,12 +76,12 @@ const AddProduct = () => {
         setThumbnailPreview(reader.result);
       };
       reader.readAsDataURL(file);
-      setValue("thumbnail", file); // Save the file object directly
+      setValue("thumbnail", file); 
     }
   };
 
   return (
-    <div className="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div className="container mx-auto p-6 bg-gray-100 shadow-lg rounded-lg">
       <div className="flex justify-between content-center items-center">
         <h2 className="text-3xl font-semibold mb-6 text-gray-800">
           Add New Product
@@ -256,11 +260,14 @@ const AddProduct = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Colors (comma-separated)
+            </Label>
             <Input
               type="text"
-              {...register("color")}
-              placeholder="Enter color"
+              value={colorInput}
+              onChange={(e) => setColorInput(e.target.value)}
+              placeholder="Enter colors (e.g. Red, Blue, Green)"
               className="w-full text-black"
             />
           </div>
