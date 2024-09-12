@@ -18,6 +18,9 @@ import ViewCartAndUpdateCart from "./components/cart/ViewCartAndUpdateCart.jsx";
 import { MyAccount } from "./components/myaccount/MyAccount.jsx";
 import UserProfile from "./components/UserProfile.jsx/UserProfile.jsx";
 import AddressForm from "./components/UserProfile.jsx/AddressForm.jsx";
+import SelectAddress from "./components/cart/SelectAddress.jsx";
+import PaymentHomepage from "./components/payment/PaymentHomepage.jsx";
+
 import GiftCards from "./components/QuickLink/GiftCards.jsx";
 import CorporateGifting from "./components/QuickLink/CorporateGifting.jsx";
 
@@ -70,6 +73,14 @@ const router = createBrowserRouter([
       },
       {
         path: "/addressForm",
+        element: <AddressForm/>, 
+      },{
+        path: "/selectAddress",
+        element: <SelectAddress/>,  // This component will be displayed when the path is "/user-Profile/SaveAddress"
+      },{
+        path: "/payment",
+        element: <PaymentHomepage/>,  // This component will be displayed when the path is "/user-Profile/SaveAddress"
+      }
         element: <AddressForm />,
       },
 

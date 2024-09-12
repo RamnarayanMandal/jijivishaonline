@@ -1,0 +1,12 @@
+/* PaymentBill.css */
+.payment-bill-container {
+    padding: 1rem;
+    max-width: 768px;
+    margin: 0 auto;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 0.375rem;
+    display: flex;
+    flex-direction: column;
+  }
+  

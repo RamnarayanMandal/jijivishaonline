@@ -3,15 +3,15 @@ const router = express.Router();
 const userController = require('../controllers/address');
 
 // Add a new address to user
-router.post('/address/:userId', userController.addAddress);
+router.post('/:userId', userController.addAddress);
 
-router.get('/get-address/:userId', userController.getAllAddresses);
+router.get('/:userId', userController.getAllAddresses);
 
 
 // Update an existing address of user
-router.put('/address/:userId/:addressId', userController.updateAddress);
+router.put('/:userId/:addressId', userController.updateAddress);
 
 // Delete an address of user
-router.delete('/address/:userId/:addressId', userController.deleteAddress);
+router.delete('/:userId/:addressId', userController.deleteAddress);
 
 module.exports = router;

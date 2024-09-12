@@ -115,9 +115,32 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.getUserDetails = async (req, res) => {
+  const userId = req.params.userId; // Correctly extract userId
+  try {
+    // Find the user and exclude password, address, and cart
+    const newUser = await User.findById(userId).select(
+      "-password -addresses -cart"
+    );
+
+    if (!newUser) {
+      return res.status(404).json({ message: "User not found" }); // 404 for not found
+    }
+
+    return res.status(200).json({
+      message: "User fetched successfully",
+      userDetails: newUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error while fetching user details",
+      error,
+    });
+  }
+};
+
 // Add a new item to the cart
 exports.addItemToCart = async (req, res) => {
-
   const {
     userId,
     productId,
@@ -129,12 +152,11 @@ exports.addItemToCart = async (req, res) => {
     Image,
   } = req.body;
 
-  console.log(productId, productName, quantity, price, attributes,Image)
+  console.log(productId, productName, quantity, price, attributes, Image);
 
   try {
     // Find the user by userId
     let user = await User.findById(userId);
-
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -159,7 +181,7 @@ exports.addItemToCart = async (req, res) => {
         price,
         attributes,
         discount,
-        Image,
+        thumbnail: Image,
       });
     }
 
@@ -399,7 +421,8 @@ exports.getTotalQuantity = async (req, res) => {
       attributes: item.attributes,
       discountPercentage: item.discountPercentage,
       promotionCode: item.promotionCode,
-      Image: item.Image,
+
+      thumbnail: item.thumbnail,
     }));
 
     const totalQuantity = user.cart.reduce(
@@ -407,7 +430,7 @@ exports.getTotalQuantity = async (req, res) => {
       0
     );
 
-    res.json({ totalQuantity, data: productDetails });
+    res.json({ totalQuantity, product: productDetails });
   } catch (error) {
     console.error("Error fetching user cart:", error);
     res.status(500).json({ message: "Server Error" });

@@ -11,6 +11,7 @@ import ShowCart from "../cart/ShowCart";
 import { FaUserCircle } from "react-icons/fa";
 import axios from "axios";
 import Navbar1Search from "./Navbar1Search";
+import { useSelector } from "react-redux";
 
 const Navbar1 = () => {
   const URI = import.meta.env.VITE_API_URL;
@@ -19,12 +20,10 @@ const Navbar1 = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [logo, setLogo] = useState("");
   const [icons, setIcons] = useState([]);
+  const userProfile = useSelector((store) => store.user);
 
   // Mock user profile data (replace with actual data from your backend)
-  const userProfile = {
-    mobileNumber: "9876543210",
-    wallet: "500",
-  };
+
 
   useEffect(() => {
     // Check if the token is in localStorage
@@ -117,7 +116,7 @@ const Navbar1 = () => {
                     >
                       My Account
                       <p className="text-sm font-thin">
-                        {userProfile.mobileNumber}
+                        {userProfile?.email}
                       </p>
                     </Link>
                     <Link

@@ -33,9 +33,6 @@ export default function ShowCart() {
   const dispatch = useDispatch();
   const bag = useSelector((store) => store.bag) || { totalQuantity: 0, data: [] };
 
-  
-
-  console.log("cart",bag)
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -146,7 +143,7 @@ export default function ShowCart() {
 
         {/* Conditionally show the item count */}
         {bag.totalQuantity > 0 && (
-          <p className='absolute h-7 w-7 -right-0 -top-5 bg-deep-purple-400 rounded-full text-white'>
+          <p className='absolute h-7 w-7 -right-0 -top-5 bg-deep-purple-400 rounded-full text-white bg-red-600'>
             {bag.totalQuantity}
           </p>
         )}

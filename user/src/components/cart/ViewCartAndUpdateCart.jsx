@@ -65,7 +65,7 @@ const ViewCartAndUpdateCart = () => {
             >
               <div className="flex items-center gap-4">
                 <img
-                  src={`${URI}${item.images[0]}`}
+                  src={`${URI}${item.thumbnail}`}
                   alt={item.title}
                   className="w-32 h-32 object-cover rounded-md"
                 />
@@ -129,7 +129,7 @@ const ViewCartAndUpdateCart = () => {
           </div>
 
           <button
-            onClick={() => navigate("/CheckoutForm")}
+            onClick={() => navigate("/selectAddress")}
             className="w-full bg-red-400 text-white py-2 rounded mt-6 text-lg"
           >
             Place Order
