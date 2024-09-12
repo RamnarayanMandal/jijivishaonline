@@ -247,7 +247,14 @@ exports.updateProductById = async (req, res) => {
       productreviews,
     } = req.body;
 
-    console.log(title, quantity, typeOfPrinting, productdescriptions, color, typeOfPrinting,)
+    console.log(
+      title,
+      quantity,
+      typeOfPrinting,
+      productdescriptions,
+      color,
+      typeOfPrinting
+    );
 
     // Find the product by ID
     const product = await Product.findById(id);
@@ -263,7 +270,7 @@ exports.updateProductById = async (req, res) => {
     if (thumbnail || images) {
       const oldImagePaths = [product.thumbnail, ...product.images];
       oldImagePaths.forEach((imagePath) => {
-        const fullPath = path.join(__dirname, '..', imagePath); // Adjust path if needed
+        const fullPath = path.join(__dirname, "..", imagePath); // Adjust path if needed
         if (fs.existsSync(fullPath)) {
           fs.unlinkSync(fullPath);
         }
@@ -284,7 +291,8 @@ exports.updateProductById = async (req, res) => {
     product.size = size || product.size;
     product.quantity = quantity || product.quantity;
     product.inStock = inStock || product.inStock;
-    product.productdescriptions = productdescriptions || product.productdescriptions;
+    product.productdescriptions =
+      productdescriptions || product.productdescriptions;
     product.color = color || product.color;
     product.typeOfPrinting = typeOfPrinting || product.typeOfPrinting;
     product.fabric = fabric || product.fabric;
@@ -446,9 +454,6 @@ exports.getProductBySubcategory = async (req, res) => {
     });
   }
 };
-   
-
-
 
 exports.getCategoriesWithSubcategories = async (req, res) => {
   try {
@@ -457,16 +462,16 @@ exports.getCategoriesWithSubcategories = async (req, res) => {
       {
         $group: {
           _id: "$category",
-          subcategories: { $addToSet: "$subcategory" }
-        }
+          subcategories: { $addToSet: "$subcategory" },
+        },
       },
       {
         $project: {
           _id: 0,
           category: "$_id",
-          subcategories: 1
-        }
-      }
+          subcategories: 1,
+        },
+      },
     ]);
 
     res.status(200).json(result);
@@ -476,10 +481,10 @@ exports.getCategoriesWithSubcategories = async (req, res) => {
   }
 };
 
-
 exports.postReview = async (req, res) => {
   try {
-    const { username, email, rating, description, userId, productId } = req.body;
+    const { username, email, rating, description, userId, productId } =
+      req.body;
 
     // Find the product by ID
     const product = await Product.findById(productId);
@@ -525,7 +530,6 @@ exports.postReview = async (req, res) => {
 
     // Send back the updated reviews list
     res.status(201).json(product.productreviews);
-
   } catch (error) {
     console.error("Error posting review:", error);
     res.status(500).json({ message: "Server Error", error });
@@ -546,12 +550,11 @@ exports.getAverageRating = async (req, res) => {
     );
     const averageRating = totalRating / totalReviews;
     res.status(200).json({ averageRating });
-
   } catch (error) {
     console.error("Error getting average rating:", error);
     res.status(500).json({ message: "Server Error", error });
   }
-}
+};
 
 exports.getTopRatedProducts = async (req, res) => {
   try {
@@ -570,7 +573,6 @@ exports.getTopRatedProducts = async (req, res) => {
     res.status(500).json({ message: "Server Error", error });
   }
 };
-
 
 exports.getProductReviews = async (req, res) => {
   try {
@@ -592,7 +594,6 @@ exports.getProductReviews = async (req, res) => {
   }
 };
 
-
 exports.deleteProductReview = async (req, res) => {
   try {
     const { productId, reviewId } = req.params;
@@ -609,9 +610,35 @@ exports.deleteProductReview = async (req, res) => {
     product.productreviews.splice(reviewIndex, 1);
     await product.save();
     res.status(204).json({ message: "Review deleted successfully" });
-
   } catch (error) {
     console.error("Error deleting product review:", error);
     res.status(500).json({ message: "Server Error", error });
+  }
+};
+
+exports.searchProduct = async (req, res) => {
+  try {
+    const { searchTerm } = req.query;
+
+    if (!searchTerm) {
+      return res.status(400).json({ message: "Search term is required" });
+    }
+
+    // Use MongoDB's $or operator to search in multiple fields
+    const filteredProducts = await Product.find({
+      $or: [
+        { title: { $regex: searchTerm, $options: "i" } }, // 'i' for case-insensitive
+        { category: { $regex: searchTerm, $options: "i" } },
+        { subcategory: { $regex: searchTerm, $options: "i" } },
+      ],
+    });
+
+    if (filteredProducts.length === 0) {
+      return res.status(404).json({ message: "No products found" });
+    }
+
+    res.json(filteredProducts);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

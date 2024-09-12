@@ -17,6 +17,8 @@ import Banner from "./components/Banner/Banner";
 import BlogsHome from "./components/Blogs/BlogsHome";
 import BlogsList from "./components/Blogs/BlogsList";
 import ManageNavIcons from "./components/ManageAll/ManageNavIcons";
+import Order from "./Pages/Order";
+import BookOrder from "./Pages/BookOrder";
 
 // Create the router instance
 const router = createBrowserRouter([
@@ -72,6 +74,14 @@ const router = createBrowserRouter([
       {
         path: "/manage-nav-icons",
         element: <ManageNavIcons />,
+      },
+      {
+        path: "/order",
+        element: <Order />,
+      },
+      {
+        path: "/bookOrder",
+        element: <BookOrder />,
       },
     ],
   },

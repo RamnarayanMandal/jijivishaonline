@@ -10,9 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { bagActions } from "../../store/bagSlice";
 import { Snackbar, Alert } from "@mui/material";
-import axios from 'axios';
-import Swal from 'sweetalert2';
-
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export function Product({ products }) {
   const [itemsPerSlide, setItemsPerSlide] = useState(1);
@@ -21,7 +20,7 @@ export function Product({ products }) {
   const navigate = useNavigate();
 
   const URI = import.meta.env.VITE_API_URL;
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const updateItemsPerSlide = () => {
@@ -44,17 +43,17 @@ export function Product({ products }) {
 
   const handleAddToCart = async (product) => {
     const token = localStorage.getItem("token");
-  
+
     if (!token) {
       Swal.fire({
-        title: 'Login Required',
-        text: 'Please log in to add products to the cart.',
-        icon: 'warning',
-        confirmButtonText: 'OK',
+        title: "Login Required",
+        text: "Please log in to add products to the cart.",
+        icon: "warning",
+        confirmButtonText: "OK",
       });
       return;
     }
-  
+
     try {
       const response = await axios.post(`${URI}api/user/`, {
         userId,
@@ -66,7 +65,7 @@ export function Product({ products }) {
         discount: product.discount,
         Image: product.thumbnail,
       });
-  
+
       // Dispatch the action to add to the Redux store (bag)
       dispatch(
         bagActions.addToBag({
@@ -74,19 +73,21 @@ export function Product({ products }) {
           totalQuantity: 1,
         })
       );
-  
+
       // Show success notification
       setOpenSnackbar(true);
     } catch (error) {
       // Catch the error and show an error message
       console.error("Error adding item to cart", error);
-  
+
       // Display a user-friendly message or show a snackbar with error info
-      setOpenSnackbar({ open: true, message: "Error adding item to cart", severity: "error" });
+      setOpenSnackbar({
+        open: true,
+        message: "Error adding item to cart",
+        severity: "error",
+      });
     }
   };
-  
-  
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -108,40 +109,42 @@ export function Product({ products }) {
           1024: { slidesPerView: 4 }, // large screens
         }}
       >
-        {products && products.map((product) => (
-          <SwiperSlide key={product._id}>
-            <div className="flex-shrink-0 w-72 mx-2 my-10">
-              <div className="border-2 border-gray-300 bg-gray-50 shadow-lg overflow-hidden hover:border-red-500 transition-transform duration-300 transform hover:scale-105 cursor-pointer" >
-                <div className="overflow-hidden">
-                  <img
-                    src={`${URI}${product.thumbnail}`}
-                    alt={product.title}
-                    className="w-full object-cover h-80"
-                    onClick={() => navigate(`/product/${product._id}`)}/>
-                </div>
-                <div className="p-4 flex flex-col justify-between">
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="font-semibold text-base w-[90%]">
-                      {product.title}
-                    </p>
-                    <CiHeart className="hover:text-red-500 text-2xl cursor-pointer" />
+        {products &&
+          products.map((product) => (
+            <SwiperSlide key={product._id}>
+              <div className="flex-shrink-0 w-72 mx-2 my-10">
+                <div className="border-2 border-gray-300 bg-gray-50 shadow-lg overflow-hidden hover:border-red-500 transition-transform duration-300 transform hover:scale-105 cursor-pointer">
+                  <div className="overflow-hidden">
+                    <img
+                      src={`${URI}${product.thumbnail}`}
+                      alt={product.title}
+                      className="w-full object-cover h-80"
+                      onClick={() => navigate(`/product/${product._id}`)}
+                    />
                   </div>
-                  <p className="mb-4">₹ {product.price.toFixed(2)}</p>
-                  <button
-                    className="border-2 border-black py-2 px-4 text-black hover:border-none hover:bg-red-500 hover:text-white transition duration-300 flex justify-center items-center gap-2 w-full"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent click event from triggering the parent div
-                      handleAddToCart(product);
-                    }}
-                  >
-                    <IoCartOutline className="text-xl" />
-                    <p>Add to Cart</p>
-                  </button>
+                  <div className="p-4 flex flex-col justify-between">
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="font-semibold text-base w-[90%]">
+                        {product.title}
+                      </p>
+                      <CiHeart className="hover:text-red-500 text-2xl cursor-pointer" />
+                    </div>
+                    <p className="mb-4">₹ {product.price.toFixed(2)}</p>
+                    <button
+                      className="border-2 border-black py-2 px-4 text-black hover:border-none hover:bg-red-500 hover:text-white transition duration-300 flex justify-center items-center gap-2 w-full"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent click event from triggering the parent div
+                        handleAddToCart(product);
+                      }}
+                    >
+                      <IoCartOutline className="text-xl" />
+                      <p>Add to Cart</p>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
+            </SwiperSlide>
+          ))}
       </Swiper>
       <style jsx>{`
         .swiper-button-next,

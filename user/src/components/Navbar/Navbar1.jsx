@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
+
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import ShowCart from "../cart/ShowCart";
-import { IoIosPersonAdd } from "react-icons/io";
+
 import { FaUserCircle } from "react-icons/fa";
 import axios from "axios";
+import Navbar1Search from "./Navbar1Search";
 
 const Navbar1 = () => {
+  const URI = import.meta.env.VITE_API_URL;
   const navigation = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -32,12 +34,10 @@ const Navbar1 = () => {
     // Fetch data from API
     const fetchNavbarData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5001/api/navbarIcons/getAll"
-        );
+        const response = await axios.get(`${URI}api/navbarIcons/getAll`);
         if (response.data && response.data.length > 0) {
           const { filename } = response.data[0]; // Assuming the first item is the logo
-          setLogo(`http://localhost:5001/uploads/${filename}`); // Adjust URL as needed
+          setLogo(`${URI}uploads/${filename}`); // Adjust URL as needed
           setIcons(response.data); // Store all icons
         }
       } catch (error) {
@@ -86,33 +86,17 @@ const Navbar1 = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="relative flex-grow w-full flex items-center">
-        <input
-          type="search"
-          placeholder="Search for India's best products"
-          className="w-full px-2 py-2 pl-10 border border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500"
-        />
-        {/* Search Button */}
-        <button
-          className="absolute right-0 flex items-center justify-center bg-black text-white p-2 px-2 rounded-r-sm text-md"
-          style={{ top: "50%", transform: "translateY(-50%)" }}
-        >
-          Search
-        </button>
-      </div>
+      <Navbar1Search />
 
       {/* Icons and Login/Logout Button for Medium and Large View */}
       <div className="hidden md:flex lg:w-1/4 items-center justify-center md:justify-end space-x-4">
         <ul className="flex space-x-4 items-center m-8">
-          {icons.map((icon) => (
-            <li key={icon._id}>
-              <img
-                src={`http://localhost:5001/uploads/${icon.filename}`} // Adjust URL as needed
-                alt="Icon"
-                className="text-black text-sm md:text-base"
-              />
-            </li>
-          ))}
+          <li>
+            <FavoriteBorderIcon />
+          </li>
+          <li>
+            <LocalShippingOutlinedIcon />
+          </li>
           <li>
             <ShowCart />
           </li>

@@ -1,10 +1,11 @@
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import HomeIcon from '@mui/icons-material/Home';
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import SearchIcon from '@mui/icons-material/Search';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import * as React from "react";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import HomeIcon from "@mui/icons-material/Home";
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import SearchIcon from "@mui/icons-material/Search";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { Link } from "react-router-dom";
 
 export default function IconLabelTabs() {
   const [value, setValue] = React.useState(0);
@@ -21,10 +22,20 @@ export default function IconLabelTabs() {
         aria-label="icon label tabs example"
         className="w-full"
       >
-        <Tab icon={<HomeIcon />} label="Home" />
-        <Tab icon={<PermIdentityIcon />} label="Account" />
+        <Tab icon={<HomeIcon />} label="Home" component={Link} to="/" />
+        <Tab
+          icon={<PermIdentityIcon />}
+          label="Account"
+          component={Link}
+          to="/user-Profile/MyAccount"
+        />
         <Tab icon={<SearchIcon />} label="Search" />
-        <Tab icon={<FavoriteBorderIcon />} label="Favorites" />
+        <Tab
+          icon={<FavoriteBorderIcon />}
+          label="Favorites"
+          component={Link}
+          to="/user-Profile/MyWishlist"
+        />
       </Tabs>
     </div>
   );
