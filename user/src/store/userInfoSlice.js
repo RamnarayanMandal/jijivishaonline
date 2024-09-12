@@ -7,7 +7,8 @@ const userSlice = createSlice({
     },
     reducers: {
         updateUser: (state, action) => {
-          
+
+            console.log("store",  action.payload)
             return {...state,...action.payload};
         },
         clearUser: (state) => {
@@ -16,6 +17,6 @@ const userSlice = createSlice({
     }
  });
 
-export const userActions = userSlice.actions;
+export const UserActions = userSlice.actions;
 
 export default userSlice;

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { addressActions } from "./store/addressSlice";
 import { bagActions } from "./store/bagSlice";
+import { UserActions } from "./store/userInfoSlice";
 
 export const Api = () => {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ export const Api = () => {
 
   const fetchAddress = async (signal) => {
     try {
-      const resp = await axios.get(`${URI}api/user/get-address/${userId}`, { signal });
+      const resp = await axios.get(`${URI}api/address/${userId}`, { signal });
       // console.log("fetchAddress",resp.data.address);
       dispatch(addressActions.updateAddress(resp.data.address));
     } catch (error) {
@@ -51,17 +52,44 @@ export const Api = () => {
 
   const fetchItems = async (signal) => {
     try {
-      const resp = await axios.get(`${URI}api/cart/totalProductQuantity/${userId}`, { signal });
-      dispatch(bagActions.addToBag(resp.data));
+      const resp = await axios.get(`${URI}api/user/${userId}`, { signal });
+  
+      // Assuming `resp.data` is the array of product objects as you provided
+      const fetchedItems = resp.data;
+  
+      // Loop over the fetched items and dispatch them to the Redux store
+      fetchedItems.forEach(item => {
+        const productData = {
+          product: {
+            _id: item._id,  // Product ID (_id from fetched data)
+            productId: item.productId,  // Unique product ID
+            productName: item.productName,
+            price: item.price,
+            thumbnail: item.thumbnail,  // Correct image field
+            discount: item.discount || 0,  // Include discount if provided
+            attributes: item.attributes || {},  // Default to an empty object if not provided
+          },
+          quantity: item.quantity || 1  // Set the quantity, default to 1 if not provided
+        };
+  
+        // Dispatch to Redux with correct structure
+        dispatch(bagActions.addToBag({
+          data: productData.product, // Pass the product inside `data`
+          quantity: productData.quantity // Pass the quantity separately
+        }));
+      });
+  
     } catch (error) {
       console.error("Error fetching items", error);
     }
   };
+  
+  
 
   const fetchUserDetails = async (signal) => {
     try {
-      const resp = await axios.get(`${URI}user/getUser/${userId}`, { signal });
-      console.log("User details:", resp.data);
+      const resp = await axios.get(`${URI}api/user/getUser/${userId}`, { signal });
+      dispatch(UserActions.updateUser(resp.data.userDetails));
     } catch (error) {
       console.error("Error fetching user details", error);
     }

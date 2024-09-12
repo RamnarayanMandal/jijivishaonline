@@ -16,7 +16,7 @@ const SaveAddress = () => {
 
   const fetchAddress = async () => {
     try {
-      const resp = await axios.get(`${URI}api/user/get-address/${userId}`);
+      const resp = await axios.get(`${URI}api/address/${userId}`);
       setAddress(resp.data.addresses); // Ensure this matches the actual response structure
       dispatch(addressActions.updateAddress(resp.data.addresses));
     } catch (error) {

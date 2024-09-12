@@ -9,8 +9,8 @@ import SaveAddress from "./SaveAddress";
 import { useDispatch, useSelector } from "react-redux";
 import MyAcount from "./MyAcount";
 import Wallet from "./Wallet";
-import { userActions } from "../../store/userInfoSlice";
 import OrderHistory from "./OrderHistory";
+import { UserActions } from "../../store/userInfoSlice";
 
 const UserProfile = () => {
   const { name } = useParams();
@@ -42,7 +42,7 @@ const UserProfile = () => {
   // Logout function to clear user data
   const logout = () => {
     localStorage.clear();
-    dispatch(userActions.clearUser());
+    dispatch(UserActions.clearUser());
     navigate("/");
     window.location.reload();
   };

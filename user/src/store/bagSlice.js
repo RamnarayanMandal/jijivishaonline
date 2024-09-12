@@ -9,6 +9,7 @@ const bagSlice = createSlice({
   reducers: {
     addToBag: (state, action) => {
       const newProduct = action.payload.data;
+      console.log("bagSlice",newProduct);
       const quantityToAdd = action.payload.quantity || 1; // Quantity to add, default is 1
       const existingProductIndex = state.data.findIndex(
         (item) => item._id === newProduct._id

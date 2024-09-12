@@ -1,20 +1,27 @@
 const User = require('../models/User');
+const mongoose = require('mongoose');
 
 exports.addAddress = async (req, res) => {
-  const { userId } = req.params; // This should get the userId from the route parameter
+  const { userId } = req.params; 
+  console.log(userId)
   const { street, city, state, country, postalCode, name, phone, addressType, location } = req.body;
 
-  console.log(userId)
-
   try {
-    // Find the user by userId
+    // Ensure userId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    // Find user by userId
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Add new address to user
+    // Create new address
     const newAddress = { street, city, state, country, postalCode, name, phone, addressType, location };
+    
+    // Push new address to the user's addresses array
     user.addresses.push(newAddress);
     await user.save();
 
@@ -23,6 +30,7 @@ exports.addAddress = async (req, res) => {
     res.status(500).json({ message: 'Error adding address', error });
   }
 };
+
 
 
 // Update an existing address of user

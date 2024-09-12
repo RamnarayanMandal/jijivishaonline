@@ -26,7 +26,7 @@ const cartItemSchema = new mongoose.Schema({
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
   discount: { type: Number },
-  Image:{
+  thumbnail: {
     type: String,
     required: true,
   },
@@ -34,7 +34,6 @@ const cartItemSchema = new mongoose.Schema({
     size: { type: String },
     color: { type: String },
   },
-  
 });
 
 // Define the User schema
@@ -43,7 +42,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String },
   customUserId: { type: String },
   isVerified: { type: Boolean, default: false },
-  mobileNumber: { type: String},
+  mobileNumber: { type: String },
   name: { type: String },
   lastName: { type: String },
   phone: { type: String },
@@ -55,7 +54,6 @@ const userSchema = new mongoose.Schema({
   otp: { type: String }, // Field for OTP
   otpExpires: { type: Date }, // Field for OTP expiry
 });
-
 
 // Create the User model
 const User = mongoose.model("User", userSchema);

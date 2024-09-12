@@ -15,6 +15,8 @@ router.post("/login", userController.login);
 
 router.post('/', userController.addItemToCart);
 
+router.get('/getUser/:userId', userController.getUserDetails)
+
 // Get cart by user ID
 router.get('/:userId', userController.getCartByUserId);
 
