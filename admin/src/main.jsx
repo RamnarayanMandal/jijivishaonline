@@ -19,6 +19,8 @@ import BlogsList from "./components/Blogs/BlogsList";
 import ManageNavIcons from "./components/ManageAll/ManageNavIcons";
 import Order from "./Pages/Order";
 import BookOrder from "./Pages/BookOrder";
+import QuickLinkHome from "./components/QuickLink/QuickLinkHome";
+import GiftCards from "./components/QuickLink/GiftCards";
 
 // Create the router instance
 const router = createBrowserRouter([
@@ -82,6 +84,15 @@ const router = createBrowserRouter([
       {
         path: "/bookOrder",
         element: <BookOrder />,
+      },
+      {
+        path: "/quickLinkHome",
+        element: <QuickLinkHome />,
+      },
+
+      {
+        path: "/giftCards",
+        element: <GiftCards/>,
       },
     ],
   },

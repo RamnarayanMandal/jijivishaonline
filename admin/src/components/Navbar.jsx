@@ -63,7 +63,7 @@ const Navbar = () => {
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
                 <Users2 className="h-5 w-5" />
-                Manage Category
+               Category
               </Link>
 
               <Link
@@ -71,7 +71,7 @@ const Navbar = () => {
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
                 <Users2 className="h-5 w-5" />
-                Manage Banner
+            Banner
               </Link>
 
               <Link
@@ -79,7 +79,7 @@ const Navbar = () => {
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
                 <Users2 className="h-5 w-5" />
-                Manage Blogs
+               Blogs
               </Link>
 
               <Link
@@ -87,7 +87,15 @@ const Navbar = () => {
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
                 <Users2 className="h-5 w-5" />
-                Manage NavIcons
+              NavIcons
+              </Link>
+
+              <Link
+                to="/quickLinkHome"
+                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <Users2 className="h-5 w-5" />
+               Gift-Card
               </Link>
             </div>
           )}

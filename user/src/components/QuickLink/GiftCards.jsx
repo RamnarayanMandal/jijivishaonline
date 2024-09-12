@@ -1,23 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const GiftCards = () => {
-  const giftCards = [
-    {
-      id: 1,
-      image: "https://via.placeholder.com/300x150", // Replace with actual image URL
-      price: "Rs 1100",
-    },
-    {
-      id: 2,
-      image: "https://via.placeholder.com/300x150", // Replace with actual image URL
-      price: "Rs 3100",
-    },
-    {
-      id: 3,
-      image: "https://via.placeholder.com/300x150", // Replace with actual image URL
-      price: "Rs 5100",
-    },
-  ];
+  const URI = import.meta.env.VITE_API_URL;
+  const [giftCards, setGiftCards] = useState([]);
+
+  // Fetch gift cards data from API
+  useEffect(() => {
+    const fetchGiftCards = async () => {
+      try {
+        const response = await axios.get(
+          `${URI}api/quickLink/giftCards`
+        );
+        // Assuming the API returns an array of gift cards
+        const data = response.data; // Modify this if needed based on the actual API response format
+        setGiftCards(data.giftCards); // Adjust this based on how the data is structured
+        console.log("Gift cards fetched:", data.giftCards); // Adjust this based on how the data is structured in your application
+      } catch (error) {
+        console.error("Error fetching gift cards:", error);
+      }
+    };
+
+    fetchGiftCards();
+  }, []);
 
   return (
     <div className="container mx-auto px-4">
@@ -36,16 +41,17 @@ const GiftCards = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mt-8">
         {giftCards.map((card) => (
           <div
-            key={card.id}
+            key={card._id}
             className="border rounded-lg shadow-lg p-4 text-center m-2"
           >
             <img
-              src={card.image}
+           
+              src={`${URI}uploads/${card.image}`}
               alt={`${card.price} E-Gift Card`}
               className="w-full h-48 object-cover rounded-t-lg"
             />
             <h2 className="mt-4 text-xl font-semibold">
-              {card.price} E-Gift Card
+              Rs {card.price} E-Gift Card
             </h2>
           </div>
         ))}
