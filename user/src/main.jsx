@@ -18,6 +18,8 @@ import ViewCartAndUpdateCart from "./components/cart/ViewCartAndUpdateCart.jsx";
 import { MyAccount } from "./components/myaccount/MyAccount.jsx";
 import UserProfile from "./components/UserProfile.jsx/UserProfile.jsx";
 import AddressForm from "./components/UserProfile.jsx/AddressForm.jsx";
+import GiftCards from "./components/QuickLink/GiftCards.jsx";
+import CorporateGifting from "./components/QuickLink/CorporateGifting.jsx";
 
 // Define your router outside of the provider
 const router = createBrowserRouter([
@@ -48,24 +50,38 @@ const router = createBrowserRouter([
       },
       {
         path: "/blogsdetails/:id",
-        element: <BlogDetails/>,
+        element: <BlogDetails />,
       },
       {
-        path:"All-lasted-products",
-        element:<AllLatestProduct/>
-      },{
-        path:"/viewCartDeatils",
-        element:<ViewCartAndUpdateCart/>
-      },{
-        path:"/My-Account",
-        element:<MyAccount/>
-      },{
+        path: "All-lasted-products",
+        element: <AllLatestProduct />,
+      },
+      {
+        path: "/viewCartDeatils",
+        element: <ViewCartAndUpdateCart />,
+      },
+      {
+        path: "/My-Account",
+        element: <MyAccount />,
+      },
+      {
         path: "/user-Profile/:name",
-        element: <UserProfile/>, 
-      },{
+        element: <UserProfile />,
+      },
+      {
         path: "/addressForm",
-        element: <AddressForm/>, 
-      }
+        element: <AddressForm />,
+      },
+
+      // Quick Links
+      {
+        path: "/giftCards",
+        element: <GiftCards />,
+      },
+      {
+        path: "/corporateGifting",
+        element: <CorporateGifting />,
+      },
     ],
   },
 ]);

@@ -14,6 +14,9 @@ const navbarIconsRoutes = require("./admin/routes/navIconsRoutes");
 
 const addressRoutes = require("./user/routes/addressRoutes");
 
+// QuickLink Footer
+const quickLinkRoutes = require("./QuickLink/routes/giftCardRoutes");
+
 const path = require("path");
 
 connectDB();
@@ -43,6 +46,8 @@ app.use("/api/admin", BlogRoutes);
 app.use("/api/navbarIcons", navbarIconsRoutes);
 
 app.use("/api/perspective", PerspectiveRoutes);
+
+app.use("/api/quickLink", quickLinkRoutes);
 
 // error handling middleware
 
