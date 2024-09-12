@@ -73,14 +73,17 @@ const router = createBrowserRouter([
       },
       {
         path: "/addressForm",
-        element: <AddressForm/>, 
-      },{
+        element: <AddressForm />,
+      },
+      {
         path: "/selectAddress",
-        element: <SelectAddress/>,  // This component will be displayed when the path is "/user-Profile/SaveAddress"
-      },{
+        element: <SelectAddress />, // This component will be displayed when the path is "/user-Profile/SaveAddress"
+      },
+      {
         path: "/payment",
-        element: <PaymentHomepage/>,  // This component will be displayed when the path is "/user-Profile/SaveAddress"
-      }
+        element: <PaymentHomepage />, // This component will be displayed when the path is "/user-Profile/SaveAddress"
+      },
+      {
         element: <AddressForm />,
       },
 
