@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 
 const GiftCards = () => {
   const URI = import.meta.env.VITE_API_URL; // Ensure this is correctly set
@@ -90,9 +97,13 @@ const GiftCards = () => {
     }
 
     try {
-      await axios.put(`${URI}api/quickLink/giftCards/${selectedCard._id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await axios.put(
+        `${URI}api/quickLink/giftCards/${selectedCard._id}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       alert("Gift Card Updated Successfully!");
       handleEditClose(); // Close the edit modal and reset fields
 
@@ -106,22 +117,28 @@ const GiftCards = () => {
   };
 
   // Handle deleting a gift card
+  // Handle deleting a gift card
   const handleDeleteGiftCard = async (id) => {
     if (window.confirm("Are you sure you want to delete this gift card?")) {
       try {
+        // Perform the deletion
         await axios.delete(`${URI}api/quickLink/giftCards/${id}`);
-        alert("Gift Card Deleted Successfully!");
-  
-        // Fetch the gift cards again to reflect the deletion
+
+        // Fetch the updated list after deletion
         const response = await axios.get(`${URI}api/quickLink/giftCards`);
+        console.log("====================================");
+        console.log(response.data.giftCards);
+        console.log("====================================");
         setGiftCards(response.data.giftCards);
+
+        // Show success message after deletion is complete
+        alert("Gift Card Deleted Successfully!");
       } catch (error) {
         console.error("Error deleting gift card:", error);
         alert("Failed to delete gift card");
       }
     }
   };
-  
 
   return (
     <div className="container mx-auto px-4">
@@ -129,7 +146,7 @@ const GiftCards = () => {
       <div className="text-center py-8">
         <h1 className="text-4xl font-bold text-red-600">e-Gift Cards</h1>
       </div>
-      
+
       {/* Button to open the modal */}
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Create Gift Card
