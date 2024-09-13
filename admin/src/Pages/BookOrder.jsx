@@ -1,69 +1,29 @@
-import React from "react";
-
-const orders = [
-  {
-    id: 1,
-    date: "Sep 11, 2024 5:28 PM",
-    customerName: "Anish",
-    phone: "6363022752",
-    pickupLocation:
-      "393, Channasandra, Srinivaspura, Bengaluru, Karnataka 560060, India",
-    dropLocation: "2F5H+3JW, Andrahalli, Bengaluru, Karnataka 560091, India",
-    city: "Bangalore",
-    status: "Update",
-  },
-  {
-    id: 2,
-    date: "Sep 9, 2024 12:17 PM",
-    customerName: "Ram",
-    phone: "6363427479",
-    pickupLocation:
-      "Shop No 1, Appanna Layout, Outer Ring Rd, Mahadevapura, Bengaluru, Karnataka 560048, India",
-    dropLocation:
-      "6-11, off B.M. Kaval, off Kanakapura Road, Thathaguni, Bengaluru, Karnataka 560062, India",
-    city: "Bangalore",
-    status: "Update",
-  },
-  {
-    id: 3,
-    date: "Sep 9, 2024 6:22 PM",
-    customerName: "Pankaj",
-    phone: "7760779659",
-    pickupLocation:
-      "01, Near, Mahadevapura Flyover, Mahadevapura, Bengaluru, Karnataka 560048, India",
-    dropLocation:
-      "01, Amarjyothi Colony, Cholanayakanahalli, Hebbal, Bengaluru, Karnataka 560032, India",
-    city: "Lucknow",
-    status: "Update",
-  },
-  {
-    id: 4,
-    date: "Aug 30, 2024 5:28 PM",
-    customerName: "yogesh nnc11",
-    phone: "6363022752",
-    pickupLocation:
-      "393, Channasandra, Srinivaspura, Bengaluru, Karnataka 560060, India",
-    dropLocation: "2F5H+3JW, Andrahalli, Bengaluru, Karnataka 560091, India",
-    city: "Bangalore",
-    status: "Update",
-  },
-  {
-    id: 5,
-    date: "Aug 30, 2024 5:28 PM",
-    customerName: "yogesh nnc11",
-    phone: "6363022752",
-    pickupLocation:
-      "393, Channasandra, Srinivaspura, Bengaluru, Karnataka 560060, India",
-    dropLocation: "2F5H+3JW, Andrahalli, Bengaluru, Karnataka 560091, India",
-    city: "Bangalore",
-    status: "Update",
-  },
-];
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const BookOrder = () => {
+  const [orders, setOrders] = useState([]);
+  const URI = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    fetchOrder();
+  }, []);
+
+  const fetchOrder = async () => {
+    try {
+      const response = await axios.get(`${URI}api/productOrder/`);
+      const sortedOrders = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setOrders(sortedOrders);
+      console.log(sortedOrders);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Try to booking Order</h1>
+      <h1 className="text-2xl font-bold mb-4">Order Details</h1>
       <p className="text-sm text-green-600 mb-4">List of Orders</p>
 
       <div className="overflow-x-auto">
@@ -72,22 +32,54 @@ const BookOrder = () => {
             <tr className="bg-green-100 text-left">
               <th className="py-2 px-4 border-b">Date</th>
               <th className="py-2 px-4 border-b">Customer Name</th>
-              <th className="py-2 px-4 border-b">Phone No.</th>
-              <th className="py-2 px-4 border-b">Pickup Location</th>
-              <th className="py-2 px-4 border-b">Drop Location</th>
-              <th className="py-2 px-4 border-b">City</th>
+              <th className="py-2 px-4 border-b">Phone NO</th>
+              <th className="py-2 px-4 border-b">Shiping information</th>
+              <th className="py-2 px-4 border-b">Product Image</th>
+              <th className="py-2 px-4 border-b">Product Details</th>
+              <th className="py-2 px-4 border-b">Attributes</th>
               <th className="py-2 px-4 border-b">Status</th>
             </tr>
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order.id} className="hover:bg-gray-50">
-                <td className="py-2 px-4 border-b">{order.date}</td>
-                <td className="py-2 px-4 border-b">{order.customerName}</td>
-                <td className="py-2 px-4 border-b">{order.phone}</td>
-                <td className="py-2 px-4 border-b">{order.pickupLocation}</td>
-                <td className="py-2 px-4 border-b">{order.dropLocation}</td>
-                <td className="py-2 px-4 border-b">{order.city}</td>
+              <tr key={order._id} className="hover:bg-gray-50">
+                <td className="py-2 px-4 border-b">{new Date(order.createdAt).toLocaleString()}</td>
+                <td className="py-2 px-4 border-b">{order.user.email}</td>
+                <td className="py-2 px-4 border-b">{order.address.phone}</td>
+                
+                <td className="py-2 px-4 border-b">
+                  <p>{order.address.street}</p>
+                  <p>{order.address.city}, {order.address.state}</p>
+                  <p>{order.address.country}, {order.address.postalCode}</p>
+                </td>
+                <td className="py-2 px-4 border-b">
+                  {order.products.map((product) => (
+                    <img
+                      key={product.productId}
+                      src={`${URI}${product.
+                        thumbnail}`} // Ensure this is the correct path to the image
+                      alt="Product"
+                      className="w-20  rounded-sm"
+                    />
+                  ))}
+                </td>
+                <td className="py-2 px-4 border-b">
+                  {order.products.map((product) => (
+                    <div key={product.productId}>
+                      <p>Product ID: {product.productId}</p>
+                      <p>Quantity: {product.quantity}</p>
+                      <p>Price: {product.price}</p>
+                    </div>
+                  ))}
+                </td>
+                <td className="py-2 px-4 border-b">
+                  {order.products.map((product) => (
+                    <div key={product.productId}>
+                      <p>Size: {product.attributes.size.join(', ')}</p>
+                      <p>Color: {product.attributes.color.join(', ')}</p>
+                    </div>
+                  ))}
+                </td>
                 <td className="py-2 px-4 border-b">
                   <button className="bg-gray-200 text-black px-4 py-1 rounded-md hover:bg-gray-300">
                     {order.status}

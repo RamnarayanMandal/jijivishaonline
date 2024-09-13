@@ -36,7 +36,7 @@ const orders = [
 ];
 
 const Order = () => {
-  const [view, setView] = useState("month"); // Current view state (month, week, day)
+  const [view, setView] = useState("month"); 
 
   return (
     <div className="container mx-auto p-4">

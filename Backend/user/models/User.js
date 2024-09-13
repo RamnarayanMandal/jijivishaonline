@@ -31,8 +31,8 @@ const cartItemSchema = new mongoose.Schema({
     required: true,
   },
   attributes: {
-    size: { type: String },
-    color: { type: String },
+    size: { type: [String] },  // Change to array of strings
+    color: { type: [String] }, // Change to array of strings
   },
 });
 

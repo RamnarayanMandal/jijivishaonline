@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const transporter = require("../mailer"); // Your configured nodemailer transporter
 const { generateUserId, generatePassword } = require("../utils/otp"); // Utility functions for generating user ID and password
+const mongoose = require("mongoose");
 
 const jwt = require("jsonwebtoken");
 
@@ -201,14 +202,17 @@ exports.addItemToCart = async (req, res) => {
 };
 
 // Remove an item from the cart
+
 exports.removeItemFromCart = async (req, res) => {
   const { userId, productId } = req.params;
 
+  console.log("Removing item from cart", userId, productId);
+
   try {
-    // Find the user by userId and update cart by removing the item
+    // Step 1: Remove the item from the cart using $pull
     const user = await User.findOneAndUpdate(
       { _id: userId },
-      { $pull: { cart: { productId } } },
+      { $pull: { cart: { productId: productId } } }, // Match and remove the item by productId
       { new: true }
     );
 
@@ -216,20 +220,40 @@ exports.removeItemFromCart = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Recalculate total price after removing item
-    user.totalPrice = user.cart.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
+    // Step 2: Use the aggregation pipeline to recalculate the total price after removal
+    const updatedUser = await User.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(userId) } }, // Correct use of ObjectId
+      { 
+        $addFields: {
+          totalPrice: { 
+            $sum: {
+              $map: {
+                input: "$cart",
+                as: "item",
+                in: { $multiply: ["$$item.price", "$$item.quantity"] }
+              }
+            }
+          }
+        }
+      }
+    ]);
 
-    // Save the updated user document
-    await user.save();
+    // Step 3: Check if the user still exists after aggregation
+    if (updatedUser.length === 0) {
+      return res.status(404).json({ message: "User not found after item removal" });
+    }
 
-    res.status(200).json(user);
+    // Send back the updated user with the recalculated total price
+    res.status(200).json({ message: "Item removed and total price recalculated", user: updatedUser[0] });
   } catch (error) {
+    console.error("Error removing item from cart", error);
     res.status(500).json({ message: "Error removing item from cart", error });
   }
 };
+
+
+
+
 
 exports.AddProductQuantity = async (req, res) => {
   const { userId, productId } = req.body;

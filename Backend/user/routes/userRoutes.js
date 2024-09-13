@@ -26,7 +26,7 @@ router.put('/', userController.updateCart);
 // Delete a cart by user ID
 router.delete('/:userId', userController.deleteCartByUserId);
 
-router.post('/:userId/:productId', userController.removeItemFromCart)
+router.patch('/:userId/:productId', userController.removeItemFromCart)
 
 router.put('/addProductQuantityByOne', userController.AddProductQuantity)
 

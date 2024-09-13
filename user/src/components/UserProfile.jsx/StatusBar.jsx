@@ -3,6 +3,7 @@ import React from 'react';
 import { Stepper, Step, StepLabel, StepConnector, styled } from '@mui/material';
 import { FaCheck, FaTimes, FaHourglassHalf, FaBoxOpen, FaBox } from 'react-icons/fa';
 
+// Custom connector for step styling
 const CustomStepConnector = styled(StepConnector)(({ theme }) => ({
   [`&.MuiStepConnector-active`]: {
     borderColor: theme.palette.primary.main,
@@ -18,6 +19,7 @@ const CustomStepConnector = styled(StepConnector)(({ theme }) => ({
   },
 }));
 
+// Icon mapping for each status
 const icons = {
   pending: <FaHourglassHalf />,
   processing: <FaBoxOpen />,
@@ -27,15 +29,24 @@ const icons = {
 };
 
 const StatusStepper = ({ status }) => {
+  console.log(status);
+  // Standardize the steps array and make sure status strings are consistent
   const steps = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
-  const activeStep = steps.indexOf(status);
+  
+  // Find active step based on the current status
+  const activeStep = steps.indexOf(status.toLowerCase());
 
-  const getCircleColor = (index) => {
-    switch (steps[index]) {
-      case 'cancelled': return 'red'; // Red for cancelled
-      case 'delivered': return 'green'; // Green for delivered
-      case 'processing': return 'blue'; // Blue for processing
-      default: return 'gray'; // Default color for other statuses
+  // Function to get the color based on the current step
+  const getCircleColor = (step) => {
+    switch (step) {
+      case 'cancelled':
+        return 'red'; // Red for cancelled
+      case 'delivered':
+        return 'green'; // Green for delivered
+      case 'processing':
+        return 'blue'; // Blue for processing
+      default:
+        return 'gray'; // Default color for other statuses
     }
   };
 
@@ -46,15 +57,19 @@ const StatusStepper = ({ status }) => {
       alternativeLabel
     >
       {steps.map((step, index) => (
-        <Step key={step} completed={index < activeStep} disabled={index > activeStep}>
+        <Step
+          key={step}
+          completed={index < activeStep} 
+          disabled={index > activeStep} // Disable future steps
+        >
           <StepLabel
             icon={
               <div
-                className={`w-8 h-8 flex items-center justify-center rounded-full border-2`}
+                className="w-8 h-8 flex items-center justify-center rounded-full border-2"
                 style={{
-                  borderColor: index < activeStep ? getCircleColor(index) : (index === activeStep ? getCircleColor(index) : 'gray'),
-                  backgroundColor: index === activeStep ? getCircleColor(index) : 'transparent',
-                  color: index <= activeStep ? 'white' : 'gray'
+                  borderColor: index <= activeStep ? getCircleColor(step) : 'gray',
+                  backgroundColor: index === activeStep ? getCircleColor(step) : 'transparent',
+                  color: index <= activeStep ? 'white' : 'gray',
                 }}
               >
                 {icons[step]}

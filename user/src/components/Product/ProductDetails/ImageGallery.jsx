@@ -5,6 +5,8 @@ const ImageGallery = ({ product }) => {
   const URI = import.meta.env.VITE_API_URL;
   const [selectedImage, setSelectedImage] = useState(product.thumbnail);
 
+  localStorage.setItem('selectedImage', selectedImage);
+
   return (
     <div className="flex">
       <div className="flex flex-col space-y-2">

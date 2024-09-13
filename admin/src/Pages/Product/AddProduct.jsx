@@ -9,11 +9,12 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, getValues } = useForm();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [alert, setAlert] = useState({ type: "", message: "" });
-  const [colorInput, setColorInput] = useState("");
+  const [colorInputs, setColorInputs] = useState([""]);
+  const [sizeInputs, setSizeInputs] = useState([""]);
   const navigate = useNavigate();
 
   const URI = import.meta.env.VITE_API_URL;
@@ -33,9 +34,11 @@ const AddProduct = () => {
       // Append image files to formData
       selectedFiles.forEach((file) => formData.append("images", file));
 
-      // Process color input and save as an array
-      const colorArray = colorInput.split(",").map((color) => color.trim());
-      formData.append("color", JSON.stringify(colorArray));
+      // Process color inputs and save as an array
+      formData.append("color", JSON.stringify(colorInputs.map(color => color.trim())));
+
+      // Process size inputs and save as an array
+      formData.append("size", JSON.stringify(sizeInputs.map(size => size.trim())));
 
       // Append other form fields to formData
       Object.keys(data).forEach((key) => {
@@ -78,6 +81,22 @@ const AddProduct = () => {
       reader.readAsDataURL(file);
       setValue("thumbnail", file); 
     }
+  };
+
+  const addColorInput = () => {
+    setColorInputs([...colorInputs, ""]);
+  };
+
+  const removeColorInput = (index) => {
+    setColorInputs(colorInputs.filter((_, i) => i !== index));
+  };
+
+  const addSizeInput = () => {
+    setSizeInputs([...sizeInputs, ""]);
+  };
+
+  const removeSizeInput = (index) => {
+    setSizeInputs(sizeInputs.filter((_, i) => i !== index));
   };
 
   return (
@@ -225,13 +244,34 @@ const AddProduct = () => {
 
           {/* Additional Product Details */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Size</label>
-            <Input
-              type="text"
-              {...register("size")}
-              placeholder="Enter sizes (comma-separated)"
-              className="w-full text-black"
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Size
+            </label>
+            {sizeInputs.map((size, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <Input
+                  type="text"
+                  value={size}
+                  onChange={(e) => {
+                    const updatedSizes = [...sizeInputs];
+                    updatedSizes[index] = e.target.value;
+                    setSizeInputs(updatedSizes);
+                  }}
+                  placeholder="Enter size"
+                  className="w-full text-black"
+                />
+                <Button
+                  type="button"
+                  onClick={() => removeSizeInput(index)}
+                  className="ml-2"
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+            <Button type="button" onClick={addSizeInput}>
+              Add More Size
+            </Button>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
@@ -261,15 +301,33 @@ const AddProduct = () => {
           </div>
           <div>
             <Label className="block text-sm font-medium text-gray-700 mb-2">
-              Colors (comma-separated)
+              Colors
             </Label>
-            <Input
-              type="text"
-              value={colorInput}
-              onChange={(e) => setColorInput(e.target.value)}
-              placeholder="Enter colors (e.g. Red, Blue, Green)"
-              className="w-full text-black"
-            />
+            {colorInputs.map((color, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <Input
+                  type="text"
+                  value={color}
+                  onChange={(e) => {
+                    const updatedColors = [...colorInputs];
+                    updatedColors[index] = e.target.value;
+                    setColorInputs(updatedColors);
+                  }}
+                  placeholder="Enter color"
+                  className="w-full text-black"
+                />
+                <Button
+                  type="button"
+                  onClick={() => removeColorInput(index)}
+                  className="ml-2"
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+            <Button type="button" onClick={addColorInput}>
+              Add More Color
+            </Button>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Type of Printing</label>

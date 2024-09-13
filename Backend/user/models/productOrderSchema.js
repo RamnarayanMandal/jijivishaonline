@@ -20,6 +20,16 @@ const productOrderSchema = new mongoose.Schema(
         },
         quantity: { type: Number, required: true },
         price: { type: Number, required: true },
+       
+        attributes: {
+          size: { type: [String] },  // Change to array of strings
+          color: { type: [String] }, // Change to array of strings
+        },
+        thumbnail: {
+          type: String,
+          required: true,
+        },
+          
       },
     ],
     address: { type: mongoose.Schema.Types.ObjectId, required: true },

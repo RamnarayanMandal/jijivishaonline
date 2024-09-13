@@ -14,24 +14,31 @@ const ViewCartAndUpdateCart = () => {
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity > 0) {
-      // Check if newQuantity is greater than the current quantity
-      if (newQuantity > bag.data.find(item => item._id === productId).quantity) {
-        // Increase quantity
-        dispatch(bagActions.increaseQuantity({ _id: productId }));
+      const currentQuantity = bag.data.find(item => item._id === productId).quantity;
+      if (newQuantity > currentQuantity) {
+        dispatch(bagActions.increaseQuantity({ _id: productId, quantity: newQuantity - currentQuantity }));
       } else {
-        // Decrease quantity
-        dispatch(bagActions.decreaseQuantity({ _id: productId }));
+        dispatch(bagActions.decreaseQuantity({ _id: productId, quantity: currentQuantity - newQuantity }));
       }
     }
   };
 
   const handleSizeChange = (productId, newSize) => {
-    // Update the size in the Redux store
-    dispatch(bagActions.updateSize({ _id: productId, size: newSize }));
+    dispatch(bagActions.updateAttributes({ productId, size: newSize }));
+  };
+
+  const handleColorChange = (productId, newColor) => {
+    dispatch(bagActions.updateAttributes({ productId, color: newColor }));
   };
 
   const applyCoupon = () => {
-    setDiscount(couponCode === "SAVE5" ? 5 : 0);
+    if (couponCode === "SAVE5") {
+      setDiscount(5);
+    } else if (couponCode === "SAVE10") {
+      setDiscount(10);
+    } else {
+      setDiscount(0);
+    }
   };
 
   const formatPrice = (price) => {
@@ -77,14 +84,28 @@ const ViewCartAndUpdateCart = () => {
                     </label>
                     <select
                       id={`size-${item._id}`}
-                      value={item.size} // Ensure 'size' is part of the product data
+                      value={item.size}
                       onChange={(e) => handleSizeChange(item._id, e.target.value)}
                       className="border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out text-sm"
                     >
-                      <option value="S">S</option>
-                      <option value="M">M</option>
-                      <option value="L">L</option>
-                      <option value="XL">XL</option>
+                      {item.attributes.size.map((size, index) => (
+                        <option key={index} value={size}>{size}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <label htmlFor={`color-${item._id}`} className="text-sm font-medium">
+                      Color:
+                    </label>
+                    <select
+                      id={`color-${item._id}`}
+                      value={item.color}
+                      onChange={(e) => handleColorChange(item._id, e.target.value)}
+                      className="border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out text-sm"
+                    >
+                      {item.attributes.color.map((color, index) => (
+                        <option key={index} value={color}>{color}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -125,6 +146,24 @@ const ViewCartAndUpdateCart = () => {
                 <p className="text-lg">Total</p>
                 <p className="text-lg">Rs {calculateTotal().toFixed(2)}</p>
               </div>
+            </div>
+            <div className="mt-4">
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                className="border border-gray-300 rounded-md px-2 py-1 w-full text-sm"
+                placeholder="Enter coupon code"
+              />
+              <button
+                onClick={applyCoupon}
+                className="mt-2 w-full bg-blue-500 text-white py-2 rounded-md"
+              >
+                Apply Coupon
+              </button>
+              {discount > 0 && (
+                <p className="mt-2 text-green-600">Coupon applied! Discount: {discount}%</p>
+              )}
             </div>
           </div>
 

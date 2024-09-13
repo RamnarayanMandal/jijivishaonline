@@ -6,15 +6,17 @@ import {
   FaCcVisa,
   FaGoogleWallet,
 } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Make sure axios is imported
 import CustomizedSteppers from "../CustomizedSteppers";
 import Swal from "sweetalert2";
+import { bagActions } from "../../store/bagSlice";
 
 const PaymentHomepage = () => {
   const [paymentMethod, setPaymentMethod] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const bag = useSelector((store) => store.bag) || {
     totalQuantity: 0,
     data: [],
@@ -27,6 +29,8 @@ const PaymentHomepage = () => {
   const handlePaymentChange = (method) => {
     setPaymentMethod(method);
   };
+ 
+  const URI = import.meta.env.VITE_API_URL;
 
   const placeOrder = async () => {
     if (!paymentMethod) {
@@ -45,6 +49,12 @@ const PaymentHomepage = () => {
       productId: item.productId,
       quantity: item.quantity,
       price: item.price,
+      thumbnail: item.thumbnail,
+      attributes: {
+        size: item.size|| item.attributes.size,
+        color: item.color || item.attributes.color,  
+      },
+    
     }));
 
     const orderData = {
@@ -58,9 +68,10 @@ const PaymentHomepage = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URI}/api/products/orderProduct`,
+        `${URI}api/productOrder/orderProduct`,
         orderData
       );
+      await clearCart()
       Swal.fire({
         icon: "success",
         title: "Order placed successfully!",
@@ -69,7 +80,7 @@ const PaymentHomepage = () => {
         timerProgressBar: true,
         showConfirmButton: false,
       });
-      navigate("/user/myorder");
+      navigate("/user-Profile/MyOrder");
     } catch (error) {
       console.error("Error placing the order:", error);
       Swal.fire({
@@ -92,6 +103,18 @@ const PaymentHomepage = () => {
       (total, item) => total + item.price * item.quantity,
       0
     );
+  };
+
+  const clearCart =async () => {
+    try {
+      await axios.delete(`${URI}api/user/${userId}`);
+      dispatch(bagActions.clearBag());
+      
+    
+    } catch (error) {
+      console.error("Error clearing the cart:", error);
+    }
+    
   };
 
   // Sample discount percentage

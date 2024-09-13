@@ -23,6 +23,7 @@ import PaymentHomepage from "./components/payment/PaymentHomepage.jsx";
 
 import GiftCards from "./components/QuickLink/GiftCards.jsx";
 import CorporateGifting from "./components/QuickLink/CorporateGifting.jsx";
+import OrderDetails from "./components/UserProfile.jsx/OrderDetails.jsx";
 
 // Define your router outside of the provider
 const router = createBrowserRouter([
@@ -96,6 +97,10 @@ const router = createBrowserRouter([
         path: "/corporateGifting",
         element: <CorporateGifting />,
       },
+      {
+        path:"/orderDetails/:id",
+        element: <OrderDetails/>// Add the component for order details when the path is "/orderDetails/:id"
+      }
     ],
   },
 ]);

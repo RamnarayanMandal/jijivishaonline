@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export const UpdateProduct = () => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({
     defaultValues: {
       title: '',
       description: '',
@@ -17,7 +17,7 @@ export const UpdateProduct = () => {
       price: '',
       discount: '',
       productCode: '',
-      color: '',
+      color: [],
       typeOfProduct: '',
       size: [],
       quantity: '',
@@ -29,18 +29,26 @@ export const UpdateProduct = () => {
       countryOfOrigin: '',
       marketedBy: '',
       note: '',
-      materialCare: [],
+      materialCare: '',
       disclaimer: '',
-      shippingInfo: [],
+      shippingInfo: '',
     }
+  });
+
+  const { fields: colorFields, append: appendColor, remove: removeColor } = useFieldArray({
+    control,
+    name: 'color',
+  });
+  const { fields: sizeFields, append: appendSize, remove: removeSize } = useFieldArray({
+    control,
+    name: 'size',
   });
 
   const [images, setImages] = useState([]);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const location = useLocation();
   const { product } = location.state || {};
-
   const URI = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -53,7 +61,7 @@ export const UpdateProduct = () => {
         price: product.price || '',
         discount: product.discount || '',
         productCode: product.productCode || '',
-        color: product.color || '',
+        color: product.color || [],
         typeOfProduct: product.typeOfProduct || '',
         size: product.size || [],
         quantity: product.quantity || '',
@@ -65,9 +73,9 @@ export const UpdateProduct = () => {
         countryOfOrigin: product.countryOfOrigin || '',
         marketedBy: product.marketedBy || '',
         note: product.note || '',
-        materialCare: product.materialCare || [],
+        materialCare: product.materialCare || '',
         disclaimer: product.disclaimer || '',
-        shippingInfo: product.shippingInfo || [],
+        shippingInfo: product.shippingInfo || '',
       });
 
       setImages(product.images || []);
@@ -143,7 +151,6 @@ export const UpdateProduct = () => {
               placeholder="Enter product title"
               className="w-full text-black"
             />
-           
           </div>
 
           {/* Thumbnail Image */}
@@ -157,8 +164,7 @@ export const UpdateProduct = () => {
             />
             {thumbnailPreview && (
               <img
-              src={`${URI}${thumbnailPreview}`}
-     
+                src={thumbnailPreview}
                 alt="Thumbnail Preview"
                 className="w-32 h-32 object-cover rounded-md border border-gray-300"
               />
@@ -184,7 +190,6 @@ export const UpdateProduct = () => {
               placeholder="Enter product description"
               className="w-full text-black"
             />
-          
           </div>
 
           {/* Price */}
@@ -192,11 +197,10 @@ export const UpdateProduct = () => {
             <Label className="block text-sm font-medium text-gray-700 mb-2">Price</Label>
             <Input
               type="number"
-              {...register("price", )}
+              {...register("price")}
               placeholder="Enter product price"
               className="w-full text-black"
             />
-           
           </div>
 
           {/* Discount */}
@@ -223,13 +227,27 @@ export const UpdateProduct = () => {
 
           {/* Color */}
           <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Color</Label>
-            <Input
-              type="text"
-              {...register("color")}
-              placeholder="Enter color"
-              className="w-full text-black"
-            />
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Colors</Label>
+            {colorFields.map((item, index) => (
+              <div key={item.id} className="flex items-center mb-2">
+                <Input
+                  type="text"
+                  {...register(`color.${index}`)}
+                  placeholder="Enter color"
+                  className="w-full text-black"
+                />
+                <Button
+                  type="button"
+                  onClick={() => removeColor(index)}
+                  className="ml-2"
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+            <Button type="button" onClick={() => appendColor('')}>
+              Add More Color
+            </Button>
           </div>
 
           {/* Type of Product */}
@@ -245,13 +263,27 @@ export const UpdateProduct = () => {
 
           {/* Size */}
           <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Size</Label>
-            <Input
-              type="text"
-              {...register("size")}
-              placeholder="Enter size"
-              className="w-full text-black"
-            />
+            <Label className="block text-sm font-medium text-gray-700 mb-2">Sizes</Label>
+            {sizeFields.map((item, index) => (
+              <div key={item.id} className="flex items-center mb-2">
+                <Input
+                  type="text"
+                  {...register(`size.${index}`)}
+                  placeholder="Enter size"
+                  className="w-full text-black"
+                />
+                <Button
+                  type="button"
+                  onClick={() => removeSize(index)}
+                  className="ml-2"
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+            <Button type="button" onClick={() => appendSize('')}>
+              Add More Size
+            </Button>
           </div>
 
           {/* Quantity */}
@@ -260,7 +292,7 @@ export const UpdateProduct = () => {
             <Input
               type="number"
               {...register("quantity")}
-              placeholder="Enter quantity"
+              placeholder="Enter product quantity"
               className="w-full text-black"
             />
           </div>
@@ -269,9 +301,9 @@ export const UpdateProduct = () => {
           <div>
             <Label className="block text-sm font-medium text-gray-700 mb-2">In Stock</Label>
             <Input
-              type="number"
+              type="text"
               {...register("inStock")}
-              placeholder="Enter stock quantity"
+              placeholder="Enter stock status"
               className="w-full text-black"
             />
           </div>
@@ -304,7 +336,7 @@ export const UpdateProduct = () => {
             <Input
               type="text"
               {...register("additionalInfo1")}
-              placeholder="Enter additional info 1"
+              placeholder="Enter additional information"
               className="w-full text-black"
             />
           </div>
@@ -315,7 +347,7 @@ export const UpdateProduct = () => {
             <Input
               type="text"
               {...register("additionalInfo2")}
-              placeholder="Enter additional info 2"
+              placeholder="Enter additional information"
               className="w-full text-black"
             />
           </div>
@@ -347,7 +379,7 @@ export const UpdateProduct = () => {
             <Label className="block text-sm font-medium text-gray-700 mb-2">Note</Label>
             <Textarea
               {...register("note")}
-              placeholder="Enter note"
+              placeholder="Enter any additional notes"
               className="w-full text-black"
             />
           </div>
@@ -367,7 +399,7 @@ export const UpdateProduct = () => {
             <Label className="block text-sm font-medium text-gray-700 mb-2">Disclaimer</Label>
             <Textarea
               {...register("disclaimer")}
-              placeholder="Enter disclaimer"
+              placeholder="Enter product disclaimer"
               className="w-full text-black"
             />
           </div>
@@ -384,9 +416,9 @@ export const UpdateProduct = () => {
 
         </div>
 
-        <div className="flex justify-end">
-          <Button type="submit" variant="dark">Update Product</Button>
-        </div>
+        <Button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">
+          Update Product
+        </Button>
       </form>
     </div>
   );

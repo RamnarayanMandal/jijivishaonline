@@ -12,15 +12,18 @@ const ProductInfo = ({ product }) => {
     return <p>Product not found</p>;
   }
 
-  // Parse the color array (assuming color[0] holds the actual color data)
-  const parsedColors = product.color && product.color[0] ? JSON.parse(product.color[0]) : [];
+  // Directly use the color array (no need to parse it)
+  const colors = product.color ? product.color : [];
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState(product.size ? product.size[0] : "");
-  const [selectedColor, setSelectedColor] = useState(parsedColors.length > 0 ? parsedColors[0] : "");
+  const [selectedColor, setSelectedColor] = useState(colors.length > 0 ? colors[0] : "");
   const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
+  const selectImage = localStorage.getItem("selectedImage");
+
+  const URI = import.meta.env.VITE_API_URL;
 
   const handleAddToCart = async (product) => {
     const token = localStorage.getItem("token");
@@ -47,7 +50,7 @@ const ProductInfo = ({ product }) => {
           color: selectedColor,
         },
         discount: product.discount,
-        image: product.thumbnail,
+        Image: selectImage,
       });
 
       dispatch(
@@ -132,7 +135,7 @@ const ProductInfo = ({ product }) => {
         {/* Color Selection */}
         <div className="space-x-2">
           <label className="font-semibold">Color:</label>
-          {parsedColors.map((color) => (
+          {colors.map((color) => (
             <button
               key={color}
               onClick={() => setSelectedColor(color)}

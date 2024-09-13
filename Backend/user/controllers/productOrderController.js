@@ -58,9 +58,7 @@ const getProductOrdersByUserId = async (req, res) => {
     // Find product orders by user ID
     const orders = await ProductOrder.find({
       userId: new mongoose.Types.ObjectId(userId),
-    })
-      .populate("products.productId")
-      .populate("address");
+    }).populate("address");
 
     // Fetch addresses for each order
     const ordersWithAddresses = await Promise.all(
@@ -189,10 +187,58 @@ const assgintoDeliveryBoy = async(req,res)=>{
 
 }
 
+const getAllOrder = async (req, res, next) => {
+  try {
+    // Fetch all orders
+    const orders = await ProductOrder.find({});
+
+    // Fetch user info and address details for each order
+    const ordersWithDetails = await Promise.all(orders.map(async (order) => {
+      // Fetch user information
+      const user = await User.findById(order.userId).exec();
+
+      // Find the address within the user's addresses array
+      const address = user ? user.addresses.find(addr => addr._id.toString() === order.address.toString()) : null;
+
+      // Construct the order with additional user and address info
+      return {
+        ...order._doc,
+        user: user ? {
+          _id: user._id,
+          email: user.email,
+          customUserId: user.customUserId,
+          isVerified: user.isVerified,
+          wallet: user.wallet,
+          security: user.security,
+          // Add other user fields if needed
+        } : null,
+        address: address ? {
+          _id: address._id,
+          street: address.street,
+          city: address.city,
+          state: address.state,
+          country: address.country,
+          postalCode: address.postalCode,
+          name: address.name,
+          phone: address.phone,
+          addressType: address.addressType,
+          // Add other address fields if needed
+        } : null
+      };
+    }));
+
+    res.status(200).json(ordersWithDetails);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+
 module.exports = {
   productOrder,
   cancelledOrder,
   getProductOrdersByUserId,
   productOrderById,
   assgintoDeliveryBoy,
+  getAllOrder
 };

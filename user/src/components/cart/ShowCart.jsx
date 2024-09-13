@@ -21,6 +21,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { MdShoppingCart } from "react-icons/md";
+import axios from 'axios';
 
 export default function ShowCart() {
   const [state, setState] = React.useState({ right: false });
@@ -28,6 +29,7 @@ export default function ShowCart() {
   const [itemToRemove, setItemToRemove] = React.useState(null);
 
   const URI = import.meta.env.VITE_API_URL;
+  const userId = localStorage.getItem('userId');
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -111,11 +113,16 @@ export default function ShowCart() {
     setOpenDialog(true);
   };
 
-  const handleDelete = () => {
-    // Dispatch action to remove item from the bag
-    dispatch(bagActions.removeFromBag({ productId: itemToRemove.productId }));
-    setOpenDialog(false); // Close the dialog
-  };
+  const handleDelete = async() => {
+    try {
+      await axios.patch(`${URI}api/user/${userId}/${itemToRemove._id}`); // Ensure the correct item ID is sent in the request
+      dispatch(bagActions.removeFromBag({ productId: itemToRemove._id })); // Use the correct ID from itemToRemove
+      setOpenDialog(false); // Close the dialog after deletion
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+ };
+ 
 
   const handleCheckout = () => {
     // Logic to checkout items
