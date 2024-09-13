@@ -43,4 +43,16 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+productSchema.pre("save", function (next) {
+  if (this.categories) {
+    this.categories = this.categories.toLowerCase();
+  }
+  
+  if (this.subcategory && this.subcategory.length > 0) {
+    this.subcategory = this.subcategory.map((item) => item.toLowerCase());
+  }
+  
+  next();
+});
+
 module.exports = mongoose.model("Product", productSchema);

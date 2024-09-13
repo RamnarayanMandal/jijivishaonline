@@ -12,7 +12,7 @@ const HandwovenSareesfromalloverBharat = () => {
 
   const URI = import.meta.env.VITE_API_URL;
 
-  const category = "Saree"
+  const category = "saree"
 
   useEffect(() => {
     fetchLatestProducts();
@@ -20,8 +20,9 @@ const HandwovenSareesfromalloverBharat = () => {
 
   const fetchLatestProducts = async () => {
     try {
-      const resp = await axios.get(`${URI}api/admin//getProductByCatogry/${category}`);
+      const resp = await axios.get(`${URI}api/admin/getProductByCatogry/${category}`);
       const fetchedProducts = resp.data.product;
+      console.log(`Fetched ${fetchedProducts} product`);
 
       setProducts(fetchedProducts);
       // Extract unique subcategories from fetched products

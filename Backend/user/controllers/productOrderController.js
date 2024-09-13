@@ -2,13 +2,27 @@ const ProductOrder = require("../models/productOrderSchema");
 const Product = require("../../admin/models/product");
 const mongoose = require("mongoose");
 const User = require("../models/User");
+const nodemailer = require("nodemailer");
+
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "amitkumar425863@gmail.com",
+    pass: "wqql hbvq udjt erat",
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
+
 
 const productOrder = async (req, res) => {
   try {
-    const {userId, products, address, paymentMethod } = req.body;
+    const { userId, products, address, paymentMethod } = req.body;
 
     // Validate the required fields
-    if (!userId || !products || !address || !paymentMethod ) {
+    if (!userId || !products || !address || !paymentMethod) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
@@ -152,34 +166,34 @@ const productOrderById = async (req, res) => {
   }
 };
 
-const assgintoDeliveryBoy = async(req,res)=>{
+const assgintoDeliveryBoy = async (req, res) => {
   try {
     const { orderId, deliveryBoyId } = req.body;
-    
-    if (!orderId ||!deliveryBoyId) {
+
+    if (!orderId || !deliveryBoyId) {
       return res.status(400).json({ message: "All fields are required." });
     }
-    
+
     // Validate deliveryBoyId is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(deliveryBoyId)) {
       return res
-       .status(400)
-       .json({ message: "Invalid deliveryBoy ID format." });
+        .status(400)
+        .json({ message: "Invalid deliveryBoy ID format." });
     }
-    
+
     const updatedOrder = await ProductOrder.findByIdAndUpdate(
       orderId,
       { deliveryBoy: deliveryBoyId },
       { new: true }
     );
-    
+
     if (!updatedOrder) {
       return res.status(404).json({ message: "Order not found." });
     }
-    
+
     res
-     .status(200)
-     .json({ message: "Order assigned to delivery boy successfully", updatedOrder });
+      .status(200)
+      .json({ message: "Order assigned to delivery boy successfully", updatedOrder });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error." });
@@ -234,11 +248,133 @@ const getAllOrder = async (req, res, next) => {
   }
 };
 
+const updateOrderStatus = async (req, res) => {
+  const { orderId, status } = req.body;
+  try {
+    if (!orderId ||!status) {
+      return res.status(400).json({ message: "orderId and status are required" });
+    }
+    // Validate status
+    if (!["processing", "shipped", "cancelled"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+    // Update the order status
+    const updatedOrder = await ProductOrder.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }
+    );
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    res.status(200).json({ message: "Order status updated successfully", updatedOrder });
+    // Send order status update notification to the user
+    // sendOrderStatusNotification(updatedOrder);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+}
+
+const sendOtp = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Fetch the user details
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Generate OTP
+    const otp = (Math.floor(100000 + Math.random() * 900000)).toString();
+
+    // Set OTP and expiry time (e.g., 10 minutes)
+    user.otp = otp;
+    user.otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes from now
+    await user.save();
+
+    // Send OTP via email
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to: user.email,
+      subject: "Your OTP for Order Verification",
+      text: `Your OTP is: ${otp}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: "OTP sent successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+const verifyAndDeliverOrder = async (req, res) => {
+  const { orderId, otp } = req.body;
+
+  try {
+    // Fetch the order details
+    const order = await ProductOrder.findById(orderId).populate("userId");
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    console.log("Order", order);
+
+    // Fetch the user details associated with the order
+    const user = order.userId; // Use embedded userId directly
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    console.log("User", user.opt);
+
+    // Verify the OTP
+    if (user.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    // Check if OTP is expired
+    if (user.otpExpires < Date.now()) {
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+
+    // Mark the order as delivered
+    order.status = "delivered";
+    await order.save();
+
+    // Clear the OTP and expiry time
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    // Send confirmation email
+    const mailOptions = {
+      from: "amitkumar425863@gmail.com",
+      to: user.email,
+      subject: "Order Delivered Successfully",
+      text: `Your order with ID ${order._id} has been successfully delivered.`,
+    };
+    transporter.sendMail(mailOptions);
+
+
+
+    res.status(200).json({ message: "Order delivered successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
 module.exports = {
   productOrder,
   cancelledOrder,
   getProductOrdersByUserId,
   productOrderById,
   assgintoDeliveryBoy,
-  getAllOrder
+  getAllOrder,
+  sendOtp,
+  verifyAndDeliverOrder,
+  updateOrderStatus
 };

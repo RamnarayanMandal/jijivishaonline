@@ -1,46 +1,69 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-// Ensure you have Tailwind CSS set up
+import axios from "axios";
 
 // Moment.js localization
 const localizer = momentLocalizer(moment);
 
-// Sample orders data
-const orders = [
-  {
-    id: 1,
-    title: "1 orders",
-    start: new Date(2024, 8, 2), // Month is 0-indexed (so 8 means September)
-    end: new Date(2024, 8, 2),
-  },
-  {
-    id: 2,
-    title: "2 orders",
-    start: new Date(2024, 8, 3),
-    end: new Date(2024, 8, 3),
-  },
-  {
-    id: 3,
-    title: "2 orders",
-    start: new Date(2024, 8, 9),
-    end: new Date(2024, 8, 9),
-  },
-  {
-    id: 4,
-    title: "2 orders",
-    start: new Date(2024, 8, 10),
-    end: new Date(2024, 8, 10),
-  },
-];
-
 const Order = () => {
-  const [view, setView] = useState("month"); 
+  const [view, setView] = useState("month");
+  const [orders, setOrders] = useState([]);
+  const [status, setStatus] = useState("pending"); // Default status
+  const URI = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    fetchOrder();
+  }, [status]); // Re-fetch orders when the status changes
+
+  const fetchOrder = async () => {
+    try {
+      const response = await axios.get(`${URI}api/productOrder/`);
+      const filteredOrders = response.data.filter(
+        (order) => order.status.toLowerCase() === status
+      );
+      const sortedOrders = filteredOrders.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      // Map order data to calendar events
+      const calendarOrders = sortedOrders.map((order) => ({
+        id: order._id,
+        title: `${order.products.length} orders`,
+        start: new Date(order.createdAt),
+        end: new Date(order.createdAt),
+      }));
+
+      setOrders(calendarOrders);
+      console.log(calendarOrders);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Order </h1>
+      <h1 className="text-3xl font-bold mb-4">Order</h1>
+
+      {/* Status Tabs */}
+      <div className="flex justify-center space-x-4 mb-4">
+        {["pending", "processing", "shipped", "delivered", "cancelled"].map(
+          (tab) => (
+            <button
+              key={tab}
+              onClick={() => setStatus(tab)}
+              className={`px-4 py-2 rounded-md ${
+                status === tab
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-100 text-gray-800"
+              }`}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          )
+        )}
+      </div>
 
       {/* Calendar UI */}
       <Calendar

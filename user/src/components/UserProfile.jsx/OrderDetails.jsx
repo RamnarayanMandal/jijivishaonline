@@ -115,20 +115,19 @@ const OrderDetails = () => {
                             <p className="text-xl font-bold">₹{product.price} </p>
                             <p className="text-gray-600">Quantity: {product.quantity}</p>
                             <div className="">
-                                <button
-                                    className="mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 rounded transition duration-300 ease-in-out"
-                                    onClick={cancelOrder}
-                                >
-                                    Cancel
-                                </button>
+                                {/* Only show Cancel button if the order status is not "cancelled" */}
+                                {status !== 'cancelled' && (
+                                    <button
+                                        className="mt-2 px-4 py-2 text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 rounded transition duration-300 ease-in-out"
+                                        onClick={cancelOrder}
+                                    >
+                                        Cancel Order
+                                    </button>
+                                )}
                             </div>
                         </div>
-
-
                     </div>
                 ))}
-
-                
 
                 <div className="my-8 px-4">
                     <StatusBar status={status} /> {/* Display status bar */}
