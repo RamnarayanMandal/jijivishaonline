@@ -1,6 +1,9 @@
 const upload = require("../../modules/fileModule"); // Assuming `fileModule` is configured properly with multer
 const GiftCards = require("../models/giftCardsModels");
 const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
+const { log } = require("console");
 
 // Controller to upload gift card
 const uploadGiftCard = (req, res) => {
@@ -35,7 +38,9 @@ const uploadGiftCard = (req, res) => {
       await newGiftCard.save();
 
       // Build the file URL
-      const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+      const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${
+        req.file.filename
+      }`;
 
       // Send success response
       res.status(201).json({
@@ -96,7 +101,9 @@ const updateGiftCard = (req, res) => {
       await giftCard.save();
 
       // Build the file URL if image is updated
-      const fileUrl = req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}` : undefined;
+      const fileUrl = req.file
+        ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
+        : undefined;
 
       // Send success response
       res.status(200).json({
@@ -110,7 +117,6 @@ const updateGiftCard = (req, res) => {
     }
   });
 };
-
 
 const deleteGiftCard = async (req, res) => {
   try {
@@ -127,19 +133,39 @@ const deleteGiftCard = async (req, res) => {
 
     // Delete the image file from the file system (if applicable)
     if (giftCard.image) {
-      const imagePath = path.join('uploads', giftCard.image);
-      fs.unlink(imagePath, (err) => {
-        if (err) console.error("Error deleting image file:", err);
-      });
+      // Use path.resolve to construct an absolute path
+      const imagePath = path.resolve(
+        __dirname,
+        "../../uploads",
+        giftCard.image
+      );
+      console.log("====================================");
+      console.log(imagePath);
+      console.log("====================================");
+
+      // Use fs.promises.unlink for promise-based file deletion
+      try {
+        await fs.promises.unlink(imagePath);
+        console.log("Image file deleted successfully");
+      } catch (err) {
+        console.error("Error deleting image file:", err);
+        // Continue with success response even if image deletion fails
+      }
     }
 
     // Send success response
-    res.status(200).json({ message: "Gift card deleted successfully." });
+    res
+      .status(200)
+      .json({ message: "Gift card and image deleted successfully." });
   } catch (error) {
     // Handle server errors
     res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
-
-module.exports = { uploadGiftCard,getAllGiftCards,updateGiftCard , deleteGiftCard };
+module.exports = {
+  uploadGiftCard,
+  getAllGiftCards,
+  updateGiftCard,
+  deleteGiftCard,
+};
