@@ -19,6 +19,10 @@ const productOrderRoutes = require("./user/routes/productOrderRoutes");
 // QuickLink Footer
 const quickLinkRoutes = require("./QuickLink/routes/giftCardRoutes");
 
+const categoryRoutes = require('./admin/routes/category.routes');
+
+const navbarRoutes = require('./admin/routes/navbarRoute');
+
 const path = require("path");
 
 connectDB();
@@ -52,7 +56,11 @@ app.use("/api/perspective", PerspectiveRoutes);
 
 app.use("/api/quickLink", quickLinkRoutes);
 
-// error handling middleware
+app.use('/api/categories', categoryRoutes);
+
+app.use('/api/navbar', navbarRoutes);
+
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server is running on port ${port}`));

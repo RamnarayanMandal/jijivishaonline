@@ -6,6 +6,9 @@ import { IoCartOutline } from "react-icons/io5";
 import axios from "axios";
 import Swal from "sweetalert2";
 
+// Helper function to check if the array is not empty and contains valid data
+const isValidArray = (arr) => Array.isArray(arr) && arr.some(item => item.trim() !== "");
+
 const ProductInfo = ({ product }) => {
   // Handle undefined product
   if (!product) {
@@ -13,7 +16,8 @@ const ProductInfo = ({ product }) => {
   }
 
   // Directly use the color array (no need to parse it)
-  const colors = product.color ? product.color : [];
+  const colors = product.color || [];
+  const sizes = product.size || [];
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -93,8 +97,7 @@ const ProductInfo = ({ product }) => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold">{product?.title}</h1>
-      <p className="text-sm text-gray-600">{product?.productCode}</p>
-
+     
       {/* Price Section */}
       <div className="flex items-center my-4">
         <p className="text-2xl font-semibold text-gray-800">
