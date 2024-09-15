@@ -24,6 +24,8 @@ import PaymentHomepage from "./components/payment/PaymentHomepage.jsx";
 import GiftCards from "./components/QuickLink/GiftCards.jsx";
 import CorporateGifting from "./components/QuickLink/CorporateGifting.jsx";
 import OrderDetails from "./components/UserProfile.jsx/OrderDetails.jsx";
+import PrivacyPolicy from "./components/PrivacyPolicy.jsx";
+import ShippingPolicy from "./components/ShippingPolicy.jsx";
 
 // Define your router outside of the provider
 const router = createBrowserRouter([
@@ -96,6 +98,14 @@ const router = createBrowserRouter([
       {
         path: "/corporateGifting",
         element: <CorporateGifting />,
+      },
+      {
+        path: "/privacyPolicy",
+        element: <PrivacyPolicy/>,
+      },
+      {
+        path: "/shippingPolicy",
+        element: <ShippingPolicy/>,
       },
       {
         path:"/orderDetails/:id",
