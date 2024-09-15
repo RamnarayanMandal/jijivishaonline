@@ -21,6 +21,7 @@ import Order from "./Pages/Order";
 import BookOrder from "./Pages/BookOrder";
 import QuickLinkHome from "./components/QuickLink/QuickLinkHome";
 import GiftCards from "./components/QuickLink/GiftCards";
+import  MangeCatogry  from './Pages/catogry/MangeCatogry';
 
 // Create the router instance
 const router = createBrowserRouter([
@@ -94,6 +95,10 @@ const router = createBrowserRouter([
         path: "/giftCards",
         element: <GiftCards/>,
       },
+      {
+        path: '/Category',
+        element: <MangeCatogry />,
+      }
     ],
   },
 ]);

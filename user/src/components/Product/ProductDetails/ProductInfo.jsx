@@ -6,6 +6,9 @@ import { IoCartOutline } from "react-icons/io5";
 import axios from "axios";
 import Swal from "sweetalert2";
 
+// Helper function to check if the array is not empty and contains valid data
+const isValidArray = (arr) => Array.isArray(arr) && arr.some(item => item.trim() !== "");
+
 const ProductInfo = ({ product }) => {
   // Handle undefined product
   if (!product) {
@@ -13,11 +16,12 @@ const ProductInfo = ({ product }) => {
   }
 
   // Directly use the color array (no need to parse it)
-  const colors = product.color ? product.color : [];
+  const colors = product.color || [];
+  const sizes = product.size || [];
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(product.size ? product.size[0] : "");
+  const [selectedSize, setSelectedSize] = useState(sizes.length > 0 ? sizes[0] : "");
   const [selectedColor, setSelectedColor] = useState(colors.length > 0 ? colors[0] : "");
   const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
@@ -93,8 +97,7 @@ const ProductInfo = ({ product }) => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold">{product?.title}</h1>
-      <p className="text-sm text-gray-600">{product?.productCode}</p>
-
+     
       {/* Price Section */}
       <div className="flex items-center my-4">
         <p className="text-2xl font-semibold text-gray-800">
@@ -114,40 +117,44 @@ const ProductInfo = ({ product }) => {
 
       {/* Size and Color Section */}
       <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 my-4">
-        {/* Size Selection */}
-        <div className="space-x-2">
-          <label className="font-semibold">Size:</label>
-          {product?.size?.map((size) => (
-            <button
-              key={size}
-              onClick={() => setSelectedSize(size)}
-              className={`px-3 py-1 border ${
-                size === selectedSize ? "border-red-600" : "border-gray-300"
-              } rounded ${
-                size === selectedSize ? "text-red-600" : "text-gray-700"
-              }`}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
+        {/* Size Selection - Render only if sizes are available */}
+        {isValidArray(sizes) && (
+          <div className="space-x-2">
+            <label className="font-semibold">Size:</label>
+            {sizes.map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                className={`px-3 py-1 border ${
+                  size === selectedSize ? "border-red-600" : "border-gray-300"
+                } rounded ${
+                  size === selectedSize ? "text-red-600" : "text-gray-700"
+                }`}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        )}
 
-        {/* Color Selection */}
-        <div className="space-x-2">
-          <label className="font-semibold">Color:</label>
-          {colors.map((color) => (
-            <button
-              key={color}
-              onClick={() => setSelectedColor(color)}
-              style={{ backgroundColor: color }} // Set background color dynamically
-              className={`px-3 py-1 border ${
-                color === selectedColor ? "border-red-600" : "border-gray-300"
-              } rounded text-white`} // Add text color and border for selected color
-            >
-              {color}
-            </button>
-          ))}
-        </div>
+        {/* Color Selection - Render only if colors are available */}
+        {isValidArray(colors) && (
+          <div className="space-x-2">
+            <label className="font-semibold">Color:</label>
+            {colors.map((color) => (
+              <button
+                key={color}
+                onClick={() => setSelectedColor(color)}
+                style={{ backgroundColor: color }} // Set background color dynamically
+                className={`px-3 py-1 border ${
+                  color === selectedColor ? "border-red-600" : "border-gray-300"
+                } rounded text-white`} // Add text color and border for selected color
+              >
+                {color}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Quantity Section */}
