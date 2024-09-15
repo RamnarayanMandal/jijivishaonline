@@ -8,7 +8,11 @@ const productSchema = new mongoose.Schema(
     title: { type: String },
     price: { type: Number, default: 0 },
     discount: { type: Number },
-    productCode: { type: String },
+    SKU: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     description: { type: String },
     category: { type: String },
     subcategory: { type: String },
@@ -17,7 +21,7 @@ const productSchema = new mongoose.Schema(
     quantity: { type: Number },
     inStock: { type: Number },
     productdescriptions: { type: String },
-    color: [{type: String}]  ,
+    color: [{ type: String }],
     typeOfPrinting: { type: String },
     fabric: { type: String },
     additionalInfo1: { type: String },
@@ -47,7 +51,7 @@ productSchema.pre("save", function (next) {
   if (this.category) {
     this.category = this.category.toLowerCase();
   }
-  
+
   if (this.subcategory) {
     this.subcategory = this.subcategory.toLowerCase(); // Treat subcategory as a string
   }

@@ -28,7 +28,7 @@ exports.createProduct = async (req, res) => {
       title,
       price,
       discount,
-      productCode,
+      SKU,
       description,
       category,
       subcategory,
@@ -55,14 +55,14 @@ exports.createProduct = async (req, res) => {
     console.log("color:", color);
 
     // Validate required fields
-    if (!title || !price || !productCode) {
+    if (!title || !price || !SKU) {
       return res
         .status(400)
         .json({ message: "Title, price, and product code are required" });
     }
 
-    // Check if a product with the same productCode exists
-    const existingProduct = await Product.findOne({ productCode });
+    // Check if a product with the same SKU exists
+    const existingProduct = await Product.findOne({ SKU });
 
     if (existingProduct) {
       // If you want to replace the product images
@@ -78,22 +78,23 @@ exports.createProduct = async (req, res) => {
     }
 
     // Build the product data object, excluding empty fields
+    // Backend (Ensure proper parsing of size and color fields)
     const productData = {
       thumbnail: thumbnail[0].path,
       images: images.map((file) => file.path),
       title,
       price,
-      productCode,
+      SKU,
       discount: discount || undefined,
       description: description || undefined,
       category: category || undefined,
       subcategory: subcategory || undefined,
       typeOfProduct: typeOfProduct || undefined,
-      size: size && size.trim() !== '' ? size.split(",").filter(Boolean) : undefined, // Exclude if empty
+      size: Array.isArray(size) ? size : size.split(",").map(s => s.trim()), // Properly handle size
       quantity: quantity || undefined,
       inStock: inStock || undefined,
       productdescriptions: productdescriptions || undefined,
-      color: color && color.trim() !== '' ? color : undefined, // Exclude if empty
+      color: Array.isArray(color) ? color : color.split(",").map(c => c.trim()), // Properly handle color
       typeOfPrinting: typeOfPrinting || undefined,
       fabric: fabric || undefined,
       additionalInfo1: additionalInfo1 || undefined,
@@ -101,11 +102,12 @@ exports.createProduct = async (req, res) => {
       countryOfOrigin: countryOfOrigin || undefined,
       marketedBy: marketedBy || undefined,
       note: note || undefined,
-      materialCare: materialCare ? materialCare.split(",").filter(Boolean) : undefined, // Exclude if empty
+      materialCare: materialCare ? materialCare.split(",").filter(Boolean) : undefined,
       disclaimer: disclaimer || undefined,
-      shippingInfo: shippingInfo ? shippingInfo.split(",").filter(Boolean) : undefined, // Exclude if empty
+      shippingInfo: shippingInfo ? shippingInfo.split(",").filter(Boolean) : undefined,
       productreviews: productreviews ? JSON.parse(productreviews) : undefined,
     };
+
 
     // Remove undefined fields
     Object.keys(productData).forEach((key) => {
@@ -238,7 +240,7 @@ exports.updateProductById = async (req, res) => {
       title,
       price,
       discount,
-      productCode,
+      SKU,
       description,
       category,
       subcategory,
@@ -297,7 +299,7 @@ exports.updateProductById = async (req, res) => {
     product.title = title || product.title;
     product.price = price || product.price;
     product.discount = discount || product.discount;
-    product.productCode = productCode || product.productCode;
+    product.SKU = SKU || product.SKU;
     product.description = description || product.description;
     product.category = category || product.category;
     product.subcategory = subcategory || product.subcategory;

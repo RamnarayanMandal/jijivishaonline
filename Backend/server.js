@@ -21,7 +21,7 @@ const quickLinkRoutes = require("./QuickLink/routes/giftCardRoutes");
 
 const categoryRoutes = require('./admin/routes/category.routes');
 
-// const navbarRoutes = require('./admin/routes/navbarRoute');
+ const navbarRoutes = require('./admin/routes/navbarRoute');
 
 const path = require("path");
 
@@ -58,7 +58,7 @@ app.use("/api/quickLink", quickLinkRoutes);
 
 app.use('/api/categories', categoryRoutes);
 
-// app.use('/api/navbar', navbarRoutes);
+ app.use('/api/navbar', navbarRoutes);
 
 
 

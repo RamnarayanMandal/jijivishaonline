@@ -7,7 +7,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 // Helper function to check if the array is not empty and contains valid data
-const isValidArray = (arr) => Array.isArray(arr) && arr.some(item => item.trim() !== "");
+const isValidArray = (arr) =>
+  Array.isArray(arr) && arr.some((item) => item.trim() !== "");
 
 const ProductInfo = ({ product }) => {
   // Handle undefined product
@@ -21,8 +22,12 @@ const ProductInfo = ({ product }) => {
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(product.size?.length > 0 ? product.size[0] : "");
-  const [selectedColor, setSelectedColor] = useState(colors.length > 0 ? colors[0] : "");
+  const [selectedSize, setSelectedSize] = useState(
+    product.size?.length > 0 ? product.size[0] : ""
+  );
+  const [selectedColor, setSelectedColor] = useState(
+    colors.length > 0 ? colors[0] : ""
+  );
   const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
   const selectImage = localStorage.getItem("selectedImage");
@@ -34,10 +39,10 @@ const ProductInfo = ({ product }) => {
 
     if (!token) {
       Swal.fire({
-        title: 'Login Required',
-        text: 'Please log in to add products to the cart.',
-        icon: 'warning',
-        confirmButtonText: 'OK',
+        title: "Login Required",
+        text: "Please log in to add products to the cart.",
+        icon: "warning",
+        confirmButtonText: "OK",
       });
       return;
     }
@@ -59,7 +64,12 @@ const ProductInfo = ({ product }) => {
 
       dispatch(
         bagActions.addToBag({
-          data: { ...product, quantity, size: selectedSize, color: selectedColor },
+          data: {
+            ...product,
+            quantity,
+            size: selectedSize,
+            color: selectedColor,
+          },
           totalQuantity: quantity,
         })
       );
@@ -97,7 +107,7 @@ const ProductInfo = ({ product }) => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold">{product?.title}</h1>
-     
+
       {/* Price Section */}
       <div className="flex items-center my-4">
         <p className="text-2xl font-semibold text-gray-800">
@@ -118,41 +128,47 @@ const ProductInfo = ({ product }) => {
       {/* Size and Color Section */}
       <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 my-4">
         {/* Size Selection */}
-        {product?.size?.length > 0 && (
+        {product?.size?.filter((size) => size.trim().length > 0).length > 0 && (
           <div className="space-x-2">
             <label className="font-semibold">Size:</label>
-            {product.size.map((size) => (
-              <button
-                key={size}
-                onClick={() => setSelectedSize(size)}
-                className={`px-3 py-1 border ${
-                  size === selectedSize ? "border-red-600" : "border-gray-300"
-                } rounded ${
-                  size === selectedSize ? "text-red-600" : "text-gray-700"
-                }`}
-              >
-                {size}
-              </button>
-            ))}
+            {product.size
+              .filter((size) => size.trim().length > 0) // Filter out empty size values
+              .map((size) => (
+                <button
+                  key={size}
+                  onClick={() => setSelectedSize(size)}
+                  className={`px-3 py-1 border ${
+                    size === selectedSize ? "border-red-600" : "border-gray-300"
+                  } rounded ${
+                    size === selectedSize ? "text-red-600" : "text-gray-700"
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
           </div>
         )}
 
         {/* Color Selection */}
-        {colors.length > 0 && (
+        {colors.filter((color) => color.trim().length > 0).length > 0 && (
           <div className="space-x-2">
             <label className="font-semibold">Color:</label>
-            {colors.map((color) => (
-              <button
-                key={color}
-                onClick={() => setSelectedColor(color)}
-                style={{ backgroundColor: color }} // Set background color dynamically
-                className={`px-3 py-1 border ${
-                  color === selectedColor ? "border-red-600" : "border-gray-300"
-                } rounded text-white`} // Add text color and border for selected color
-              >
-                {color}
-              </button>
-            ))}
+            {colors
+              .filter((color) => color.trim().length > 0) // Filter out empty color values
+              .map((color) => (
+                <button
+                  key={color}
+                  onClick={() => setSelectedColor(color)}
+                  style={{ backgroundColor: color }} // Set background color dynamically
+                  className={`px-3 py-1 border ${
+                    color === selectedColor
+                      ? "border-red-600"
+                      : "border-gray-300"
+                  } rounded text-white`} // Add text color and border for selected color
+                >
+                  {color}
+                </button>
+              ))}
           </div>
         )}
       </div>

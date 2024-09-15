@@ -15,6 +15,8 @@ const AddProduct = () => {
   const [alert, setAlert] = useState({ type: "", message: "" });
   const [colorInputs, setColorInputs] = useState([""]);
   const [sizeInputs, setSizeInputs] = useState([""]);
+  const [materialCareInputs, setMaterialCareInputs] = useState([""]); // For material care
+  const [shippingInfoInputs, setShippingInfoInputs] = useState([""]); // For shipping info
   const navigate = useNavigate();
 
   const URI = import.meta.env.VITE_API_URL;
@@ -35,11 +37,9 @@ const AddProduct = () => {
       selectedFiles.forEach((file) => formData.append("images", file));
 
       // Process color inputs and save as an array
-      formData.append("color", JSON.stringify(colorInputs.map(color => color.trim())));
-
-      // Process size inputs and save as an array
-      formData.append("size", JSON.stringify(sizeInputs.map(size => size.trim())));
-
+      formData.append("color", colorInputs.filter(c => c.trim()));  // Directly use array
+      formData.append("size", sizeInputs.filter(s => s.trim()));    // Directly use array
+  
       // Append other form fields to formData
       Object.keys(data).forEach((key) => {
         formData.append(key, data[key]);
@@ -98,6 +98,13 @@ const AddProduct = () => {
   const removeSizeInput = (index) => {
     setSizeInputs(sizeInputs.filter((_, i) => i !== index));
   };
+
+  const addMaterialCareInput = () => setMaterialCareInputs([...materialCareInputs, ""]);
+  const removeMaterialCareInput = (index) => setMaterialCareInputs(materialCareInputs.filter((_, i) => i !== index));
+
+  const addShippingInfoInput = () => setShippingInfoInputs([...shippingInfoInputs, ""]);
+  const removeShippingInfoInput = (index) => setShippingInfoInputs(shippingInfoInputs.filter((_, i) => i !== index));
+
 
   return (
     <div className="container mx-auto p-6 bg-gray-100 shadow-lg rounded-lg">
@@ -205,11 +212,11 @@ const AddProduct = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Product Code</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">SKU</label>
             <Input
               type="text"
-              {...register("productCode")}
-              placeholder="Enter product code"
+              {...register("SKU")}
+              placeholder="Enter Sku code"
               className="w-full text-black"
             />
           </div>
@@ -399,6 +406,57 @@ const AddProduct = () => {
               className="w-full text-black"
             />
           </div>
+
+          <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">Material Care</Label>
+          {materialCareInputs.map((care, index) => (
+            <div key={index} className="flex items-center mb-2">
+              <Input
+                type="text"
+                value={care}
+                onChange={(e) => {
+                  const updatedMaterialCare = [...materialCareInputs];
+                  updatedMaterialCare[index] = e.target.value;
+                  setMaterialCareInputs(updatedMaterialCare);
+                }}
+                placeholder="Enter material care instruction"
+                className="w-full text-black"
+              />
+              <Button type="button" onClick={() => removeMaterialCareInput(index)} className="ml-2">
+                Remove
+              </Button>
+            </div>
+          ))}
+          <Button type="button" onClick={addMaterialCareInput}>
+            Add More Material Care
+          </Button>
+        </div>
+
+        {/* Shipping Info */}
+        <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">Shipping Info</Label>
+          {shippingInfoInputs.map((info, index) => (
+            <div key={index} className="flex items-center mb-2">
+              <Input
+                type="text"
+                value={info}
+                onChange={(e) => {
+                  const updatedShippingInfo = [...shippingInfoInputs];
+                  updatedShippingInfo[index] = e.target.value;
+                  setShippingInfoInputs(updatedShippingInfo);
+                }}
+                placeholder="Enter shipping info"
+                className="w-full text-black"
+              />
+              <Button type="button" onClick={() => removeShippingInfoInput(index)} className="ml-2">
+                Remove
+              </Button>
+            </div>
+          ))}
+          <Button type="button" onClick={addShippingInfoInput}>
+            Add More Shipping Info
+          </Button>
+        </div>
           
 
         </div>
