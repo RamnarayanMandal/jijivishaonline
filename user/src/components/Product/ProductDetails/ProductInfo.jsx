@@ -17,7 +17,7 @@ const ProductInfo = ({ product }) => {
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(product.size ? product.size[0] : "");
+  const [selectedSize, setSelectedSize] = useState(product.size?.length > 0 ? product.size[0] : "");
   const [selectedColor, setSelectedColor] = useState(colors.length > 0 ? colors[0] : "");
   const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
@@ -115,39 +115,43 @@ const ProductInfo = ({ product }) => {
       {/* Size and Color Section */}
       <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 my-4">
         {/* Size Selection */}
-        <div className="space-x-2">
-          <label className="font-semibold">Size:</label>
-          {product?.size?.map((size) => (
-            <button
-              key={size}
-              onClick={() => setSelectedSize(size)}
-              className={`px-3 py-1 border ${
-                size === selectedSize ? "border-red-600" : "border-gray-300"
-              } rounded ${
-                size === selectedSize ? "text-red-600" : "text-gray-700"
-              }`}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
+        {product?.size?.length > 0 && (
+          <div className="space-x-2">
+            <label className="font-semibold">Size:</label>
+            {product.size.map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                className={`px-3 py-1 border ${
+                  size === selectedSize ? "border-red-600" : "border-gray-300"
+                } rounded ${
+                  size === selectedSize ? "text-red-600" : "text-gray-700"
+                }`}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Color Selection */}
-        <div className="space-x-2">
-          <label className="font-semibold">Color:</label>
-          {colors.map((color) => (
-            <button
-              key={color}
-              onClick={() => setSelectedColor(color)}
-              style={{ backgroundColor: color }} // Set background color dynamically
-              className={`px-3 py-1 border ${
-                color === selectedColor ? "border-red-600" : "border-gray-300"
-              } rounded text-white`} // Add text color and border for selected color
-            >
-              {color}
-            </button>
-          ))}
-        </div>
+        {colors.length > 0 && (
+          <div className="space-x-2">
+            <label className="font-semibold">Color:</label>
+            {colors.map((color) => (
+              <button
+                key={color}
+                onClick={() => setSelectedColor(color)}
+                style={{ backgroundColor: color }} // Set background color dynamically
+                className={`px-3 py-1 border ${
+                  color === selectedColor ? "border-red-600" : "border-gray-300"
+                } rounded text-white`} // Add text color and border for selected color
+              >
+                {color}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Quantity Section */}

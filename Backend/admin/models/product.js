@@ -44,14 +44,14 @@ const productSchema = new mongoose.Schema(
 );
 
 productSchema.pre("save", function (next) {
-  if (this.categories) {
-    this.categories = this.categories.toLowerCase();
+  if (this.category) {
+    this.category = this.category.toLowerCase();
   }
   
-  if (this.subcategory && this.subcategory.length > 0) {
-    this.subcategory = this.subcategory.map((item) => item.toLowerCase());
+  if (this.subcategory) {
+    this.subcategory = this.subcategory.toLowerCase(); // Treat subcategory as a string
   }
-  
+
   next();
 });
 

@@ -51,6 +51,9 @@ exports.createProduct = async (req, res) => {
       productreviews,
     } = req.body;
 
+    console.log("size:", size);
+    console.log("color:", color);
+
     // Validate required fields
     if (!title || !price || !productCode) {
       return res
@@ -58,7 +61,7 @@ exports.createProduct = async (req, res) => {
         .json({ message: "Title, price, and product code are required" });
     }
 
-    // Check if a product with the same productCode exists (if applicable)
+    // Check if a product with the same productCode exists
     const existingProduct = await Product.findOne({ productCode });
 
     if (existingProduct) {
@@ -70,41 +73,49 @@ exports.createProduct = async (req, res) => {
         }
       });
 
-      // Delete the existing product document from the database (if necessary)
+      // Delete the existing product document from the database
       await Product.deleteOne({ _id: existingProduct._id });
     }
 
-    // Create a new product entry with the new file paths and details
-    const newProduct = new Product({
+    // Build the product data object, excluding empty fields
+    const productData = {
       thumbnail: thumbnail[0].path,
       images: images.map((file) => file.path),
       title,
       price,
-      discount,
       productCode,
-      description,
-      category,
-      subcategory,
-      typeOfProduct,
-      size: size ? size.split(",") : [], // Handle array input
-      quantity,
-      inStock,
-      productdescriptions,
-      color,
-      typeOfPrinting,
-      fabric,
-      additionalInfo1,
-      additionalInfo2,
-      countryOfOrigin,
-      marketedBy,
-      note,
-      materialCare: materialCare ? materialCare.split(",") : [], // Handle array input
-      disclaimer,
-      shippingInfo: shippingInfo ? shippingInfo.split(",") : [], // Handle array input
-      productreviews: productreviews ? JSON.parse(productreviews) : [], // Parse JSON if necessary
+      discount: discount || undefined,
+      description: description || undefined,
+      category: category || undefined,
+      subcategory: subcategory || undefined,
+      typeOfProduct: typeOfProduct || undefined,
+      size: size && size.trim() !== '' ? size.split(",").filter(Boolean) : undefined, // Exclude if empty
+      quantity: quantity || undefined,
+      inStock: inStock || undefined,
+      productdescriptions: productdescriptions || undefined,
+      color: color && color.trim() !== '' ? color : undefined, // Exclude if empty
+      typeOfPrinting: typeOfPrinting || undefined,
+      fabric: fabric || undefined,
+      additionalInfo1: additionalInfo1 || undefined,
+      additionalInfo2: additionalInfo2 || undefined,
+      countryOfOrigin: countryOfOrigin || undefined,
+      marketedBy: marketedBy || undefined,
+      note: note || undefined,
+      materialCare: materialCare ? materialCare.split(",").filter(Boolean) : undefined, // Exclude if empty
+      disclaimer: disclaimer || undefined,
+      shippingInfo: shippingInfo ? shippingInfo.split(",").filter(Boolean) : undefined, // Exclude if empty
+      productreviews: productreviews ? JSON.parse(productreviews) : undefined,
+    };
+
+    // Remove undefined fields
+    Object.keys(productData).forEach((key) => {
+      if (productData[key] === undefined) {
+        delete productData[key];
+      }
     });
 
-    // Save the new product to the database
+    // Create and save the new product
+    const newProduct = new Product(productData);
     await newProduct.save();
 
     res.status(201).json({
@@ -118,6 +129,8 @@ exports.createProduct = async (req, res) => {
       .json({ message: "Failed to create product", error: error.message });
   }
 };
+
+
 
 // Controller to get all products
 exports.getAllProducts = async (req, res) => {
@@ -150,11 +163,11 @@ exports.getProductById = async (req, res) => {
     // Find the product by its ID
     const product = await Product.findById(id); // Use the extracted 'id'
 
-    // Check if the product was found
-    if (!product) {
+    // Check if the product was found or if size or color fields are empty
+    if (!product || !product.size.length || !product.color.length) {
       return res.status(404).json({
         success: false,
-        message: "Product not found",
+        message: "Product not found or missing size/color",
       });
     }
 
@@ -173,6 +186,7 @@ exports.getProductById = async (req, res) => {
     });
   }
 };
+
 
 exports.deleteProductById = async (req, res) => {
   try {
