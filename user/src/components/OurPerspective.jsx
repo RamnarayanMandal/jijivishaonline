@@ -3,11 +3,12 @@ import axios from "axios";
 
 const OurPerspective = () => {
   const [perspectiveData, setPerspectiveData] = useState(null);
+  const URI = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchPerspectiveData = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/api/perspective/get-Perspective");
+        const response = await axios.get(`${URI}api/perspective/get-Perspective`);
         if (response.data && response.data.blogs && response.data.blogs.length > 0) {
           setPerspectiveData(response.data.blogs[0]);
         }
@@ -28,9 +29,10 @@ const OurPerspective = () => {
       {/* Image Section */}
       <div className="lg:w-1/2 w-full flex justify-center lg:justify-start mb-8 lg:mb-0">
         <img
-          src={`http://localhost:5001/${perspectiveData.image}`}
+          src={`${URI}${perspectiveData.image}`}
           alt="Our Perspective"
-          className="w-full lg:h-[80vh] h-64 object-fill"
+          // className="w-full lg:h-[80vh] h-64 object-fill"
+          style={{ width: '100%', maxWidth: '600px', height:'600px', borderRadius: '8px' }}
         />
       </div>
       {/* Text Section */}

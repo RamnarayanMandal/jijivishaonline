@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { bagActions } from "../../store/bagSlice";
 import { Snackbar, Alert } from "@mui/material";
 import Swal from "sweetalert2";
+import MetaTags from "../../MetaTags";
 
 
 export const SubCategories = () => {
@@ -92,10 +93,15 @@ export const SubCategories = () => {
     <div className="container mx-auto p-4 my-10">
       <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {subCategories.map((product) => (
+      
           <div
             key={product.id}
             className="flex-shrink-0 w-full items-center justify-center content-center"
           >
+            <MetaTags
+              title={product.title}
+              description={product.description}
+            />
             <div className="border-2 border-gray-300 bg-gray-50 shadow-lg overflow-hidden hover:border-red-500 transition-transform duration-300 transform hover:scale-105 " >
               <div className="overflow-hidden"  onClick={()=>navagite(`/product/${product._id}`)}>
                 <img
