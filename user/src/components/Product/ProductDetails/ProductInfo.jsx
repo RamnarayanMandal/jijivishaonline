@@ -124,6 +124,12 @@ const ProductInfo = ({ product }) => {
           </p>
         )}
       </div>
+      <div className="flex ">
+        <p className="text-red-600  text-sm">
+          {product.subcategory} <span className="text-gray-600">|</span> {product.typeOfProduct} <span className="text-gray-600">|</span> {product.category}
+        </p>
+      </div>
+
 
       {/* Size and Color Section */}
       <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 my-4">
@@ -137,11 +143,9 @@ const ProductInfo = ({ product }) => {
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
-                  className={`px-3 py-1 border ${
-                    size === selectedSize ? "border-red-600" : "border-gray-300"
-                  } rounded ${
-                    size === selectedSize ? "text-red-600" : "text-gray-700"
-                  }`}
+                  className={`px-3 py-1 border ${size === selectedSize ? "border-red-600" : "border-gray-300"
+                    } rounded ${size === selectedSize ? "text-red-600" : "text-gray-700"
+                    }`}
                 >
                   {size}
                 </button>
@@ -160,11 +164,10 @@ const ProductInfo = ({ product }) => {
                   key={color}
                   onClick={() => setSelectedColor(color)}
                   style={{ backgroundColor: color }} // Set background color dynamically
-                  className={`px-3 py-1 border ${
-                    color === selectedColor
+                  className={`px-3 py-1 border ${color === selectedColor
                       ? "border-red-600"
                       : "border-gray-300"
-                  } rounded text-white`} // Add text color and border for selected color
+                    } rounded text-white`} // Add text color and border for selected color
                 >
                   {color}
                 </button>

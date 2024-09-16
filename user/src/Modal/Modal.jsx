@@ -1,5 +1,6 @@
 import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import { useNavigate } from "react-router-dom";
 
 const Modal = React.forwardRef(
   (
@@ -12,6 +13,8 @@ const Modal = React.forwardRef(
     },
     ref
   ) => {
+    const navigate = useNavigate();
+
     if (!isOpen || !categoryData || categoryData.length === 0) return null;
 
     return (
@@ -34,6 +37,7 @@ const Modal = React.forwardRef(
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors"
+            aria-label="Close"
           >
             <CloseIcon className="text-3xl" />
           </button>
@@ -58,9 +62,7 @@ const Modal = React.forwardRef(
                   <div key={idx} className="mb-2 md:mb-4">
                     <div
                       className="cursor-pointer text-blue-600 hover:text-blue-800 transition-colors"
-                      onClick={() =>
-                        toggleSubcategories(category.name)
-                      }
+                      onClick={() => toggleSubcategories(category.name)}
                     >
                       {category.name}
                     </div>
@@ -68,11 +70,16 @@ const Modal = React.forwardRef(
                       <ul className="ml-4 mt-1 md:mt-2 list-disc list-inside">
                         {category.types.map((type, typeIdx) => (
                           <li
-                            key={typeIdx}
-                            className="text-gray-700 hover:text-gray-900 transition-colors"
-                          >
-                            {type}
-                          </li>
+                          key={typeIdx}
+                          className="text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
+                          onClick={() => {
+                            navigate(`/SubCategory/${type}`);
+                            onClose(); // Close the modal after navigation
+                          }}
+                        >
+                          {type}
+                        </li>
+                        
                         ))}
                       </ul>
                     )}
