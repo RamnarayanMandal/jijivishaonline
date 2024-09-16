@@ -127,7 +127,7 @@ const AddCategoryForm = ({ initialData = null, isEditing = false, onClose }) => 
         {subCategories.map((sub, subIndex) => (
           <div key={subIndex} className="border p-4 rounded-md space-y-2">
             <div className="flex flex-col">
-              <label htmlFor={`subName-${subIndex}`}>Subcategory Name</label>
+              
               <input
                 type="text"
                 id={`subName-${subIndex}`}
@@ -135,6 +135,7 @@ const AddCategoryForm = ({ initialData = null, isEditing = false, onClose }) => 
                 onChange={(e) => handleSubCategoryChange(subIndex, e)}
                 className="p-2 border rounded-md"
                 required
+                placeholder='Enter cloth name'
               />
             </div>
 
@@ -144,6 +145,7 @@ const AddCategoryForm = ({ initialData = null, isEditing = false, onClose }) => 
                   type="text"
                   value={type}
                   onChange={(e) => handleTypeChange(subIndex, typeIndex, e)}
+                  placeholder='Enter type of cloth'
                   className="p-2 border rounded-md flex-1"
                 />
                 {sub.types.length > 1 && (
