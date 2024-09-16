@@ -23,6 +23,7 @@ import QuickLinkHome from "./components/QuickLink/QuickLinkHome";
 import GiftCards from "./components/QuickLink/GiftCards";
 import  MangeCatogry  from './Pages/catogry/MangeCatogry';
 import AddCategoryForm from "./Pages/navbarMangment/AddCategoryForm";
+import  NavbarCatogry  from "./Pages/navbarMangment/NavbarCatogry";
 import { NavbarCatogry } from "./Pages/navbarMangment/NavbarCatogry";
 import Perspective from "./components/Perspective";
 

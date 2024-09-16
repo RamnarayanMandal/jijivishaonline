@@ -16,7 +16,7 @@ function App() {
       {!shouldHideNavbarAndHeader && <Header />}
       <div className="flex  w-full h-full ">
         {!shouldHideNavbarAndHeader && (
-          <div className=" hidden w-[300px] flex-col border-r bg-background sm:flex">
+          <div className=" hidden w-72  min-h-screen flex-col border-r bg-background sm:flex">
             <Navbar />
           </div>
         )}

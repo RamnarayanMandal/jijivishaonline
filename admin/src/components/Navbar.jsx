@@ -4,16 +4,20 @@ import {
   Home,
   ShoppingCart,
   Package,
-  Users2,
-  LineChart,
-  Users,
-} from "lucide-react";
+  Tags,
+  Image,
+  FileText,
+  Settings,
+  Gift,
+  BarChart2,
+  ClipboardList,
+} from "lucide-react"; // Updated icons
 
 const Navbar = () => {
   const [showManageProductOptions, setShowManageProductOptions] =
     useState(false);
-
   const [showReporterOptions, setShowReporterOptions] = useState(false);
+
   const toggleOptions = () => {
     setShowManageProductOptions(!showManageProductOptions);
   };
@@ -24,7 +28,7 @@ const Navbar = () => {
 
   return (
     <div>
-      <nav className="grid gap-6 text-lg font-medium px-2 pt-10">
+      <nav className="grid gap-6 text-lg  font-medium px-2 pt-10 w-72 h-full">
         <Link
           to="/dashboard"
           className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
@@ -32,6 +36,7 @@ const Navbar = () => {
           <Home className="h-5 w-5" />
           Dashboard
         </Link>
+
         {/* Manage Product Options */}
         <div>
           <button
@@ -50,6 +55,7 @@ const Navbar = () => {
                 <ShoppingCart className="h-5 w-5" />
                 Products
               </Link>
+
               <Link
                 to="/AddProduct"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
@@ -62,32 +68,40 @@ const Navbar = () => {
                 to="/Category"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
-                <Users2 className="h-5 w-5" />
-               Category
+                <Tags className="h-5 w-5" />
+                Category
               </Link>
 
               <Link
                 to="/Manage-Banner"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
-                <Users2 className="h-5 w-5" />
-            Banner
+                <Image className="h-5 w-5" />
+                Banner
               </Link>
 
               <Link
                 to="/Blogs-list"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
-                <Users2 className="h-5 w-5" />
-               Blogs
+                <FileText className="h-5 w-5" />
+                Blogs
               </Link>
 
               <Link
                 to="/manage-nav-icons"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
-                <Users2 className="h-5 w-5" />
-              NavIcons
+                <ClipboardList className="h-5 w-5" />
+                Nav Icons
+              </Link>
+
+              <Link
+                to="/NavBar-Managment"
+                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <ClipboardList className="h-5 w-5" />
+                NavBar Management
               </Link>
 
               <Link
@@ -102,21 +116,21 @@ const Navbar = () => {
                 to="/quickLinkHome"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
-                <Users2 className="h-5 w-5" />
-               Gift-Card
+                <Gift className="h-5 w-5" />
+                Gift Card
               </Link>
             </div>
           )}
         </div>
-        {/* Report Managment */}
 
+        {/* Report Management */}
         <div>
           <button
             onClick={toggleReportOptions}
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground focus:outline-none"
           >
-            <Package className="h-5 w-5" />
-            Report Managment
+            <BarChart2 className="h-5 w-5" />
+            Report Management
           </button>
           {showReporterOptions && (
             <div className="ml-8 mt-2 space-y-2">
@@ -124,25 +138,26 @@ const Navbar = () => {
                 to="/order"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
-                <Users className="h-5 w-5" />
-                Order
+                <ClipboardList className="h-5 w-5" />
+                Order Report
               </Link>
+
               <Link
                 to="/bookOrder"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
                 <Package className="h-5 w-5" />
-                book order
+                Book Order Report
               </Link>
             </div>
           )}
         </div>
 
         <Link
-          to="#"
+          to="/settings"
           className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
         >
-          <LineChart className="h-5 w-5" />
+          <Settings className="h-5 w-5" />
           Settings
         </Link>
       </nav>
