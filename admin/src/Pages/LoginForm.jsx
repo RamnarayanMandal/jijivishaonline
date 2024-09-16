@@ -29,28 +29,31 @@ export function LoginForm() {
     e.preventDefault();
     setLoading(true);
     setError("");
-
+  
     try {
       const response = await axios.post(`${URI}api/admin/login`, {
         email,
         password,
       });
-
+  
       // Handle successful login
       console.log("Login successful:", response.data);
-
+  
       // Save token and user data in localStorage
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
-
+  
       // Redirect to the dashboard or another page after successful login
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response ? err.response.data : "Login failed");
+      setError(err.response && err.response.data && err.response.data.message
+        ? err.response.data.message
+        : "Login failed");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
