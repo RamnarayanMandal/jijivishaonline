@@ -26,6 +26,9 @@ import CorporateGifting from "./components/QuickLink/CorporateGifting.jsx";
 import OrderDetails from "./components/UserProfile.jsx/OrderDetails.jsx";
 import PrivacyPolicy from "./components/PrivacyPolicy.jsx";
 import ShippingPolicy from "./components/ShippingPolicy.jsx";
+import GroomShoppingAssistance from "./components/QuickLink/GroomShoppingAssistance.jsx";
+import BridalShoppingAssistance from "./components/QuickLink/BridalShoppingAssistance.jsx";
+import ScrollToTop from "./ScrollToTop.jsx"; // Import ScrollToTop
 import { GetProductBYProductType } from "./components/catogry/GetProductBYProductType.jsx";
 
 // Define your router outside of the provider
@@ -46,7 +49,6 @@ const router = createBrowserRouter([
         path: "/catogry/:category",
         element: <ShowCatogry />,
       },
-
       {
         path: "/product/:id",
         element: <ProductHome />,
@@ -81,17 +83,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/selectAddress",
-        element: <SelectAddress />, // This component will be displayed when the path is "/user-Profile/SaveAddress"
+        element: <SelectAddress />,
       },
       {
         path: "/payment",
-        element: <PaymentHomepage />, // This component will be displayed when the path is "/user-Profile/SaveAddress"
+        element: <PaymentHomepage />,
       },
-      {
-        element: <AddressForm />,
-      },
-
-      // Quick Links
       {
         path: "/giftCards",
         element: <GiftCards />,
@@ -102,13 +99,24 @@ const router = createBrowserRouter([
       },
       {
         path: "/privacyPolicy",
-        element: <PrivacyPolicy/>,
+        element: <PrivacyPolicy />,
       },
       {
         path: "/shippingPolicy",
-        element: <ShippingPolicy/>,
+        element: <ShippingPolicy />,
       },
       {
+        path: "/groomShoppingAssistance",
+        element: <GroomShoppingAssistance />,
+      },
+      {
+        path: "/bridalShoppingAssistance",
+        element: <BridalShoppingAssistance />,
+      },
+      {
+        path: "/orderDetails/:id",
+        element: <OrderDetails />,
+      },{
         path:"/orderDetails/:id",
         element: <OrderDetails/>// Add the component for order details when the path is "/orderDetails/:id"
       },{
@@ -124,7 +132,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
       <Provider store={Jijivisha}>
-        <RouterProvider router={router} />
+        <RouterProvider router={router}>
+          <ScrollToTop /> {/* ScrollToTop inside RouterProvider */}
+        </RouterProvider>
       </Provider>
     </ThemeProvider>
   </StrictMode>

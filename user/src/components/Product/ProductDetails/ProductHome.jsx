@@ -4,11 +4,13 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import ReviewComponent from "../../ReviewComponent";
 import { RecentlyViewedProduct } from "../RecentlyViewedProduct";
+import MetaTags from "../../../MetaTags";
 
 const ProductHome = () => {
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
   const { id } = useParams();
+  
 
   const URI = import.meta.env.VITE_API_URL;
 
@@ -32,7 +34,17 @@ const ProductHome = () => {
 
   return (
     <div>
+     
+      
+    
       <ProductPage product={product} />
+   
+      <MetaTags
+       title={product.subcategory}
+       description=""
+      
+      
+      />
       <div className="mt-10 py-5 bg-[#f4f1e9] lg:px-[6%]">
       <h1 className="lg:text-4xl text-2xl text-center font-semibold text-gray-800 mb-6">
       Recently Viewed

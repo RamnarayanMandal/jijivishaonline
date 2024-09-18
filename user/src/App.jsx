@@ -12,10 +12,12 @@ import { IconContext } from "react-icons/lib";
 import IconLabelTabs from "./components/Navbar/IconLabelTabs";
 import ProductHome from "./components/Product/ProductDetails/ProductHome";
 import { Api } from "./api";
+import ScrollToTop from "./ScrollToTop";
 
 function App() {
   return (
     <>
+    <ScrollToTop/>
       <Navbar1 />
       <Navbar2 />
       <Api/>

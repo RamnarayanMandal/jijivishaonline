@@ -141,12 +141,12 @@ const ShippingPolicy = () => {
         <p className="text-gray-600">
           For international shipping inquiries, visit us at{" "}
           <a
-            href="https://www.jijivishaonline.co"
+            href="https://www.jijivishaonline.com"
             target="_blank"
             rel="noopener noreferrer"
             className="text-red-500 hover:underline"
           >
-            www.jijivishaonline.co
+            www.jijivishaonline.com
           </a>
         </p>
       </div>

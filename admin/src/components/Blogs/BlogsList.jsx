@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import JoditEditor from 'jodit-react';
 
 const BlogsList = () => {
   const [blogs, setBlogs] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentBlog, setCurrentBlog] = useState(null);
   const navigate = useNavigate();
+  const editor = useRef(null); // Using ref for the editor instance
   const URI = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -72,12 +74,16 @@ const BlogsList = () => {
     }
   };
 
+  const handleDescriptionChange = (content) => {
+    setCurrentBlog({ ...currentBlog, description: content });
+  };
+
   return (
     <div className="  w-full p-6">
       <div className="flex justify-between">
         <Link to="/Manage-Blogs">
           <Button className="lg:text-3xl text-xl font-bold mb-6 mx-2 py-5">
-            Create Bolgs
+            Create Blogs
           </Button>
         </Link>
         <Link to="/dashboard">
@@ -140,11 +146,10 @@ const BlogsList = () => {
               <label className="block text-sm font-medium text-gray-700">
                 Description
               </label>
-              <textarea
-                name="description"
+              <JoditEditor
+                ref={editor}
                 value={currentBlog.description}
-                onChange={handleInputChange}
-                className="mt-1 p-2 w-full border rounded text-black h-24"
+                onBlur={handleDescriptionChange} // Use onBlur to handle editor changes
               />
             </div>
             <div className="mb-4">
