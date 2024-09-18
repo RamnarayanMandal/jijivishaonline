@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import MetaTags from "../../MetaTags";
 
 const GiftCards = () => {
   const URI = import.meta.env.VITE_API_URL;
@@ -26,6 +27,14 @@ const GiftCards = () => {
 
   return (
     <div className="container mx-auto px-4">
+       <MetaTags
+        title="e-Gift Cards"
+        description="   We are excited to announce that JIJIVISHA now offers e-gift cards, the
+          perfect gift for your loved ones who appreciate sustainable and
+          eco-friendly products. Simply select the desired denomination and we
+          will send the e-gift card directly to your recipient’s email address."
+       
+      />
       {/* Heading */}
       <div className="text-center py-8">
         <h1 className="text-4xl font-bold text-red-600">e-Gift Cards</h1>

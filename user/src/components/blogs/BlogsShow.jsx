@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import MetaTags from '../../MetaTags';
 
 export const BlogShow = () => {
   const URI = import.meta.env.VITE_API_URL;
@@ -30,10 +31,15 @@ export const BlogShow = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {blogs.map((blog) => (
           <div
-            key={blog._id}
-            className="bg-[#ffffff] border-2 shadow-lg overflow-hidden hover:border-black transition-transform duration-300 transform hover:scale-105 cursor-pointer"
-            onClick={() => handleBlogClick(blog._id)} // Add onClick handler here
+          key={blog._id}
+          className="bg-[#ffffff] border-2 shadow-lg overflow-hidden hover:border-black transition-transform duration-300 transform hover:scale-105 cursor-pointer"
+          onClick={() => handleBlogClick(blog._id)} // Add onClick handler here
           >
+            <MetaTags
+             title={blog.title}
+             description={blog.description}
+            
+            />
             <div className="overflow-hidden">
               <img
                 src={`${URI}${blog.image}`}

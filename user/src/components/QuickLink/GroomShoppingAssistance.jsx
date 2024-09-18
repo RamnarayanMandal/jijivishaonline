@@ -1,4 +1,5 @@
 import React from 'react';
+import MetaTags from '../../MetaTags';
 
 const GroomShoppingAssistance = () => {
   return (
@@ -8,6 +9,11 @@ const GroomShoppingAssistance = () => {
         <div className="text-sm text-gray-500 mb-2">
           <span className="text-red-600">Home</span> / Groom Shopping Assistance
         </div>
+        <MetaTags
+        title="Groom Shopping Assistance"
+        description=" We are excited to announce that JUJVISHA now offers groom shopping assistance for Hindu weddings. We understand that weddings are a significant event in one's life, and we want to make sure that the groom looks his best on his special day."
+    
+      />
 
         {/* Title */}
         <h1 className="text-4xl font-bold text-red-600 mb-6">Groom Shopping Assistance</h1>
