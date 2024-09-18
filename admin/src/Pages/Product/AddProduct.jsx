@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,12 @@ const AddProduct = () => {
   const [alert, setAlert] = useState({ type: "", message: "" });
   const [colorInputs, setColorInputs] = useState([""]);
   const [sizeInputs, setSizeInputs] = useState([""]);
-  const [materialCareInputs, setMaterialCareInputs] = useState([""]); // For material care
-  const [shippingInfoInputs, setShippingInfoInputs] = useState([""]); // For shipping info
+  const [materialCareInputs, setMaterialCareInputs] = useState([]);
+  const [shippingInfoInputs, setShippingInfoInputs] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
+  const [selectedType, setSelectedType] = useState(null);
+  const [categoriesData, setCategoriesData] = useState([]);
   const navigate = useNavigate();
 
   const URI = import.meta.env.VITE_API_URL;
@@ -29,42 +33,44 @@ const AddProduct = () => {
       });
       return;
     }
-
+  
     try {
       const formData = new FormData();
-
-      // Append image files to formData
       selectedFiles.forEach((file) => formData.append("images", file));
-
-      // Process color inputs and save as an array
-      formData.append("color", colorInputs.filter(c => c.trim()));  // Directly use array
-      formData.append("size", sizeInputs.filter(s => s.trim()));    // Directly use array
+      formData.append("thumbnail", data.thumbnail);
+      formData.append("color", colorInputs.filter((c) => c.trim()));
+      formData.append("size", sizeInputs.filter((s) => s.trim()));
+      formData.append("category", selectedCategory?.category || "");
+      formData.append("subcategory", selectedSubCategory?.name || "");
+      formData.append("typeOfProduct", selectedType || "");  // Ensure this line is included
+      formData.append("materialCare", materialCareInputs.filter((m) => m.trim()));
+      formData.append("shippingInfo", shippingInfoInputs.filter((s) => s.trim()));
   
-      // Append other form fields to formData
       Object.keys(data).forEach((key) => {
-        formData.append(key, data[key]);
+        if (key !== "thumbnail") {
+          formData.append(key, data[key]);
+        }
       });
-
+  
       await axios.post(`${URI}api/admin/products`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-      setAlert({
-        type: "success",
-        message: "Product added successfully!",
-      });
-
-      setTimeout(() => {
-        navigate("/products");
-      }, 2000);
+  
+      setAlert({ type: "success", message: "Product added successfully!" });
+      setTimeout(() => navigate("/products"), 2000);
     } catch (error) {
       console.error("Error adding product:", error);
-      setAlert({
-        type: "error",
-        message: "Failed to add product.",
-      });
+      setAlert({ type: "error", message: "Failed to add product." });
     }
   };
+  
+
+  useEffect(() => {
+    fetch(`${URI}api/navbar/categories`)
+      .then((response) => response.json())
+      .then((data) => setCategoriesData(data))
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -75,44 +81,57 @@ const AddProduct = () => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setThumbnailPreview(reader.result);
-      };
+      reader.onloadend = () => setThumbnailPreview(reader.result);
       reader.readAsDataURL(file);
-      setValue("thumbnail", file); 
+      setValue("thumbnail", file);
     }
   };
 
-  const addColorInput = () => {
-    setColorInputs([...colorInputs, ""]);
-  };
-
-  const removeColorInput = (index) => {
+  const addColorInput = () => setColorInputs([...colorInputs, ""]);
+  const removeColorInput = (index) =>
     setColorInputs(colorInputs.filter((_, i) => i !== index));
-  };
-
-  const addSizeInput = () => {
-    setSizeInputs([...sizeInputs, ""]);
-  };
-
-  const removeSizeInput = (index) => {
+  const addSizeInput = () => setSizeInputs([...sizeInputs, ""]);
+  const removeSizeInput = (index) =>
     setSizeInputs(sizeInputs.filter((_, i) => i !== index));
+  const addMaterialCareInput = () =>
+    setMaterialCareInputs([...materialCareInputs, ""]);
+  const removeMaterialCareInput = (index) =>
+    setMaterialCareInputs(materialCareInputs.filter((_, i) => i !== index));
+  const addShippingInfoInput = () =>
+    setShippingInfoInputs([...shippingInfoInputs, ""]);
+  const removeShippingInfoInput = (index) =>
+    setShippingInfoInputs(shippingInfoInputs.filter((_, i) => i !== index));
+
+  const handleCategoryChange = (e) => {
+    const category = categoriesData.find(
+      (cat) => cat.category === e.target.value
+    );
+    if (category) {
+      setSelectedCategory(category);
+      setSelectedSubCategory(null); // Reset subcategory when category changes
+      setSelectedType(null); // Reset type when category changes
+    }
   };
 
-  const addMaterialCareInput = () => setMaterialCareInputs([...materialCareInputs, ""]);
-  const removeMaterialCareInput = (index) => setMaterialCareInputs(materialCareInputs.filter((_, i) => i !== index));
+  const handleSubCategoryChange = (e) => {
+    const subCategory = selectedCategory?.subCategoryData.find(
+      (subCat) => subCat.name === e.target.value
+    );
+    setSelectedSubCategory(subCategory);
+    setSelectedType(null); // Reset type when subcategory changes
+  };
 
-  const addShippingInfoInput = () => setShippingInfoInputs([...shippingInfoInputs, ""]);
-  const removeShippingInfoInput = (index) => setShippingInfoInputs(shippingInfoInputs.filter((_, i) => i !== index));
-
+  const handleTypeChange = (e) => {
+    setSelectedType(e.target.value);
+  };
 
   return (
-    <div className="container mx-auto p-6 bg-gray-100 shadow-lg rounded-lg">
+    <div className="container mx-10 my-5 p-6 bg-gray-100 shadow-lg rounded-lg overflow-hidden">
       <div className="flex justify-between content-center items-center">
         <h2 className="text-3xl font-semibold mb-6 text-gray-800">
           Add New Product
         </h2>
-        <Button variant="dark" onClick={() => navigate("/products")}>
+        <Button variant="outline" onClick={() => navigate("/products")}>
           Back
         </Button>
       </div>
@@ -202,8 +221,12 @@ const AddProduct = () => {
               className="w-full text-black"
             />
           </div>
+
+          {/* Discount */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Discount</label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Discount
+            </Label>
             <Input
               type="number"
               {...register("discount")}
@@ -211,76 +234,143 @@ const AddProduct = () => {
               className="w-full text-black"
             />
           </div>
+
+          {/* SKU */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">SKU</label>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              SKU
+            </Label>
             <Input
               type="text"
               {...register("SKU")}
-              placeholder="Enter Sku code"
-              className="w-full text-black"
-            />
-          </div>
-          {/* Category and Classification */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-            <Input
-              type="text"
-              {...register("category")}
-              placeholder="Enter category"
-              className="w-full text-black"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
-            <Input
-              type="text"
-              {...register("subcategory")}
-              placeholder="Enter subcategory"
-              className="w-full text-black"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Type of Product</label>
-            <Input
-              type="text"
-              {...register("typeOfProduct")}
-              placeholder="Enter type of product"
+              placeholder="Enter SKU code"
               className="w-full text-black"
             />
           </div>
 
-          {/* Additional Product Details */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Size
-            </label>
-            {sizeInputs.map((size, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <Input
-                  type="text"
-                  value={size}
-                  onChange={(e) => {
-                    const updatedSizes = [...sizeInputs];
-                    updatedSizes[index] = e.target.value;
-                    setSizeInputs(updatedSizes);
-                  }}
-                  placeholder="Enter size"
-                  className="w-full text-black"
-                />
-                <Button
-                  type="button"
-                  onClick={() => removeSizeInput(index)}
-                  className="ml-2"
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
-            <Button type="button" onClick={addSizeInput}>
-              Add More Size
-            </Button>
+          {/* Category */}
+          <div className="text-gray-700">
+            <Label
+              htmlFor="category"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Category
+            </Label>
+            <select
+              id="category"
+              onChange={handleCategoryChange}
+              className="w-full bg-gray-200 border border-gray-300 rounded-md py-2 px-3 text-gray-900"
+            >
+              <option value="">Select Category</option>
+              {categoriesData.map((cat) => (
+                <option key={cat._id} value={cat.category}>
+                  {cat.category.charAt(0).toUpperCase() +
+                    cat.category.slice(1)}
+                </option>
+              ))}
+            </select>
           </div>
-          <div>
+
+          {/* Subcategory */}
+          {selectedCategory && (
+            <div>
+              <Label className="block text-sm font-medium text-gray-700 mb-2">
+                Subcategory
+              </Label>
+              <select
+                id="subcategory"
+                onChange={handleSubCategoryChange}
+                className="w-full bg-gray-200 border border-gray-300 rounded-md py-2 px-3 text-gray-900"
+              >
+                <option value="">Select Subcategory</option>
+                {selectedCategory?.subCategoryData?.map((subCat) => (
+                  <option key={subCat._id} value={subCat.name}>
+                    {subCat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Type */}
+          {selectedSubCategory && (
+            <div>
+              <Label className="block text-sm font-medium text-gray-700 mb-2">
+                Type
+              </Label>
+              <select
+                id="type"
+                onChange={handleTypeChange}
+                className="w-full bg-gray-200 border border-gray-300 rounded-md py-2 px-3 text-gray-900"
+              >
+                <option value="">Select Type</option>
+                {selectedSubCategory?.types?.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+
+        {/* Color Inputs */}
+        <div className="mt-6">
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Available Colors
+          </Label>
+          {colorInputs.map((color, index) => (
+            <div key={index} className="flex items-center space-x-2 mb-2">
+              <Input
+                type="text"
+                value={color}
+                onChange={(e) => {
+                  const updatedColors = [...colorInputs];
+                  updatedColors[index] = e.target.value;
+                  setColorInputs(updatedColors);
+                }}
+                className="flex-1 text-black"
+                placeholder="Enter color"
+              />
+              <Button variant="destructive" onClick={() => removeColorInput(index)}>
+                Remove
+              </Button>
+            </div>
+          ))}
+          <Button variant="outline" onClick={addColorInput}>
+            Add Color
+          </Button>
+        </div>
+
+        {/* Size Inputs */}
+        <div className="mt-6">
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Available Sizes
+          </Label>
+          {sizeInputs.map((size, index) => (
+            <div key={index} className="flex items-center space-x-2 mb-2">
+              <Input
+                type="text"
+                value={size}
+                onChange={(e) => {
+                  const updatedSizes = [...sizeInputs];
+                  updatedSizes[index] = e.target.value;
+                  setSizeInputs(updatedSizes);
+                }}
+                className="flex-1 text-black"
+                placeholder="Enter size"
+              />
+              <Button variant="destructive" onClick={() => removeSizeInput(index)}>
+                Remove
+              </Button>
+            </div>
+          ))}
+          <Button variant="outline" onClick={addSizeInput}>
+            Add Size
+          </Button>
+        </div>
+
+        <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
             <Input
               type="number"
@@ -306,36 +396,7 @@ const AddProduct = () => {
               className="w-full text-black"
             />
           </div>
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">
-              Colors
-            </Label>
-            {colorInputs.map((color, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <Input
-                  type="text"
-                  value={color}
-                  onChange={(e) => {
-                    const updatedColors = [...colorInputs];
-                    updatedColors[index] = e.target.value;
-                    setColorInputs(updatedColors);
-                  }}
-                  placeholder="Enter color"
-                  className="w-full text-black"
-                />
-                <Button
-                  type="button"
-                  onClick={() => removeColorInput(index)}
-                  className="ml-2"
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
-            <Button type="button" onClick={addColorInput}>
-              Add More Color
-            </Button>
-          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Type of Printing</label>
             <Input
@@ -351,24 +412,6 @@ const AddProduct = () => {
               type="text"
               {...register("fabric")}
               placeholder="Enter fabric"
-              className="w-full text-black"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Additional Info 1</label>
-            <Input
-              type="text"
-              {...register("additionalInfo1")}
-              placeholder="Enter additional info 1"
-              className="w-full text-black"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Additional Info 2</label>
-            <Input
-              type="text"
-              {...register("additionalInfo2")}
-              placeholder="Enter additional info 2"
               className="w-full text-black"
             />
           </div>
@@ -398,72 +441,68 @@ const AddProduct = () => {
               className="w-full text-black"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Care Instructions</label>
-            <Textarea
-              {...register("careInstructions")}
-              placeholder="Enter care instructions"
-              className="w-full text-black"
-            />
-          </div>
 
-          <div>
-          <Label className="block text-sm font-medium text-gray-700 mb-2">Material Care</Label>
-          {materialCareInputs.map((care, index) => (
-            <div key={index} className="flex items-center mb-2">
+        {/* Material & Care Inputs */}
+        <div className="mt-6">
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Material & Care Instructions
+          </Label>
+          {materialCareInputs.map((input, index) => (
+            <div key={index} className="flex items-center space-x-2 mb-2">
               <Input
                 type="text"
-                value={care}
+                value={input}
                 onChange={(e) => {
-                  const updatedMaterialCare = [...materialCareInputs];
-                  updatedMaterialCare[index] = e.target.value;
-                  setMaterialCareInputs(updatedMaterialCare);
+                  const updatedInputs = [...materialCareInputs];
+                  updatedInputs[index] = e.target.value;
+                  setMaterialCareInputs(updatedInputs);
                 }}
-                placeholder="Enter material care instruction"
-                className="w-full text-black"
+                className="flex-1 text-black"
+                placeholder="Enter material or care instruction"
               />
-              <Button type="button" onClick={() => removeMaterialCareInput(index)} className="ml-2">
+              <Button variant="destructive" onClick={() => removeMaterialCareInput(index)}>
                 Remove
               </Button>
             </div>
           ))}
-          <Button type="button" onClick={addMaterialCareInput}>
-            Add More Material Care
+          <Button variant="outline" onClick={addMaterialCareInput}>
+            Add Material/Care Instruction
           </Button>
         </div>
 
-        {/* Shipping Info */}
-        <div>
-          <Label className="block text-sm font-medium text-gray-700 mb-2">Shipping Info</Label>
-          {shippingInfoInputs.map((info, index) => (
-            <div key={index} className="flex items-center mb-2">
+        {/* Shipping Information Inputs */}
+        <div className="mt-6">
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Shipping Information
+          </Label>
+          {shippingInfoInputs.map((input, index) => (
+            <div key={index} className="flex items-center space-x-2 mb-2">
               <Input
                 type="text"
-                value={info}
+                value={input}
                 onChange={(e) => {
-                  const updatedShippingInfo = [...shippingInfoInputs];
-                  updatedShippingInfo[index] = e.target.value;
-                  setShippingInfoInputs(updatedShippingInfo);
+                  const updatedInputs = [...shippingInfoInputs];
+                  updatedInputs[index] = e.target.value;
+                  setShippingInfoInputs(updatedInputs);
                 }}
+                className="flex-1 text-black"
                 placeholder="Enter shipping info"
-                className="w-full text-black"
               />
-              <Button type="button" onClick={() => removeShippingInfoInput(index)} className="ml-2">
+              <Button variant="destructive" onClick={() => removeShippingInfoInput(index)}>
                 Remove
               </Button>
             </div>
           ))}
-          <Button type="button" onClick={addShippingInfoInput}>
-            Add More Shipping Info
+          <Button variant="outline" onClick={addShippingInfoInput}>
+            Add Shipping Info
           </Button>
         </div>
-          
 
+        <div className="mt-6 flex justify-center ">
+          <Button  variant="outline"  type="submit" className="w-11/12">
+            Add Product
+          </Button>
         </div>
-
-        <Button type="submit"  variant="outline"  className="w-full mt-4">
-          Add Product
-        </Button>
       </form>
     </div>
   );

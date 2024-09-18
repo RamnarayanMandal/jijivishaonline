@@ -94,7 +94,7 @@ export const NavbarCategory = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
           <div className="bg-gray-200 p-6 rounded-lg shadow-lg w-full max-w-lg">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Add Category</h2>
+              <h2 className="text-xl font-bold text-black">Add Category</h2>
               <button className="text-gray-500 hover:text-gray-700 text-4xl" onClick={() => setIsAddModalOpen(false)}>
                 &times;
               </button>
@@ -109,7 +109,7 @@ export const NavbarCategory = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
           <div className="bg-gray-200 p-6 rounded-lg shadow-lg w-full max-w-lg">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Update Category</h2>
+              <h2 className="text-xl font-bold text-black">Update Category</h2>
               <button className="text-gray-500 hover:text-gray-700 text-4xl" onClick={() => setIsUpdateModalOpen(false)}>
                 &times;
               </button>
@@ -122,19 +122,19 @@ export const NavbarCategory = () => {
       {/* Table to display data */}
       <table className="w-full border-collapse">
         <thead>
-          <tr className="bg-gray-200">
-            <th className="border p-2">Category</th>
-            <th className="border p-2">Subcategory</th>
-            <th className="border p-2">Subcategory Data</th>
-            <th className="border p-2">Actions</th>
+          <tr className="bg-gray-800 p-4">
+            <th >Category</th>
+            <th >Subcategory</th>
+            <th >Subcategory Data</th>
+            <th >Actions</th>
           </tr>
         </thead>
         <tbody>
           {filteredData.map((item) => (
-            <tr key={item._id}>
-              <td className="border p-2">{item.category}</td>
-              <td className="border p-2">{item.subCategory}</td>
-              <td className="border p-2">
+            <tr key={item._id} className='bg-gray-500 border-b text-center'>
+              <td >{item.category}</td>
+              <td >{item.subCategory}</td>
+              <td >
                 {item.subCategoryData.map((sub) => (
                   <div key={sub._id}>
                     <p className='text-center font-semibold'>{sub.name}</p>
@@ -146,7 +146,7 @@ export const NavbarCategory = () => {
                   </div>
                 ))}
               </td>
-              <td className="border p-2 text-center flex justify-center items-center  flex-wrap gap-2">
+              <td className=" p-4 text-center flex justify-center items-center  flex-wrap gap-2">
                 <Button className="" onClick={() => openUpdateModal(item)}>
                   Update
                 </Button>

@@ -133,7 +133,7 @@ const Banner = () => {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col sm:flex-row justify-between px-4 sm:px-[6%] py-6 sm:py-10 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between px-4  py-6 sm:py-10 gap-4">
         <div className="flex flex-col w-full sm:w-9/12">
           {banners.banner1 && (
             <>

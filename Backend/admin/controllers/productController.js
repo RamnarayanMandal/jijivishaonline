@@ -510,7 +510,7 @@ exports.postReview = async (req, res) => {
 
     // Check if user already reviewed the product
     const existingReview = product.productreviews.find(
-      (review) => review.email === email
+      (review) => review.userId === userId
     );
     if (existingReview) {
       return res.status(400).json({ message: "Review already exists" });
@@ -658,3 +658,27 @@ exports.searchProduct = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+exports.getProductByProductType = async (req, res) => {
+  try {
+    const { productType} = req.body; // Use query parameters for GET requests
+    if (!productType
+    ) {
+      return res.status(400).json({ message: "Product type is required" });
+    }
+
+    const products = await Product.find({
+      typeOfProduct:
+productType
+    });
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No products found for the given product type" });
+    }
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+

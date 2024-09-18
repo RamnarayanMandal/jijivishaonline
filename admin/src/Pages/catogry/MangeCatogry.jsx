@@ -138,16 +138,16 @@ const MangeCatogry = () => {
 
       {/* Display categories in a full-screen table */}
       <div className="overflow-x-auto max-h-screen">
-        <table className="min-w-full bg-gray-800 text-white border-collapse">
-          <thead>
+        <table className="min-w-full  text-white border-collapse">
+          <thead className="bg-gray-600">
             <tr>
-              <th className="sticky top-0 px-6 py-3 border-b-2 border-gray-700 bg-gray-900">Image</th>
-              <th className="sticky top-0 px-6 py-3 border-b-2 border-gray-700 bg-gray-900">Category</th>
-              <th className="sticky top-0 px-6 py-3 border-b-2 border-gray-700 bg-gray-900">Subcategories</th>
-              <th className="sticky top-0 px-6 py-3 border-b-2 border-gray-700 bg-gray-900">Actions</th>
+              <th className="sticky top-0 px-6 py-3 border-b-2 border-gray-700 ">Image</th>
+              <th className="sticky top-0 px-6 py-3 border-b-2 border-gray-700 ">Category</th>
+              <th className="sticky top-0 px-6 py-3 border-b-2 border-gray-700 ">Subcategories</th>
+              <th className="sticky top-0 px-6 py-3 border-b-2 border-gray-700 ">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="bg-gray-400 text-center">
             {filteredCategories.map((data, index) => (
               <tr key={index}>
                 <td className="px-6 py-4 border-b border-gray-700">

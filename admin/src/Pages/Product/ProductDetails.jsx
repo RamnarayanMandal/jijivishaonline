@@ -29,11 +29,11 @@ const ProductDetails = ({ product, fetchProducts }) => {
           <img src={`${URI}${product.thumbnail}`} alt="" className='w-20 h-20 rounded-md' />
         </td>
         <td className="px-6 py-4">{product.title}</td>
-        <td className="px-6 py-4">{product.productCode}</td>
+        <td className="px-6 py-4">{product.SKU}</td>
         <td className="px-6 py-4">{product.category}</td>
         <td className="px-6 py-4">{product.subcategory}</td>
         <td className="px-6 py-4">₹ {product.price}</td>
-        <td className="px-6 py-4">{product.discount}</td>
+        {/* <td className="px-6 py-4">{product.discount}</td> */}
         <td className="px-6 py-4">{product.typeOfProduct}</td>
         <td className="px-6 py-4 flex space-x-4">
           <button 

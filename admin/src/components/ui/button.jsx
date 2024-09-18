@@ -19,15 +19,6 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        success: "bg-green-500 text-white hover:bg-green-600", 
-        warning: "bg-yellow-500 text-white hover:bg-yellow-600",
-        error: "bg-red-500 text-white hover:bg-red-600",
-        info: "bg-blue-500 text-white hover:bg-blue-600",
-        light: "bg-gray-50 text-gray-900 hover:bg-gray-600",
-        dark: "bg-gray-900 text-white hover:bg-gray-800",
-        transparent: "bg-transparent text-gray-900 hover:text-gray-800",
-        clear: "bg-transparent text-gray-900 hover:text-gray-800",
-        icon: "h-6 w-6",
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -38,8 +29,6 @@ const buttonVariants = cva(
     },
     defaultVariants: {
       variant: "default",
-      backgroundColor: "black",
-
       size: "default",
     },
   }

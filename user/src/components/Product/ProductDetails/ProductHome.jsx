@@ -40,7 +40,7 @@ const ProductHome = () => {
         <RecentlyViewedProduct subcategory={product.subcategory} />
       </div>
        <div className="lg:px-[6%]">
-        <ReviewComponent productId={product.id} />
+        <ReviewComponent productId={product._id} />
        </div>
     </div>
   );

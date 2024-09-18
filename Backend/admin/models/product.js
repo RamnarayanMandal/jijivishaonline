@@ -10,8 +10,7 @@ const productSchema = new mongoose.Schema(
     discount: { type: Number },
     SKU: {
       type: String,
-      required: true,
-      unique: true,
+     
     },
     description: { type: String },
     category: { type: String },

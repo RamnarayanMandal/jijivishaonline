@@ -79,7 +79,7 @@ const Product = () => {
                         <p className="mb-4 text-sm md:text-base"><strong>Description:</strong> {product.description || 'No description available'}</p>
                         <p className="mb-4 text-sm md:text-base"><strong>Price:</strong> ${product.price}</p>
                         <p className="mb-4 text-sm md:text-base"><strong>Discount:</strong> {product.discount}%</p>
-                        <p className="mb-4 text-sm md:text-base"><strong>Product Code:</strong> {product.productCode}</p>
+                        <p className="mb-4 text-sm md:text-base"><strong>SKU:</strong> {product.productCode}</p>
                         <p className="mb-4 text-sm md:text-base"><strong>Category:</strong> {product.category}</p>
                         <p className="mb-4 text-sm md:text-base"><strong>Subcategory:</strong> {product.subcategory}</p>
                         <p className="mb-4 text-sm md:text-base"><strong>Type of Product:</strong> {product.typeOfProduct}</p>

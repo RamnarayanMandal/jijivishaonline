@@ -73,7 +73,7 @@ const Modal = React.forwardRef(
                           key={typeIdx}
                           className="text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
                           onClick={() => {
-                            navigate(`/SubCategory/${type}`);
+                            navigate(`/productType/${type}`);
                             onClose(); // Close the modal after navigation
                           }}
                         >

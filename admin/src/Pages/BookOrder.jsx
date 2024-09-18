@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Swal from "sweetalert"; // Import SweetAlert
-import Modal from "react-modal"; // You can use any modal library or a custom modal
+import Swal from "sweetalert";
+import Modal from "react-modal";
 
-Modal.setAppElement("#root"); // Set the app root for accessibility
+Modal.setAppElement("#root");
 
 const BookOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -13,6 +13,9 @@ const BookOrder = () => {
   const [otp, setOtp] = useState("");
   const [currentOrderId, setCurrentOrderId] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const [ordersPerPage] = useState(10); // Orders per page
+
   const URI = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -22,6 +25,10 @@ const BookOrder = () => {
   useEffect(() => {
     filterOrdersByStatus();
   }, [activeTab, orders]);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset to the first page when filtering orders
+  }, [filteredOrders]);
 
   const fetchOrder = async () => {
     try {
@@ -61,8 +68,8 @@ const BookOrder = () => {
         orderId,
         status,
       });
-      fetchOrder(); // Refresh orders after update
-      Swal("Success", `Order status updated to ${status}`, "success"); // SweetAlert for success message
+      fetchOrder();
+      Swal("Success", `Order status updated to ${status}`, "success");
     } catch (error) {
       console.error("Error updating order status:", error);
       Swal("Error", "Failed to update order status", "error");
@@ -73,10 +80,9 @@ const BookOrder = () => {
     try {
       await axios.put(`${URI}api/productOrder/sendOpt/${userId}`);
       Swal("Order Delivered", "An OTP has been sent to the user", "success");
-      // Store current orderId and userId for OTP verification
       setCurrentOrderId(orderId);
       setCurrentUserId(userId);
-      setOtpModalOpen(true); // Open OTP modal
+      setOtpModalOpen(true);
     } catch (error) {
       console.error("Error:", error);
       Swal("Error", "Failed to send OTP", "error");
@@ -90,8 +96,8 @@ const BookOrder = () => {
         otp,
       });
       Swal("Order Verified", "The order has been successfully verified", "success");
-      setOtpModalOpen(false); // Close the OTP modal
-      fetchOrder(); // Refresh orders
+      setOtpModalOpen(false);
+      fetchOrder();
     } catch (error) {
       console.error("Error:", error);
       Swal("Error", "Failed to verify the order", "error");
@@ -110,7 +116,7 @@ const BookOrder = () => {
         try {
           await axios.put(`${URI}api/productOrder/cancelOrder/${orderId}`);
           Swal("Order Cancelled", "The order has been successfully cancelled", "success");
-          fetchOrder(); // Refresh orders
+          fetchOrder();
         } catch (error) {
           console.error("Error:", error);
           Swal("Error", "Failed to cancel the order", "error");
@@ -119,8 +125,27 @@ const BookOrder = () => {
     });
   };
 
+  // Pagination logic
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
-    <div className="container mx-auto p-4">
+    <div className="container overflow-hidden p-4">
       <h1 className="text-2xl font-bold mb-4">Order Details</h1>
 
       {/* Tab Bar for Order Status */}
@@ -145,28 +170,28 @@ const BookOrder = () => {
       </p>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+        <table className="min-w-full border bg-white text-black shadow-md rounded-lg">
           <thead>
-            <tr className="bg-green-100 text-left">
-              <th className="py-2 px-4 border-b">Date</th>
-              <th className="py-2 px-4 border-b">Customer Name</th>
-              <th className="py-2 px-4 border-b">Phone NO</th>
-              <th className="py-2 px-4 border-b">Shipping Information</th>
-              <th className="py-2 px-4 border-b">Product Image</th>
-              <th className="py-2 px-4 border-b">Product Details</th>
-              <th className="py-2 px-4 border-b">Attributes</th>
-              <th className="py-2 px-4 border-b">Status</th>
+            <tr className=" text-left bg-gray-800 text-white">
+              <th className="py-2 px-4 ">Date</th>
+              <th className="py-2 px-4 ">Customer Name</th>
+              <th className="py-2 px-4 ">Phone NO</th>
+              <th className="py-2 px-4 ">Shipping Information</th>
+              <th className="py-2 px-4 ">Product Image</th>
+              <th className="py-2 px-4 ">Product Details</th>
+              <th className="py-2 px-4 ">Attributes</th>
+              <th className="py-2 px-4 ">Status</th>
             </tr>
           </thead>
           <tbody>
-            {filteredOrders.map((order) => (
-              <tr key={order._id} className="hover:bg-gray-50">
-                <td className="py-2 px-4 border-b">
+            {currentOrders.map((order) => (
+              <tr key={order._id} className=" border bg-gray-500 text-white ">
+                <td className="py-2 px-4 ">
                   {new Date(order.createdAt).toLocaleString()}
                 </td>
-                <td className="py-2 px-4 border-b">{order.user.email}</td>
-                <td className="py-2 px-4 border-b">{order.address.phone}</td>
-                <td className="py-2 px-4 border-b">
+                <td className="py-2 px-4 ">{order.user.email}</td>
+                <td className="py-2 px-4 ">{order.address.phone}</td>
+                <td className="py-2 px-4 ">
                   <p>{order.address.street}</p>
                   <p>
                     {order.address.city}, {order.address.state}
@@ -175,7 +200,7 @@ const BookOrder = () => {
                     {order.address.country}, {order.address.postalCode}
                   </p>
                 </td>
-                <td className="py-2 px-4 border-b">
+                <td className="py-2 px-4 ">
                   {order.products.map((product) => (
                     <img
                       key={product.productId}
@@ -185,7 +210,7 @@ const BookOrder = () => {
                     />
                   ))}
                 </td>
-                <td className="py-2 px-4 border-b">
+                <td className="py-2 px-4 ">
                   {order.products.map((product) => (
                     <div key={product.productId}>
                       <p>Product ID: {product.productId}</p>
@@ -194,7 +219,7 @@ const BookOrder = () => {
                     </div>
                   ))}
                 </td>
-                <td className="py-2 px-4 border-b">
+                <td className="py-2 px-4 ">
                   {order.products.map((product) => (
                     <div key={product.productId}>
                       <p>Size: {product.attributes.size.join(", ")}</p>
@@ -202,19 +227,25 @@ const BookOrder = () => {
                     </div>
                   ))}
                 </td>
-                <td className="py-2 px-4 border-b flex justify-center flex-col gap-2 ">
+                <td className="py-2 px-4  flex justify-center items-center content-center gap-4 flex-wrap">
                   <button
-                    className="bg-gray-200 text-black px-4 py-1 rounded-md hover:bg-gray-300"
-                    onClick={() => handleOnclick(order._id, order.status, order.userId)}
+                    onClick={() => handleOnclick(order._id, order.status, order.user._id)}
+                    className={`py-1 px-2 rounded ${
+                      order.status === "delivered"
+                        ? "bg-green-500 text-white"
+                        : order.status === "cancelled"
+                        ? "bg-red-500 text-white"
+                        : "bg-blue-500 text-white"
+                    }`}
                   >
-                    {order.status}
+                    {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                   </button>
-                  {["pending", "processing"].includes(order.status) && (
+                  {order.status !== "delivered" && order.status !== "cancelled" && (
                     <button
-                      className="bg-red-600 text-white px-4 py-1 rounded-md hover:bg-red-800"
                       onClick={() => cancelOrder(order._id)}
+                      className="ml-2 py-1 px-2 bg-red-500 text-white rounded"
                     >
-                      Cancel
+                      Cancel Order
                     </button>
                   )}
                 </td>
@@ -224,27 +255,42 @@ const BookOrder = () => {
         </table>
       </div>
 
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className="px-4 py-2 mx-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="px-4 py-2">{`Page ${currentPage} of ${totalPages}`}</span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 mx-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+
       {/* OTP Modal */}
-      <Modal
-        isOpen={otpModalOpen}
-        onRequestClose={() => setOtpModalOpen(false)}
-        contentLabel="OTP Verification Modal"
-        className="modal"
-        overlayClassName="overlay"
-      >
-        <h2 className="text-xl font-bold mb-4">Verify Order</h2>
+      <Modal isOpen={otpModalOpen} onRequestClose={() => setOtpModalOpen(false)}>
+        <h2>Enter OTP to Verify Order</h2>
         <input
           type="text"
           value={otp}
           onChange={(e) => setOtp(e.target.value)}
-          placeholder="Enter OTP"
-          className="mb-4 px-4 py-2 border rounded-md w-full"
+          className="border p-2 rounded"
         />
-        <button
-          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-          onClick={verifyOrder}
-        >
+        <button onClick={verifyOrder} className="ml-2 bg-blue-500 text-white px-4 py-2 rounded">
           Verify
+        </button>
+        <button
+          onClick={() => setOtpModalOpen(false)}
+          className="ml-2 bg-red-500 text-white px-4 py-2 rounded"
+        >
+          Cancel
         </button>
       </Modal>
     </div>

@@ -26,6 +26,7 @@ import CorporateGifting from "./components/QuickLink/CorporateGifting.jsx";
 import OrderDetails from "./components/UserProfile.jsx/OrderDetails.jsx";
 import PrivacyPolicy from "./components/PrivacyPolicy.jsx";
 import ShippingPolicy from "./components/ShippingPolicy.jsx";
+import { GetProductBYProductType } from "./components/catogry/GetProductBYProductType.jsx";
 
 // Define your router outside of the provider
 const router = createBrowserRouter([
@@ -110,6 +111,9 @@ const router = createBrowserRouter([
       {
         path:"/orderDetails/:id",
         element: <OrderDetails/>// Add the component for order details when the path is "/orderDetails/:id"
+      },{
+        path:"/productType/:productType",
+        element: <GetProductBYProductType/>// Add the component for product type when the path is "/productType"
       }
     ],
   },

@@ -38,7 +38,7 @@ const Header = () => {
   // Function to handle logout
   const handleLogout = () => {
     // Clear user session data (e.g., remove tokens from localStorage)
-    localStorage.removeItem("authToken"); // Adjust this based on how you store session data
+    localStorage.clear()// Adjust this based on how you store session data
 
     // Redirect to login page
     navigate("/");

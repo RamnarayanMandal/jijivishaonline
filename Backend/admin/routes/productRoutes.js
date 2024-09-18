@@ -38,7 +38,7 @@ router.get(
   productController.getProductBySubcategory
 );
 
-router.get("/postReview", productController.postReview);
+router.patch("/postReview", productController.postReview);
 
 router.get("/getaverage/:productId", productController.getAverageRating);
 
@@ -50,5 +50,7 @@ router.delete(
 );
 
 router.get("/getAllproductsSearch", productController.searchProduct);
+
+router.post("/getProductByProductType", productController.getProductByProductType);
 
 module.exports = router;

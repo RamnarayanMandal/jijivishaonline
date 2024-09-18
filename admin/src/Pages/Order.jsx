@@ -44,7 +44,7 @@ const Order = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Order</h1>
+      <h1 className="text-3xl font-bold mb-4">My Order</h1>
 
       {/* Status Tabs */}
       <div className="flex justify-center space-x-4 mb-4">
@@ -76,18 +76,18 @@ const Order = () => {
         step={60}
         showMultiDayTimes
         defaultDate={new Date(2024, 8, 1)} // Default to September 2024
-        className="bg-white shadow-md rounded-lg"
+        className="bg-white shadow-md rounded-lg text-black"
         eventPropGetter={() => ({
-          className: "bg-blue-500 text-white px-2 py-1 rounded",
+          className: "bg-blue-500 text-black px-2 py-1 rounded",
         })}
       />
 
       {/* Add navigation buttons */}
-      <div className="flex justify-end mt-4">
+      <div className="flex justify-end mt-4 text-black">
         <button
           onClick={() => setView("month")}
           className={`px-4 py-2 bg-gray-100 rounded-md mr-2 ${
-            view === "month" ? "bg-blue-500 text-white" : ""
+            view === "month" ? "bg-blue-500 text-black" : ""
           }`}
         >
           Month
@@ -95,7 +95,7 @@ const Order = () => {
         <button
           onClick={() => setView("week")}
           className={`px-4 py-2 bg-gray-100 rounded-md mr-2 ${
-            view === "week" ? "bg-blue-500 text-white" : ""
+            view === "week" ? "bg-blue-500 text-black" : ""
           }`}
         >
           Week
@@ -103,7 +103,7 @@ const Order = () => {
         <button
           onClick={() => setView("day")}
           className={`px-4 py-2 bg-gray-100 rounded-md ${
-            view === "day" ? "bg-blue-500 text-white" : ""
+            view === "day" ? "bg-blue-500 text-black" : ""
           }`}
         >
           Day

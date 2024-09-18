@@ -73,7 +73,7 @@ const BlogsList = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="  w-full p-6">
       <div className="flex justify-between">
         <Link to="/Manage-Blogs">
           <Button className="lg:text-3xl text-xl font-bold mb-6 mx-2 py-5">

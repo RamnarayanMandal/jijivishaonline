@@ -78,7 +78,7 @@ const ViewCartAndUpdateCart = () => {
                 />
                 <div>
                   <h3 className="font-semibold text-lg">{item.title}</h3>
-                  {/* <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center gap-2 mt-2">
                     <label htmlFor={`size-${item._id}`} className="text-sm font-medium">
                       Size:
                     </label>
@@ -92,8 +92,8 @@ const ViewCartAndUpdateCart = () => {
                         <option key={index} value={size}>{size}</option>
                       ))}
                     </select>
-                  </div> */}
-                  {/* <div className="flex items-center gap-2 mt-2">
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
                     <label htmlFor={`color-${item._id}`} className="text-sm font-medium">
                       Color:
                     </label>
@@ -107,7 +107,7 @@ const ViewCartAndUpdateCart = () => {
                         <option key={index} value={color}>{color}</option>
                       ))}
                     </select>
-                  </div> */}
+                  </div>
                 </div>
               </div>
 

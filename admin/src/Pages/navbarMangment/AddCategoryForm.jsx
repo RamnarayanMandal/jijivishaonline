@@ -99,7 +99,7 @@ const AddCategoryForm = ({ initialData = null, isEditing = false, onClose }) => 
   };
 
   return (
-    <div className="w-full max-h-screen overflow-y-auto p-4">
+    <div className="w-full max-h-[600px] overflow-y-auto p-4 text-black overflow-hidden mt-5">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col">
           <label htmlFor="category">Category</label>
