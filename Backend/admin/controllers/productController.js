@@ -263,14 +263,7 @@ exports.updateProductById = async (req, res) => {
       productreviews,
     } = req.body;
 
-    console.log(
-      title,
-      quantity,
-      typeOfPrinting,
-      productdescriptions,
-      color,
-      typeOfPrinting
-    );
+  
 
     // Find the product by ID
     const product = await Product.findById(id);

@@ -19,26 +19,35 @@ const Navbar2 = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(`${URI}api/navbar/categories`);
-      console.log(response.data);
-      setMenuItems(response.data); // Store fetched data
+      console.log('API Response:', response.data);
+
+      if (Array.isArray(response.data)) {
+        setMenuItems(response.data); // Store fetched data
+      } else {
+        console.error('Unexpected API response format:', response.data);
+        setMenuItems([]); // Prevent errors if response is invalid
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
+      setMenuItems([]); // Prevent crashes in case of API failure
     }
   };
 
-  // Group items by category name
-  const groupedItems = menuItems.reduce((acc, item) => {
-    if (!acc[item.category]) {
-      acc[item.category] = [];
-    }
-    acc[item.category].push(item);
-    return acc;
-  }, {});
+  // Ensure menuItems is an array before using reduce
+  const groupedItems = Array.isArray(menuItems)
+    ? menuItems.reduce((acc, item) => {
+        if (!acc[item.category]) {
+          acc[item.category] = [];
+        }
+        acc[item.category].push(item);
+        return acc;
+      }, {})
+    : {};
 
   // Handle click event for the navbar items
   const handleItemClick = (category) => {
-    setActiveCategory(category); // Update active category state
-    setModalData(groupedItems[category]); // Set the data for the modal
+    setActiveCategory(category);
+    setModalData(groupedItems[category] || []);
     setModalOpen(true);
   };
 
@@ -58,7 +67,6 @@ const Navbar2 = () => {
   };
 
   useEffect(() => {
-    // Attach event listener for clicks outside of the modal
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -73,7 +81,7 @@ const Navbar2 = () => {
             key={index}
             className={`relative px-2 py-1 cursor-pointer ${
               activeCategory === category ? 'text-red-600 font-bold' : ''
-            }`} // Correctly apply active class
+            }`}
             onClick={() => handleItemClick(category)}
           >
             <div className="font-semibold text-gray-800 text-sm">{category}</div>

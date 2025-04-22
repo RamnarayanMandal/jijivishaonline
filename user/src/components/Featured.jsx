@@ -23,15 +23,17 @@ const Featured = () => {
   const fetchImg = async () => {
     try {
       const resp = await axios.get(`${URI}api/admin/featuredImg`);
-      setImg(resp.data.data);
-     
+      if (resp.data && Array.isArray(resp.data.data)) {
+        setImg(resp.data.data);
+      } else {
+        setImg([]);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching images:", error);
+      setImg([]);
     }
   };
 
-
-  // Fallback images if API data is empty
   const fallbackImages = [fr1, fr2, fr3, fr4, fr5];
 
   return (
@@ -39,6 +41,7 @@ const Featured = () => {
       <h1 className="lg:text-4xl text-3xl text-center font-semibold text-gray-600">
         Featured In
       </h1>
+
       {/* Swiper for small to medium screens */}
       <div className="block lg:hidden border-y-2">
         <Swiper
@@ -49,41 +52,56 @@ const Featured = () => {
           pagination={{ clickable: true }}
           className="py-4"
         >
-          {(img.length > 0 ? img : fallbackImages).map((imageSrc, index) => (
-            <SwiperSlide key={index}>
-              <img
-                src={`${URI}${imageSrc.images}`}
-                alt={`Featured ${index + 1}`}
-                className="h-auto w-auto object-contain"
-              />
-            </SwiperSlide>
-          ))}
+          {(img.length > 0 ? img : fallbackImages).map((imageObj, index) => {
+            const imageUrl =
+              typeof imageObj === "object"
+                ? `${URI}${imageObj.images[0].replace(/\\/g, "/")}`
+                : imageObj;
+
+            return (
+              <SwiperSlide key={index}>
+                <img
+                  src={imageUrl}
+                  alt={`Featured ${index + 1}`}
+                  className="h-auto w-auto object-contain"
+                />
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </div>
+
       {/* Flex layout for larger screens */}
       <div className="hidden lg:flex flex-row justify-center items-center border-y-2 p-4 lg:gap-10">
-        {(img.length > 0 ? img : fallbackImages).map((imageSrc, index) => (
-          <img
-            key={index}
-            src={`${URI}${imageSrc.images}`}
-            alt={`Featured ${index + 1}`}
-            className="lg:h-20 h-auto w-auto object-contain"
-          />
-        ))}
+        {(img.length > 0 ? img : fallbackImages).map((imageObj, index) => {
+          const imageUrl =
+            typeof imageObj === "object"
+              ? `${URI}${imageObj.images[0].replace(/\\/g, "/")}`
+              : imageObj;
+
+          return (
+            <img
+              key={index}
+              src={imageUrl}
+              alt={`Featured ${index + 1}`}
+              className="lg:h-20 h-auto w-auto object-contain"
+            />
+          );
+        })}
       </div>
 
       {/* Custom styles for Swiper navigation buttons */}
       <style jsx>{`
         .swiper-button-next,
         .swiper-button-prev {
-          width: 30px; /* Increase the size of the navigation buttons */
+          width: 30px;
           height: 30px;
-          color: black; /* Change the button color if needed */
+          color: black;
         }
 
         .swiper-button-next::after,
         .swiper-button-prev::after {
-          font-size: 15px; /* Adjust font size for icons */
+          font-size: 15px;
         }
       `}</style>
     </div>

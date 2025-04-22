@@ -46,6 +46,8 @@ export const UpdateProduct = () => {
 
   const [images, setImages] = useState([]);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
+  const [thumbnailFile, setThumbnailFile] = useState(null);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { product } = location.state || {};
@@ -100,7 +102,9 @@ export const UpdateProduct = () => {
       formData.append('images', image);
     });
 
-    formData.append('thumbnail', thumbnailPreview); // Append thumbnail
+    if (thumbnailFile) {
+      formData.append('thumbnail', thumbnailFile);
+    }
 
     try {
       const response = await axios.put(`${URI}api/admin/product/${product._id}`, formData, {
@@ -123,6 +127,7 @@ export const UpdateProduct = () => {
     const file = e.target.files[0];
     if (file) {
       setThumbnailPreview(URL.createObjectURL(file));
+      setThumbnailFile(file); // Save file for form submission
     }
   };
 

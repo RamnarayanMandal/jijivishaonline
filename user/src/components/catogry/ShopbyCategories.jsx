@@ -37,7 +37,7 @@ const ShopbyCategories = () => {
             <div className="mb-2">
               <img
                 src={`${URI}${category.thumbnail}`} // Step 4: Show thumbnail image
-                alt={category.subcategory}
+                alt={category?.subcategory}
                 className="w-32 h-32 rounded-full transition-transform duration-300 ease-in-out transform hover:scale-125"
               onClick={()=>navigate(`/catogry/${category.category}`)}/>
             </div>

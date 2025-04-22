@@ -189,15 +189,15 @@ const BookOrder = () => {
                 <td className="py-2 px-4 ">
                   {new Date(order.createdAt).toLocaleString()}
                 </td>
-                <td className="py-2 px-4 ">{order.user.email}</td>
-                <td className="py-2 px-4 ">{order.address.phone}</td>
+                <td className="py-2 px-4 ">{order?.user?.email}</td>
+                <td className="py-2 px-4 ">{order?.address?.phone}</td>
                 <td className="py-2 px-4 ">
-                  <p>{order.address.street}</p>
+                  <p>{order?.address?.street}</p>
                   <p>
-                    {order.address.city}, {order.address.state}
+                    {order?.address?.city}, {order?.address?.state}
                   </p>
                   <p>
-                    {order.address.country}, {order.address.postalCode}
+                    {order?.address?.country}, {order?.address?.postalCode}
                   </p>
                 </td>
                 <td className="py-2 px-4 ">
