@@ -25,7 +25,7 @@ const PaymentHomepage = () => {
   const address = localStorage.getItem("selectedAddress")
     ? JSON.parse(localStorage.getItem("selectedAddress"))
     : {};
-
+``
   const handlePaymentChange = (method) => {
     setPaymentMethod(method);
   };
@@ -51,8 +51,8 @@ const PaymentHomepage = () => {
       price: item.price,
       thumbnail: item.thumbnail,
       attributes: {
-        size: item.size|| item.attributes.size,
-        color: item.color || item.attributes.color,  
+        size: item.size|| item?.attributes?.size,
+        color: item.color || item?.attributes?.color,  
       },
     
     }));

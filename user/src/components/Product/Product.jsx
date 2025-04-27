@@ -20,6 +20,7 @@ export function Product({ products }) {
   const navigate = useNavigate();
 
   const URI = import.meta.env.VITE_API_URL;
+  const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export function Product({ products }) {
   }, []);
 
   const handleAddToCart = async (product) => {
-    const token = localStorage.getItem("token");
+    
 
     if (!token) {
       Swal.fire({

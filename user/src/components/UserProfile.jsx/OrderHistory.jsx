@@ -54,6 +54,8 @@ const OrderHistory = () => {
     return title.includes(searchTerm.toLowerCase());
   });
 
+  console.log(orders)
+
   return (
     <div className="p-4 w-full">
       <input

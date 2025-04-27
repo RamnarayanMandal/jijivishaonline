@@ -84,7 +84,7 @@ const Navbar2 = () => {
             }`}
             onClick={() => handleItemClick(category)}
           >
-            <div className="font-semibold text-gray-800 text-sm">{category}</div>
+            <div className="font-semibold text-gray-800 text-sm">{category.toUpperCase()}</div>
           </li>
         ))}
       </ul>

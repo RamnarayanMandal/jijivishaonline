@@ -49,7 +49,7 @@ const Navbar1 = () => {
 
   const handleLogout = () => {
     // Remove token from localStorage
-    localStorage.removeItem("token");
+    localStorage.clear();
     setIsLoggedIn(false);
     // Redirect to the login page
     navigation("/My-Account");

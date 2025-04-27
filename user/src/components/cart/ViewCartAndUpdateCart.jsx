@@ -11,6 +11,7 @@ const ViewCartAndUpdateCart = () => {
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const URI = import.meta.env.VITE_API_URL;
+  
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity > 0) {
@@ -74,8 +75,8 @@ const ViewCartAndUpdateCart = () => {
                 <img
                   src={`${URI}${item.thumbnail}`}
                   alt={item.title}
-                  className="w-32 h-32 object-cover rounded-md"
-                />
+                  className="w-32 h-32 object-cover rounded-md cursor-pointer"
+                    onClick={()=>(navigate(`/product/${item.productId}`))}/>
                 <div>
                   <h3 className="font-semibold text-lg">{item.title}</h3>
                   <div className="flex items-center gap-2 mt-2">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import StatusBar from './StatusBar'; // Import StatusBar component
@@ -8,6 +8,7 @@ const OrderDetails = () => {
     const [orderDetails, setOrderDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const { id } = useParams();
+    const navagite = useNavigate()
 
     const URI = import.meta.env.VITE_API_URL;
 
@@ -41,6 +42,7 @@ const OrderDetails = () => {
     }
 
     const { products, address, status, paymentMethod, paymentStatus, createdAt } = orderDetails;
+    
 
     const cancelOrder = async () => {
         try {
@@ -102,16 +104,23 @@ const OrderDetails = () => {
                     <div key={product._id} className="lg:flex md:flex block justify-between items-center mb-4 ">
                         <div className='lg:w-1/2 md:w-1/2 w-full '>
                             <img
-                                className="w-40"
+                                className="w-40 cursor-pointer"
                                 src={`${URI}${product.productId.thumbnail}`}
                                 alt={product.productId.title}
-                            />
+                               onClick={()=>(navagite(`/product/${product.productId._id}`))}/>
                         </div>
                         <div className='lg:w-1/2 md:w-1/2 w-full'>
                             <p className="text-xl font-bold">{product.productId.title}</p>
-                            <p className="text-gray-600">Seller: {product.productId.seller || 'Unknown'}</p>
-                            <p className="text-gray-600">Size: {product.attributes.size.join(', ')}</p> {/* Display Size */}
-                            <p className="text-gray-600">Color: {product.attributes.color.join(', ')}</p> {/* Display Color */}
+                            {
+                                product.productId.seller && ( <p className="text-gray-600">Seller: {product.productId.seller || 'Unknown'}</p>)
+                            }
+                           
+                            {
+                                product.attributes.size && (<p className="text-gray-600">Size: {product.attributes.size.join(', ')}</p>
+                            )} 
+                            {
+                                product.attributes.color && (<p className="text-gray-600">Color: {product.attributes.color.join(', ')}</p>)
+                            } {/* Display Color */}
                             <p className="text-xl font-bold">₹{product.price} </p>
                             <p className="text-gray-600">Quantity: {product.quantity}</p>
                             <div className="">

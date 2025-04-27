@@ -126,7 +126,7 @@ export default function ShowCart() {
 
   const handleCheckout = () => {
     // Logic to checkout items
-    navigate('/CheckoutForm'); // Navigate to checkout page using react-router-dom
+    navigate('/selectAddress'); // Navigate to checkout page using react-router-dom
   };
 
   const handleviewcart = () => {

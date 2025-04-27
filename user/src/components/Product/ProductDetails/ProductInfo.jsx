@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { bagActions } from "../../../store/bagSlice";
+
+import { buyItemActions } from "../../../store/buyItemsSlice";
+
 import { Snackbar, Alert } from "@mui/material";
 import { IoCartOutline } from "react-icons/io5";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 // Helper function to check if the array is not empty and contains valid data
 const isValidArray = (arr) =>
@@ -31,11 +35,41 @@ const ProductInfo = ({ product }) => {
   const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
   const selectImage = localStorage.getItem("selectedImage");
-
+  const token = localStorage.getItem("token");
   const URI = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate()
+
+  const handleBuyItem = async(product)=>{
+     
+    if (!token) {
+      Swal.fire({
+        title: "Login Required",
+        text: "Please log in to add products to the cart.",
+        icon: "warning",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    dispatch(
+      buyItemActions.addToBag({
+        data: {
+          ...product,
+          quantity,
+          size: selectedSize,
+          color: selectedColor,
+        },
+        totalQuantity: quantity,
+      })
+    );
+
+    navigate("/selectAddress")
+
+
+  }
 
   const handleAddToCart = async (product) => {
-    const token = localStorage.getItem("token");
+    
 
     if (!token) {
       Swal.fire({
@@ -214,7 +248,11 @@ const ProductInfo = ({ product }) => {
           <IoCartOutline className="text-xl" />
           <p>Add to Cart</p>
         </button>
-        <button className="bg-red-600 text-white px-6 py-2 rounded w-full">
+        <button className="bg-red-600 text-white px-6 py-2 rounded w-full"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleBuyItem(product);
+        }}>
           Buy Now
         </button>
       </div>

@@ -46,7 +46,7 @@ const Modal = React.forwardRef(
           {categoryData[0] && (
             <div className="hidden md:flex md:w-96 md:justify-center md:content-center">
               <h1 className="mt-2 font-serif font-bold text-2xl md:text-3xl text-red-700">
-                {categoryData[0].name}
+              {categoryData[0]?.name?.toUpperCase()}
               </h1>
             </div>
           )}
@@ -56,7 +56,7 @@ const Modal = React.forwardRef(
             {categoryData.map((item, index) => (
               <div key={index} className="col-span-1">
                 <h3 className="font-semibold text-lg md:text-xl mb-2 md:mb-4 border-b pb-1 md:pb-2 text-red-700">
-                  {item.subName || item.subCategory} {/* Fallback to subCategory */}
+                  {item.subName?.toUpperCase() || item.subCategory?.toUpperCase()} {/* Fallback to subCategory */}
                 </h3>
                 {item.subCategoryData && item.subCategoryData.map((category, idx) => (
                   <div key={idx} className="mb-2 md:mb-4">
