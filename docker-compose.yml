@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  admin:
+    build: ./admin
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+
+  user:
+    build: ./user
+    ports:
+      - "3001:80"
+    restart: unless-stopped
+
+  backend:
+    build: ./Backend
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+    depends_on:
+      - admin
+      - user 
