@@ -11,7 +11,7 @@ import Navbar2 from "./components/Navbar/Navbar2";
 import { IconContext } from "react-icons/lib";
 import IconLabelTabs from "./components/Navbar/IconLabelTabs";
 import ProductHome from "./components/Product/ProductDetails/ProductHome";
-import { Api } from "./api";
+import { Api } from "./Api";
 import ScrollToTop from "./ScrollToTop";
 
 function App() {
